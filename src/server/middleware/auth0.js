@@ -48,7 +48,7 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-const verify = (accessToken, refreshToken, extraParams, profile, done) => {
+export const verify = (accessToken, refreshToken, extraParams, profile, done) => {
   // accessToken is the token to call Auth0 API (not needed in the most cases)
   // extraParams.id_token has the JSON Web Token
   // profile has all the information from the user
@@ -61,27 +61,26 @@ const verify = (accessToken, refreshToken, extraParams, profile, done) => {
 
   const apolloClient = getApolloClient(requestUser);
 
-  getUserByEmail(apolloClient, profile.emails[0].value)
+  return getUserByEmail(apolloClient, profile.emails[0].value)
     .then((user) => {
       if (user.data.userByEmail) {
         done(null, user.data.userByEmail);
+      } else {
+        const newUser = {
+          ...requestUser,
+          status: 'NEW',
+        };
+
+        createUser(apolloClient, newUser)
+          .then(createUserResult => done(null, createUserResult.data.createUser))
+          .catch(err => done(err));
       }
-
-      const newUser = {
-        ...requestUser,
-        status: 'NEW',
-      };
-
-      createUser(apolloClient, newUser)
-        .then(createUserResult => done(null, createUserResult.data.createUser))
-        .catch(err => done(err));
     }).catch((err) => {
       done(err);
     });
 };
 
-// Configure Passport to use Auth0
-const strategy = new Auth0Strategy(
+export default new Auth0Strategy(
   {
     domain: process.env.AUTH0_DOMAIN,
     clientID: process.env.AUTH0_CLIENT_ID,
@@ -91,5 +90,3 @@ const strategy = new Auth0Strategy(
   },
   verify,
 );
-
-export default strategy;

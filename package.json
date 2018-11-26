@@ -8,7 +8,8 @@
     "build:client:dev": "webpack --watch --progress --config-name=clientConfig",
     "build:server:dev": "webpack --watch --progress --config-name=serverConfig",
     "build:dev": "concurrently --kill-others \"npm run build:client:dev\" \"npm run build:server:dev\"",
-    "server:dev": "nodemon -r dotenv/config dist/server.bundle.js"
+    "server:dev": "nodemon -r dotenv/config dist/server.bundle.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "@babel/register": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
@@ -56,10 +58,11 @@
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^22.0.0",
+    "eslint-plugin-jest": "^22.0.1",
     "eslint-plugin-react": "^7.11.1",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "jest": "^23.6.0",
     "mini-css-extract-plugin": "^0.4.5",
     "nodemon": "^1.18.6",
     "webpack": "^4.26.0",
