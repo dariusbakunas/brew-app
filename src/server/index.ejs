@@ -4,10 +4,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title></title>
+  <title><%= title %></title>
 </head>
 <body>
-<div id='root'></div>
+<script nonce="<%= nonce %>">
+  <% if (apolloState) {%>
+  window.__APOLLO_STATE__ = <%= apolloState %>;
+  <%}%>
+</script>
+<div id='root'><%- html %></div>
 <script src="/client.bundle.js"></script>
 </body>
 </html>

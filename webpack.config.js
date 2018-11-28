@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = (env, argv) => {
   const dev = argv.mode !== 'production';
@@ -20,10 +20,9 @@ module.exports = (env, argv) => {
       raw: true,
       entryOnly: false,
     }),
-    new HtmlWebpackPlugin({
-      template: 'src/server/index.html',
-      inject: false,
-    }),
+    new CopyWebpackPlugin([
+      { from: 'src/server/index.ejs', to: 'index.ejs' },
+    ]),
   ];
 
   const clientConfig = {

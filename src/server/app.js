@@ -4,6 +4,8 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import session from 'express-session';
 import passport from 'passport';
+import helmet from 'helmet';
+import uuidv4 from 'uuid/v4';
 import serverRenderer from './middleware/renderer';
 import authRoutes from './routes/auth';
 import secured from './middleware/secured';
@@ -13,18 +15,41 @@ if (!process.env.SESSION_SECRET) throw new Error('`env.SESSION_SECRET` is requir
 
 const app = express();
 
-const sess = {
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname));
+
+app.use((req, res, next) => {
+  res.locals.nonce = uuidv4();
+  next();
+});
+
+const helmetConfig = {
+  frameguard: { action: 'deny' },
+  referrerPolicy: { policy: 'no-referrer' },
+  contentSecurityPolicy: {
+    directives: {
+      scriptSrc: [
+        "'self'",
+        (req, res) => `'nonce-${res.locals.nonce}'`,
+      ],
+    },
+  },
+};
+
+const sessionConfig = {
   secret: process.env.SESSION_SECRET,
   cookie: {},
   resave: false,
   saveUninitialized: true,
 };
 
+app.use(helmet(helmetConfig));
+
 if (app.get('env') === 'production') {
-  sess.cookie.secure = true; // serve secure cookies, requires https
+  sessionConfig.cookie.secure = true; // serve secure cookies, requires https
 }
 
-app.use(session(sess));
+app.use(session(sessionConfig));
 
 passport.use(auth0Strategy);
 app.use(passport.initialize());
