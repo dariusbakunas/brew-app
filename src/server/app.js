@@ -6,6 +6,8 @@ import session from 'express-session';
 import passport from 'passport';
 import helmet from 'helmet';
 import uuidv4 from 'uuid/v4';
+import jwt from 'jsonwebtoken';
+import proxy from 'http-proxy-middleware';
 import serverRenderer from './middleware/renderer';
 import authRoutes from './routes/auth';
 import secured from './middleware/secured';
@@ -22,6 +24,15 @@ app.use((req, res, next) => {
   res.locals.nonce = uuidv4();
   next();
 });
+
+const apiProxyConfig = {
+  target: process.env.BREW_API_HOST,
+  changeOrigin: true,
+  onProxyReq: (proxyReq, req, res, options) => {
+    const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET);
+    proxyReq.setHeader('auth-token', token);
+  },
+};
 
 const helmetConfig = {
   frameguard: { action: 'deny' },
@@ -56,6 +67,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 const router = express.Router();
+
+app.use('/api', proxy(apiProxyConfig));
 
 router.use('/', authRoutes);
 router.use('^/$', secured(), serverRenderer);
