@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const nodeExternals = require('webpack-node-externals');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+
 module.exports = (env, argv) => {
   const dev = argv.mode !== 'production';
 
@@ -40,10 +41,12 @@ module.exports = (env, argv) => {
         },
         // need to bundle css separately to avoid un-styled server side pages
         {
-          test: /\.css$/,
+          test: /\.(css|less)$/,
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
+            'less-loader',
+            'postcss-loader',
           ],
         },
         {
@@ -53,10 +56,16 @@ module.exports = (env, argv) => {
           ],
         },
         {
-          test: /\.(woff|woff2|eot|ttf|otf)$/,
-          use: [
-            'file-loader',
-          ],
+          test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+        },
+        {
+          test: /\.(ttf|eot)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: 'file-loader',
+        },
+        {
+          test: /\.otf(\?.*)?$/,
+          use: 'file-loader?name=/fonts/[name].  [ext]&mimetype=application/font-otf',
         },
       ],
     },
@@ -69,6 +78,9 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.js', '.jsx'],
+      alias: {
+        '../../theme.config$': path.join(__dirname, 'semantic-theme/theme.config'),
+      },
     },
     plugins: clientPlugins,
   };
