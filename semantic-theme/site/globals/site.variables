@@ -1,0 +1,4 @@
+@backgroundColor: rgb(254, 255, 255);
+
+@primaryColor        : @blue;
+@secondaryColor      : @black;
