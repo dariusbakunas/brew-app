@@ -12,6 +12,7 @@ import serverRenderer from './middleware/renderer';
 import authRoutes from './routes/auth';
 import secured from './middleware/secured';
 import auth0Strategy from './middleware/auth0';
+import { USER_STATUS } from '../contants';
 
 if (!process.env.SESSION_SECRET) throw new Error('`env.SESSION_SECRET` is required for sessions');
 
@@ -29,7 +30,7 @@ const apiProxyConfig = {
   target: process.env.BREW_API_HOST,
   changeOrigin: true,
   onProxyReq: (proxyReq, req, res, options) => {
-    const token = jwt.sign({ user: req.user }, process.env.JWT_SECRET);
+    const token = jwt.sign({ user: req.user ? req.user : { status: USER_STATUS.GUEST } }, process.env.JWT_SECRET);
     proxyReq.setHeader('auth-token', token);
   },
 };
@@ -68,12 +69,17 @@ app.use(passport.session());
 
 const router = express.Router();
 
-app.use('/api', proxy(apiProxyConfig));
-
 router.use('/', authRoutes);
-router.use('^/$', secured(), serverRenderer);
-app.use(router);
+router.use('/login', serverRenderer);
+
+router.use('/api', proxy(apiProxyConfig));
+
 app.use(express.static(path.resolve(__dirname, '.')));
+
+router.use('^/$', secured(), serverRenderer);
+router.use('/register', secured(), serverRenderer);
+
+app.use(router);
 app.use(logger('dev'));
 app.use(cookieParser());
 

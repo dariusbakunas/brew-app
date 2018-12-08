@@ -4,7 +4,7 @@ import passport from 'passport';
 const router = express.Router();
 
 // Perform the login, after login Auth0 will redirect to callback
-router.get('/login', passport.authenticate('auth0', {
+router.get('/auth', passport.authenticate('auth0', {
   scope: 'openid email profile',
 }), (req, res) => {
   res.redirect('/');
@@ -19,7 +19,7 @@ router.get('/callback', (req, res, next) => {
       if (err) { return next(err); }
       const returnTo = req.session.returnTo;
       delete req.session.returnTo;
-      res.redirect(returnTo || '/user');
+      res.redirect(returnTo || '/');
     });
   })(req, res, next);
 });

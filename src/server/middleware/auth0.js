@@ -2,6 +2,7 @@ import passport from 'passport';
 import Auth0Strategy from 'passport-auth0';
 import gql from 'graphql-tag';
 import getApolloClient from '../apolloClient';
+import { USER_STATUS } from '../../contants';
 
 const getUserByEmail = (apolloClient, email) => apolloClient
   .query({
@@ -68,12 +69,14 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
       } else {
         const newUser = {
           ...requestUser,
-          status: 'NEW',
+          status: USER_STATUS.GUEST,
         };
 
-        createUser(apolloClient, newUser)
-          .then(createUserResult => done(null, createUserResult.data.createUser))
-          .catch(err => done(err));
+        done(null, newUser);
+
+        // createUser(apolloClient, newUser)
+        //   .then(createUserResult => done(null, createUserResult.data.createUser))
+        //   .catch(err => done(err));
       }
     }).catch((err) => {
       done(err);
