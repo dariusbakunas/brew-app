@@ -12,7 +12,8 @@
       "README_options" : "See the 'Options' section at https://github.com/then/then-request",
       "options" : {
         "headers": {
-          "user-agent" : "JS GraphQL"
+          "user-agent" : "JS GraphQL",
+          "auth-token" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYmFrdW5hc0BnbWFpbC5jb20iLCJpYXQiOjE1NDQyODkxNzR9.-tD-DKy8g-iJeMdze7kvg5P3EoVfVse8wbqJhNlkoWg"
         }
       }
     }
@@ -25,7 +26,8 @@
       "url": "http://localhost:4000/graphql",
       "options" : {
         "headers": {
-          "user-agent" : "JS GraphQL"
+          "user-agent" : "JS GraphQL",
+          "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYmFrdW5hc0BnbWFpbC5jb20iLCJpYXQiOjE1NDQyODkxNzR9.-tD-DKy8g-iJeMdze7kvg5P3EoVfVse8wbqJhNlkoWg"
         }
       }
     }

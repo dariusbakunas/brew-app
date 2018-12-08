@@ -26,3 +26,4 @@ yarn-error.log*
 .idea
 dist
 .env
+graphql.config.json
