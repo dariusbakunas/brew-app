@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withServerContext from '../HOC/withServerContext';
+import { USER_STATUS } from '../../contants';
 
 class Dashboard extends React.Component {
   static propTypes = {
@@ -8,7 +9,7 @@ class Dashboard extends React.Component {
       email: PropTypes.string,
       firstName: PropTypes.string,
       lastName: PropTypes.string,
-      status: PropTypes.oneOf(['NEW', 'ACTIVE']),
+      status: PropTypes.oneOf(Object.values(USER_STATUS)),
     }),
   };
 
