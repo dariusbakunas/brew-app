@@ -5,15 +5,25 @@ import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import { StaticRouter } from 'react-router-dom';
 import App from '../../client/App';
 import getApolloClient from '../apolloClient';
+import { ServerContextProvider } from '../../client/ServerContext';
 
 export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user);
-  const context = {};
+  const apolloClient = getApolloClient(req.user || { guest: true });
+  const serverContext = {
+    user: req.user ? {
+      email: req.user.email,
+      firstName: req.user.firstName,
+      lastName: req.user.lastName,
+      status: req.user.status,
+    } : null,
+  };
 
   const Tree = (
-    <StaticRouter location={req.originalUrl} context={context}>
+    <StaticRouter location={req.originalUrl} context={{}}>
       <ApolloProvider client={apolloClient}>
-        <App/>
+        <ServerContextProvider value={serverContext}>
+          <App/>
+        </ServerContextProvider>
       </ApolloProvider>
     </StaticRouter>
   );
@@ -27,6 +37,7 @@ export default (req, res, next) => {
       html,
       nonce: res.locals.nonce,
       title: 'Brew',
+      serverContext: xss(JSON.stringify(serverContext)),
     });
   }).catch((error) => {
     // TODO: error handling

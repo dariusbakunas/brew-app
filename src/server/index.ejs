@@ -4,12 +4,14 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <link rel="stylesheet" type="text/css" href="./client.css" />
   <title><%= title %></title>
 </head>
 <body>
 <script nonce="<%= nonce %>">
   <% if (apolloState) {%>
-  window.__APOLLO_STATE__ = <%= apolloState %>;
+  window.__APOLLO_STATE__ = <%- apolloState %>;
+  window.__SERVER_CONTEXT__ = <%- serverContext %>;
   <%}%>
 </script>
 <div id='root'><%- html %></div>

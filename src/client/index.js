@@ -6,6 +6,7 @@ import { createHttpLink } from 'apollo-link-http';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter as Router } from 'react-router-dom';
 import 'semantic-ui-less/semantic.less';
+import { ServerContextProvider } from './ServerContext';
 import App from './App';
 import './main.css';
 
@@ -17,7 +18,9 @@ const client = new ApolloClient({
 ReactDOM.hydrate(
   <ApolloProvider client={client}>
     <Router>
-      <App />
+      <ServerContextProvider value={window.__SERVER_CONTEXT__}>
+        <App />
+      </ServerContextProvider>
     </Router>
   </ApolloProvider>,
   document.getElementById('root'),
