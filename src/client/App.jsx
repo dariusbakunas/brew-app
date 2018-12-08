@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Route, withRouter } from 'react-router-dom';
-import Learn from './pages/Learn';
 import Dashboard from './pages/Dashboard';
 import withServerContext from './HOC/withServerContext';
 import Login from './pages/Login';

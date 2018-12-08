@@ -1,0 +1,76 @@
+:root {
+  box-sizing: border-box;
+
+  --color-white: rgb(254, 255, 255);
+  --color-brand-1: rgb(159, 176, 62);
+  --color-brand-2: rgb(114, 145, 139);
+  --color-brand-3: rgb(60, 63, 64);
+}
+
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+@font-face {
+  font-family: LatoRegular;
+  src: url('public/fonts/Lato-Regular.ttf');
+}
+
+@font-face {
+  font-family: LatoLight;
+  src: url('public/fonts/Lato-Light.ttf');
+}
+
+@font-face {
+  font-family: LatoItalic;
+  src: url('public/fonts/Lato-LightItalic.ttf');
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-white);
+  margin: 0
+}
+
+.login-container {
+  height: 100%;
+}
+
+.signup-container {
+  height: 100%;
+}
+
+.signup-form > h2 {
+  font-size: 100px;
+}
+
+.power-btn {
+  width: 4em;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-quote {
+  width: 20em;
+}
+
+blockquote {
+  color: var(--color-brand-2);
+}
+
+blockquote > footer {
+  text-align: right;
+}
+
+.power-btn  circle, path, line {
+  fill: none;
+  stroke: var(--color-brand-1);
+  stroke-width: 3px;
+}
