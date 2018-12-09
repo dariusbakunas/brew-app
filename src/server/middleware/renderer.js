@@ -6,10 +6,9 @@ import { StaticRouter } from 'react-router-dom';
 import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
-import { USER_STATUS } from '../../contants';
 
 export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user || { status: USER_STATUS.GUEST });
+  const apolloClient = getApolloClient(req.user || {});
   const serverContext = {
     user: req.user ? {
       email: req.user.email,

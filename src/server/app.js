@@ -35,7 +35,7 @@ const apiProxyConfig = {
   target: process.env.BREW_API_HOST,
   changeOrigin: true,
   onProxyReq: (proxyReq, req, res, options) => {
-    const token = jwt.sign({ user: req.user ? req.user : { status: USER_STATUS.GUEST } }, process.env.JWT_SECRET);
+    const token = jwt.sign({ user: req.user || {} }, process.env.JWT_SECRET);
     proxyReq.setHeader('auth-token', token);
     proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
   },

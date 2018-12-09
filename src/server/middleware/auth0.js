@@ -40,6 +40,7 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
     username: profile.user_id,
+    initialAuth: true,
   };
 
   const apolloClient = getApolloClient(requestUser);
