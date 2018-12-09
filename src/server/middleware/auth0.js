@@ -23,24 +23,6 @@ const getUserByEmail = (apolloClient, email) => apolloClient
     },
   });
 
-const createUser = (apolloClient, user) => apolloClient.mutate({
-  mutation: gql`
-      mutation CreateUser($input: UserInput!) {
-        createUser(input: $input) {
-          id
-          email
-          username
-          firstName
-          lastName
-          status
-        }
-      }
-    `,
-  variables: {
-    input: user,
-  },
-});
-
 passport.serializeUser((user, done) => {
   done(null, user);
 });
@@ -73,10 +55,6 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
         };
 
         done(null, newUser);
-
-        // createUser(apolloClient, newUser)
-        //   .then(createUserResult => done(null, createUserResult.data.createUser))
-        //   .catch(err => done(err));
       }
     }).catch((err) => {
       done(err);

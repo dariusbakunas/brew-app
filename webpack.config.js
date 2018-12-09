@@ -16,15 +16,18 @@ module.exports = (env, argv) => {
   ];
 
   const serverPlugins = [
-    new webpack.BannerPlugin({
-      banner: 'require("source-map-support").install();',
-      raw: true,
-      entryOnly: false,
-    }),
     new CopyWebpackPlugin([
       { from: 'src/server/index.ejs', to: 'index.ejs' },
     ]),
   ];
+
+  if (dev) {
+    serverPlugins.push(new webpack.BannerPlugin({
+      banner: 'require("source-map-support").install();',
+      raw: true,
+      entryOnly: false,
+    }));
+  }
 
   const clientConfig = {
     name: 'clientConfig',
