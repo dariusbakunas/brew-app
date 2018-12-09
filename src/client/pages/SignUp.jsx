@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Form, Grid, Header, Segment, Message,
+  Button, Form, Grid, Segment, Message,
 } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
 
@@ -20,6 +20,9 @@ const REGISTER = gql`
 
 class SignUp extends React.Component {
   static propTypes = {
+    history: PropTypes.shape({
+      push: PropTypes.func,
+    }).isRequired,
     user: PropTypes.shape({
       email: PropTypes.string.isRequired,
       firstName: PropTypes.string,
@@ -42,10 +45,10 @@ class SignUp extends React.Component {
     };
   }
 
-  onInputChange = (key, e) => {
-    this.setState(({
-      [key]: e.target.value,
-    }));
+  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+
+  handleSuccess = () => {
+    window.location.href = '/auth';
   };
 
   parseErrorMessage = (error) => {
@@ -84,58 +87,83 @@ class SignUp extends React.Component {
       <div className='signup-container'>
         <Grid centered style={{ height: '100%' }} verticalAlign='middle'>
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Mutation mutation={REGISTER}>
+            <Mutation mutation={REGISTER} onCompleted={this.handleSuccess}>
               {
                 (register, { data, loading, error }) => {
                   const parsedError = error ? this.parseErrorMessage(error) : null;
 
                   return (
-                    <Form size='large' className='signup-form' loading={loading} error={!!error} onSubmit={(e) => {
-                      e.preventDefault();
+                    <Segment raised>
+                      <Message
+                        header='Welcome!'
+                        content='Fill out the form below to sign-up for a new account'
+                      />
+                      <Form className='fluid signup-form' loading={loading} error={!!error} success={!!data} onSubmit={(e) => {
+                        e.preventDefault();
 
-                      const {
-                        username, email, firstName, lastName, code,
-                      } = this.state;
+                        const {
+                          username, email, firstName, lastName, code,
+                        } = this.state;
 
-                      register({
-                        variables: {
-                          input: {
-                            username,
-                            email,
-                            firstName,
-                            lastName,
-                            code,
+                        register({
+                          variables: {
+                            input: {
+                              username,
+                              email,
+                              firstName,
+                              lastName,
+                              code,
+                            },
                           },
-                        },
-                      });
-                    }}>
-                      <Segment raised>
-                        <Header as='h2' textAlign='center'>
-                          REGISTER
-                        </Header>
+                        });
+                      }}>
                         <Form.Input
                           fluid
                           error={ parsedError ? !!parsedError.fields.username : null }
                           icon='user'
                           iconPosition='left'
+                          name='username'
                           placeholder='Username'
                           required
                           value={this.state.username}
-                          onChange={this.onInputChange.bind(this, 'username')}
+                          onChange={this.handleChange}
                         />
                         <Form.Input
                           fluid icon='at'
                           error={ parsedError ? !!parsedError.fields.email : null }
                           iconPosition='left'
+                          name='email'
                           placeholder='E-mail address'
                           value={this.state.email}
                           readOnly
                           disabled
-                          onChange={this.onInputChange.bind(this, 'email')}
+                          onChange={this.handleChange}
                         />
-                        <Form.Input fluid placeholder='First Name' value={this.state.firstName} onChange={this.onInputChange.bind(this, 'firstName')}/>
-                        <Form.Input fluid placeholder='Last Name' value={this.state.lastName} onChange={this.onInputChange.bind(this, 'lastName')}/>
-                        <Form.Input fluid placeholder='Invitation Code' value={this.state.code} onChange={this.onInputChange.bind(this, 'code')}/>
+                        <Form.Input
+                          fluid
+                          name='firstName'
+                          placeholder='First Name'
+                          value={this.state.firstName}
+                          onChange={this.handleChange}
+                        />
+                        <Form.Input
+                          fluid
+                          name='lastName'
+                          placeholder='Last Name'
+                          value={this.state.lastName}
+                          onChange={this.handleChange}/>
+                        <Form.Input
+                          fluid
+                          error={ parsedError ? !!parsedError.fields.code : null }
+                          name='code'
+                          placeholder='Invitation Code'
+                          value={this.state.code}
+                          required
+                          onChange={this.handleChange}/>
+                        <Message
+                          success
+                          header='Registration Successful'
+                          content='Redirecting to Dashboard' />
                         {
                           parsedError &&
                           <Message
@@ -145,11 +173,21 @@ class SignUp extends React.Component {
                             list={Object.keys(parsedError.fields).map(key => parsedError.fields[key])}
                           />
                         }
-                        <Button fluid size='large'>
-                          Submit
-                        </Button>
-                      </Segment>
-                    </Form>
+                        <Form.Field>
+                          <Button fluid size='large' primary type='submit'>
+                            Submit
+                          </Button>
+                        </Form.Field>
+                        <Form.Field>
+                          <Button fluid size='large' onClick={(e) => {
+                            e.preventDefault();
+                            this.props.history.push('/login');
+                          }}>
+                            Cancel
+                          </Button>
+                        </Form.Field>
+                      </Form>
+                    </Segment>
                   );
                 }
               }
@@ -161,4 +199,4 @@ class SignUp extends React.Component {
   }
 }
 
-export default withServerContext(SignUp);
+export default withRouter(withServerContext(SignUp));
