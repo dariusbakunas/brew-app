@@ -24,10 +24,10 @@ router.get('/callback', (req, res, next) => {
   })(req, res, next);
 });
 
-// Perform session logout and redirect to homepage
+// Perform session logout and redirect to login page
 router.get('/logout', (req, res) => {
   req.logout();
-  res.redirect('/');
+  res.redirect('/login');
 });
 
 export default router;

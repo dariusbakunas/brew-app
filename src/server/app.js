@@ -12,9 +12,14 @@ import serverRenderer from './middleware/renderer';
 import authRoutes from './routes/auth';
 import secured from './middleware/secured';
 import auth0Strategy from './middleware/auth0';
+import authApiToken from './middleware/authApiToken';
 import { USER_STATUS } from '../contants';
 
 if (!process.env.SESSION_SECRET) throw new Error('`env.SESSION_SECRET` is required for sessions');
+
+if (!process.env.AUTH0_CLIENT_ID || !process.env.AUTH0_CLIENT_SECRET || !process.env.AUTH0_DOMAIN) {
+  throw new Error('Make sure all AUTH0 environment variables are specified');
+}
 
 const app = express();
 
@@ -32,6 +37,7 @@ const apiProxyConfig = {
   onProxyReq: (proxyReq, req, res, options) => {
     const token = jwt.sign({ user: req.user ? req.user : { status: USER_STATUS.GUEST } }, process.env.JWT_SECRET);
     proxyReq.setHeader('auth-token', token);
+    proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
   },
 };
 
@@ -72,6 +78,7 @@ const router = express.Router();
 router.use('/', authRoutes);
 router.use('/login', serverRenderer);
 
+router.use('/api', authApiToken);
 router.use('/api', proxy(apiProxyConfig));
 
 app.use(express.static(path.resolve(__dirname, '.')));
