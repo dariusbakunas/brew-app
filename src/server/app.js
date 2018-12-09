@@ -61,6 +61,11 @@ const sessionConfig = {
   saveUninitialized: true,
 };
 
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1); // trust first proxy
+  sessionConfig.cookie.secure = true; // serve secure cookies
+}
+
 app.use(helmet(helmetConfig));
 
 if (app.get('env') === 'production') {
