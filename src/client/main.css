@@ -13,21 +13,6 @@
   box-sizing: inherit;
 }
 
-@font-face {
-  font-family: LatoRegular;
-  src: url('public/fonts/Lato-Regular.ttf');
-}
-
-@font-face {
-  font-family: LatoLight;
-  src: url('public/fonts/Lato-Light.ttf');
-}
-
-@font-face {
-  font-family: LatoItalic;
-  src: url('public/fonts/Lato-LightItalic.ttf');
-}
-
 html,
 body,
 #root {
@@ -63,6 +48,7 @@ body {
 
 blockquote {
   color: var(--color-brand-2);
+  text-align: left;
 }
 
 blockquote > footer {
