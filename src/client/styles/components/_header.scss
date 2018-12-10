@@ -1,0 +1,51 @@
+$h1 : (28 / 14) + rem;
+$h2 : (24 / 14) + rem;
+$h3 : (18 / 14) + rem;
+$h4 : (15 / 14) + rem;
+$h5 : (14 / 14) + rem;
+
+.header {
+  border: none;
+  padding: 0 0;
+  font-family: $header_font;
+  font-weight: $header_font_weight;
+  line-height: $header_line_height;
+  text-transform: none;
+  color: $text_color;
+}
+
+h1.header {
+  font-size: $h1;
+}
+h2.header {
+  font-size: $h2;
+}
+h3.header {
+  font-size: $h3;
+}
+h4.header {
+  font-size: $h4;
+}
+h5.header {
+  font-size: $h5;
+}
+
+.left.aligned.header {
+  text-align: left;
+}
+.right.aligned.header {
+  text-align: right;
+}
+.centered.header,
+.center.aligned.header {
+  text-align: center;
+}
+.justified.header {
+  text-align: justify;
+}
+.justified.header:after {
+  display: inline-block;
+  content: '';
+  width: 100%;
+}
+

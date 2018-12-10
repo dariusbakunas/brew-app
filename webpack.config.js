@@ -44,11 +44,11 @@ module.exports = (env, argv) => {
         },
         // need to bundle css separately to avoid un-styled server side pages
         {
-          test: /\.(css|less)$/,
+          test: /\.(css|scss)$/,
           use: [
             MiniCssExtractPlugin.loader,
             'css-loader',
-            'less-loader',
+            'sass-loader',
             'postcss-loader',
           ],
         },
@@ -81,9 +81,6 @@ module.exports = (env, argv) => {
     },
     resolve: {
       extensions: ['.js', '.jsx'],
-      alias: {
-        '../../theme.config$': path.join(__dirname, 'semantic-theme/theme.config'),
-      },
     },
     plugins: clientPlugins,
   };

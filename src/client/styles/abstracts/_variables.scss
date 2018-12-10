@@ -1,0 +1,61 @@
+$white: rgb(254, 255, 255);
+
+$brand1: rgb(159, 176, 62);
+$brand2: rgb(114, 145, 139);
+$brand3: rgb(60, 63, 64);
+
+$min_width: 320px;
+$max_width: 1200px;
+$min_font: 16px;
+$max_font: 24px;
+
+$font_family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+$font-weight: 300;
+
+$text_color: $brand3;
+
+$header_font: $font_family;
+$header_font_weight: bold;
+$header_line_height: (18 / 14) + 0em;
+$header_line_height_offset: ($header_line_height - 1em) / 2;
+
+// Grid
+$columnCount: 16;
+
+$oneWide        : (1 / $columnCount * 100%);
+$twoWide        : (2 / $columnCount * 100%);
+$threeWide      : (3 / $columnCount * 100%);
+$fourWide       : (4 / $columnCount * 100%);
+$fiveWide       : (5 / $columnCount * 100%);
+$sixWide        : (6 / $columnCount * 100%);
+$sevenWide      : (7 / $columnCount * 100%);
+$eightWide      : (8 / $columnCount * 100%);
+$nineWide       : (9 / $columnCount * 100%);
+$tenWide        : (10 / $columnCount * 100%);
+$elevenWide     : (11 / $columnCount * 100%);
+$twelveWide     : (12 / $columnCount * 100%);
+$thirteenWide   : (13 / $columnCount * 100%);
+$fourteenWide   : (14 / $columnCount * 100%);
+$fifteenWide    : (15 / $columnCount * 100%);
+$sixteenWide    : (16 / $columnCount * 100%);
+
+$oneColumn      : (1 / 1 * 100%);
+$twoColumn      : (1 / 2 * 100%);
+$threeColumn    : (1 / 3 * 100%);
+$fourColumn     : (1 / 4 * 100%);
+$fiveColumn     : (1 / 5 * 100%);
+$sixColumn      : (1 / 6 * 100%);
+$sevenColumn    : (1 / 7 * 100%);
+$eightColumn    : (1 / 8 * 100%);
+$nineColumn     : (1 / 9 * 100%);
+$tenColumn      : (1 / 10 * 100%);
+$elevenColumn   : (1 / 11 * 100%);
+$twelveColumn   : (1 / 12 * 100%);
+$thirteenColumn : (1 / 13 * 100%);
+$fourteenColumn : (1 / 14 * 100%);
+$fifteenColumn  : (1 / 15 * 100%);
+$sixteenColumn  : (1 / 16 * 100%);
+
+$gutterWidth: 2rem;
+$rowSpacing: 2rem;
+$consecutiveGridDistance: ($rowSpacing / 2);

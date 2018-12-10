@@ -1,0 +1,15 @@
+.power-btn {
+  width: 4em;
+  margin-left: auto;
+  margin-right: auto;
+
+  circle, path, line {
+    fill: none;
+    stroke: $brand1;
+    stroke-width: 3px;
+  }
+}
+
+blockquote > footer {
+  text-align: right;
+}

@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400');
+
+:root {
+  box-sizing: border-box;
+  @include fluid-type($min_width, $max_width, $min_font, $max_font);
+}
+
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  font-family: $font_family;
+  font-weight: $font-weight;
+  color: $text_color;
+  background-color: $white;
+}

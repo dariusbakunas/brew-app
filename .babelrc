@@ -11,6 +11,8 @@
       {
         "loose": true
       }
-    ]
+    ],
+    "@babel/plugin-syntax-export-default-from",
+    "transform-react-handled-props",
   ]
 }

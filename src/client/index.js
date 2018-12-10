@@ -6,10 +6,9 @@ import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter as Router } from 'react-router-dom';
-import 'semantic-ui-less/semantic.less';
 import { ServerContextProvider } from './ServerContext';
 import App from './App';
-import './main.css';
+import './styles/main.scss';
 
 const errLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
