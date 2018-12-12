@@ -69,6 +69,10 @@ class SignUp extends React.Component {
       graphQLErrors.forEach((err) => {
         const { extensions } = err;
 
+        if (extensions.code === 'INTERNAL_SERVER_ERROR') {
+          throw new ServerError(err.message);
+        }
+
         errorMessages.push(err.message);
 
         if (extensions.code === 'BAD_USER_INPUT') {
