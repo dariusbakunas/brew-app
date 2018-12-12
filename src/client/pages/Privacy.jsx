@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Container from '../components/Container';
 
-function Privacy(props) {
+function Privacy() {
   return (
     <div className='uk-section'>
       <Container>

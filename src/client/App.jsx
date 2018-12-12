@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp';
 import { USER_STATUS } from '../contants';
 import ErrorBoundary from './errors/errorBoundary';
 import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 
 class App extends React.Component {
   static propTypes = {
@@ -42,6 +43,7 @@ class App extends React.Component {
         <Route path='/login' component={Login}/>
         <Route path='/register' component={SignUp}/>
         <Route path='/privacy' component={Privacy}/>
+        <Route path='/terms' component={Terms}/>
       </ErrorBoundary>
     );
   }
