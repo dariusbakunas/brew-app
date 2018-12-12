@@ -118,7 +118,7 @@ class SignUp extends React.Component {
 
             return (
               <React.Fragment>
-                <div className='uk-flex uk-flex-middle uk-flex-center' style={{ height: '100%' }}>
+                <div className='uk-flex uk-flex-middle uk-flex-center' style={{ minHeight: '100%' }}>
                   <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
                     <Form loading={loading} onSubmit={(e) => {
@@ -139,32 +139,34 @@ class SignUp extends React.Component {
                       <Form.Fieldset>
                         <Form.Input
                           error={ error ? error.validationErrors.username : null }
+                          label='USERNAME'
                           name='username'
                           onChange={this.handleChange}
-                          placeholder='Username'
                           required
                           value={username}/>
                         <Form.Input
                           error={ error ? error.validationErrors.email : null }
+                          label='EMAIL'
                           name='email'
                           onChange={this.handleChange}
-                          placeholder='Email'
                           required
                           disabled
                           value={email}/>
                         <Form.Input
+                          label='FIRST NAME'
                           name='firstName'
                           onChange={this.handleChange}
                           value={firstName}/>
                         <Form.Input
+                          label='LAST NAME'
                           name='lastName'
                           onChange={this.handleChange}
                           value={lastName}/>
                         <Form.Input
+                          label='INVITATION CODE'
                           error={ error ? error.validationErrors.code : null }
                           name='code'
                           onChange={this.handleChange}
-                          placeholder={'Invitation Code'}
                           required
                           value={code}/>
                       </Form.Fieldset>
