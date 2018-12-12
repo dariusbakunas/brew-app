@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400');
 
-:root {
-  box-sizing: border-box;
-  @include fluid-type($min_width, $max_width, $min_font, $max_font);
-}
-
 *,
 ::before,
 ::after {
