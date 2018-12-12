@@ -5,5 +5,5 @@ export const USER_STATUS = {
   NEW: 'NEW',
 };
 
-export const TEXT_ALIGNMENTS = ['left', 'center', 'right', 'justified'];
+export const TEXT_ALIGNMENTS = ['left', 'center', 'right', 'justify'];
 export const VERTICAL_ALIGNMENTS = ['bottom', 'middle', 'top'];

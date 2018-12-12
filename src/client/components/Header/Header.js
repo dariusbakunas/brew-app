@@ -7,8 +7,7 @@ function Header(props) {
   const { as: Element, children, textAlign } = props;
 
   const classes = classNames(
-    { [textAlign === 'justified' ? 'justified' : `${textAlign} aligned`]: textAlign },
-    'header',
+    { [`uk-text-${textAlign}`]: textAlign },
   );
 
   return (
@@ -17,8 +16,8 @@ function Header(props) {
 }
 
 Header.propTypes = {
-  as: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).isRequired,
-  textAlign: PropTypes.oneOf([TEXT_ALIGNMENTS]),
+  as: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5']).isRequired,
+  textAlign: PropTypes.oneOf(TEXT_ALIGNMENTS),
   children: PropTypes.node,
 };
 
