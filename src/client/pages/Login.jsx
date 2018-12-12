@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import Header from '../components/Header';
-import Container from '../components/container';
+import Container from '../components/Container';
 
 const GET_LOGIN_QUOTE = gql`
   query GetRandomQuote {
