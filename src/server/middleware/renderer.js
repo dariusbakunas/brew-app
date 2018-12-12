@@ -6,7 +6,7 @@ import { StaticRouter } from 'react-router-dom';
 import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
-import ErrorBoundary from '../../client/errors/errorBoundary';
+import ErrorBoundary from '../../client/errors/ErrorBoundary';
 
 export default (req, res, next) => {
   const apolloClient = getApolloClient(req.user || {});
