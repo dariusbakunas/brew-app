@@ -26,7 +26,7 @@ class Login extends React.Component {
             }
 
             return (
-              <div className='uk-flex uk-flex-middle' style={{ minHeight: '100%' }}>
+              <div className='login-container'>
                 <Container size='small'>
                   <Header as='h1' textAlign='center'>BREW BEER</Header>
                   <div className='power-btn'>

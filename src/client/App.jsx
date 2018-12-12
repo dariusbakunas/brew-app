@@ -6,7 +6,7 @@ import withServerContext from './HOC/withServerContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import { USER_STATUS } from '../contants';
-import ErrorBoundary from './errors/errorBoundary';
+import ErrorBoundary from './errors/ErrorBoundary';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Footer from './components/Footer';
@@ -39,14 +39,16 @@ class App extends React.Component {
     // }
 
     return (
-      <ErrorBoundary>
-        <Route path='/' exact component={Dashboard}/>
-        <Route path='/login' component={Login}/>
-        <Route path='/register' component={SignUp}/>
-        <Route path='/privacy' component={Privacy}/>
-        <Route path='/terms' component={Terms}/>
-        <Footer/>
-      </ErrorBoundary>
+      <div className='main-container'>
+        <ErrorBoundary>
+          <Route path='/' exact component={Dashboard}/>
+          <Route path='/login' component={Login}/>
+          <Route path='/register' component={SignUp}/>
+          <Route path='/privacy' component={Privacy}/>
+          <Route path='/terms' component={Terms}/>
+          <Footer/>
+        </ErrorBoundary>
+      </div>
     );
   }
 }

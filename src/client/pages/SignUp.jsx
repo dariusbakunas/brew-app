@@ -118,7 +118,7 @@ class SignUp extends React.Component {
 
             return (
               <React.Fragment>
-                <div className='uk-flex uk-flex-middle uk-flex-center' style={{ minHeight: '100%' }}>
+                <div className='signup-container'>
                   <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
                     <Form loading={loading} onSubmit={(e) => {

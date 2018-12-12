@@ -12,3 +12,17 @@ body {
   color: $text_color;
   background-color: $white;
 }
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.error-boundary {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

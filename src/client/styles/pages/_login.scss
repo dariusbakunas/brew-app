@@ -9,3 +9,7 @@
     stroke-width: 3px;
   }
 }
+
+.login-container {
+  @include middle-page(552px);
+}
