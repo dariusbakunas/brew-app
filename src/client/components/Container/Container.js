@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 function Container(props) {
-  const { children, size } = props;
+  const { children, className, size } = props;
 
   const classes = classNames(
     'uk-container',
     { [`uk-container-${size}`]: size },
+    className,
   );
 
   return (
@@ -19,6 +20,7 @@ function Container(props) {
 
 Container.propTypes = {
   children: PropTypes.node,
+  className: PropTypes.string,
   size: PropTypes.oneOf(['xsmall', 'small', 'large', 'expand']),
 };
 

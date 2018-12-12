@@ -9,6 +9,7 @@ import { USER_STATUS } from '../../contants';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import Header from '../components/Header';
+import Container from '../components/Container';
 import { ServerError, AuthorizationError } from '../errors/errors';
 
 const REGISTER = gql`
@@ -118,7 +119,7 @@ class SignUp extends React.Component {
             return (
               <React.Fragment>
                 <div className='uk-flex uk-flex-middle uk-flex-center' style={{ height: '100%' }}>
-                  <Card className='uk-width-large'>
+                  <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
                     <Form loading={loading} onSubmit={(e) => {
                       e.preventDefault();
@@ -169,7 +170,7 @@ class SignUp extends React.Component {
                       </Form.Fieldset>
                       <Button className='uk-width-1-1' variation='primary'>Submit</Button>
                     </Form>
-                  </Card>
+                  </Container>
                 </div>
               </React.Fragment>
             );
