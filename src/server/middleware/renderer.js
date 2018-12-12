@@ -6,6 +6,7 @@ import { StaticRouter } from 'react-router-dom';
 import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
+import ErrorBoundary from '../../client/errors/errorBoundary';
 
 export default (req, res, next) => {
   const apolloClient = getApolloClient(req.user || {});
@@ -41,7 +42,21 @@ export default (req, res, next) => {
     });
   }).catch((error) => {
     // TODO: error handling
-    console.error(error);
-    res.send('Error');
+    serverContext.error = 'Unknown error occurred, please try again';
+
+    const html = ReactDOMServer.renderToString(
+      <StaticRouter location={req.originalUrl} context={{}}>
+        <ServerContextProvider value={serverContext}>
+          <App/>
+        </ServerContextProvider>
+      </StaticRouter>
+    );
+
+    res.render('index', {
+      html,
+      nonce: res.locals.nonce,
+      serverContext: xss(JSON.stringify(serverContext)),
+      title: 'Brew',
+    });
   });
 };

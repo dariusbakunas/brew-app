@@ -17,12 +17,16 @@ UIkit.use(Icons);
 
 const errLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => console.log(
-      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-    ));
+    graphQLErrors.forEach((err) => {
+      const { message, locations, path } = err;
+
+      console.error(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+      );
+    });
   }
 
-  if (networkError) console.log(`[Network error]: ${networkError}`);
+  if (networkError) console.error(`[Network error]: ${networkError}`);
 });
 
 const client = new ApolloClient({

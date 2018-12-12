@@ -6,6 +6,7 @@ import withServerContext from './HOC/withServerContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import { USER_STATUS } from '../contants';
+import ErrorBoundary from './errors/errorBoundary';
 
 class App extends React.Component {
   static propTypes = {
@@ -35,11 +36,11 @@ class App extends React.Component {
     // }
 
     return (
-      <React.Fragment>
+      <ErrorBoundary>
         <Route path='/' exact component={Dashboard}/>
         <Route path='/login' component={Login}/>
         <Route path='/register' component={SignUp}/>
-      </React.Fragment>
+      </ErrorBoundary>
     );
   }
 }

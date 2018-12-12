@@ -70,6 +70,10 @@ module.exports = (env, argv) => {
           test: /\.otf(\?.*)?$/,
           use: 'file-loader?name=/fonts/[name].  [ext]&mimetype=application/font-otf',
         },
+        {
+          test: require.resolve('uikit'),
+          loader: 'expose-loader?UIkit',
+        },
       ],
     },
     stats: {
@@ -92,7 +96,9 @@ module.exports = (env, argv) => {
     entry: {
       server: './src/server/bin/www.js',
     },
-    externals: [nodeExternals()],
+    externals: [
+      nodeExternals(),
+    ],
     target: 'node',
     module: {
       rules: [

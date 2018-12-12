@@ -39,6 +39,13 @@ const apiProxyConfig = {
     proxyReq.setHeader('auth-token', token);
     proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
   },
+  onError: (err, req, res) => {
+    res.writeHead(500, {
+      'Content-Type': 'application/json',
+    });
+
+    res.end(JSON.stringify({ message: err.message }));
+  },
 };
 
 const helmetConfig = {

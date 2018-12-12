@@ -15,6 +15,10 @@ function Header(props) {
   );
 }
 
+Header.defaultProps = {
+  as: 'h1',
+};
+
 Header.propTypes = {
   as: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5']).isRequired,
   textAlign: PropTypes.oneOf(TEXT_ALIGNMENTS),

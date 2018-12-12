@@ -26,13 +26,17 @@ class Input extends React.Component {
     return (
       <div className="uk-margin uk-form-controls">
         <input className={classes} name={name} {...rest} onChange={this.handleChange}/>
+        {
+          error &&
+          <span className='uk-text-danger'>{error}</span>
+        }
       </div>
     );
   }
 }
 
 Input.propTypes = {
-  error: PropTypes.bool,
+  error: PropTypes.string,
   name: PropTypes.string,
   onChange: PropTypes.func,
   width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
