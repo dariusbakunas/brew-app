@@ -3,14 +3,14 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import getUnhandledProps from '../../utils/getUnhandledProps';
 
-function GridColumn(props) {
+function Column(props) {
   const { children } = props;
 
   const classes = classNames(
     'column',
   );
 
-  const rest = getUnhandledProps(GridColumn, props);
+  const rest = getUnhandledProps(Column, props);
 
   return (
     <div className={classes} {...rest}>
@@ -19,8 +19,8 @@ function GridColumn(props) {
   );
 }
 
-GridColumn.propTypes = {
+Column.propTypes = {
   children: PropTypes.node,
 };
 
-export default GridColumn;
+export default Column;
