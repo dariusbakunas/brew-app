@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button, Form, Grid, Segment, Message,
-} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Redirect, withRouter } from 'react-router-dom';
+import Form from '../components/Form';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
+import Card from '../components/Card';
+import Button from '../components/Button';
+import Header from '../components/Header';
+import { ServerError, AuthorizationError } from '../errors/errors';
 
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {
@@ -39,6 +41,7 @@ class SignUp extends React.Component {
     this.state = {
       code: '',
       email,
+      error: null,
       firstName,
       lastName,
       username: '',
@@ -51,29 +54,50 @@ class SignUp extends React.Component {
     window.location.href = '/auth';
   };
 
-  parseErrorMessage = (error) => {
+  handleError = (error) => {
     const { graphQLErrors, networkError } = error;
 
-    const unknownError = {
-      header: 'Unknown Error',
-      message: 'Unkown error occurred, please try again.',
-      fields: {},
-    };
-
     if (networkError) {
-      return unknownError;
+      throw new ServerError(networkError);
     }
 
-    if (graphQLErrors.length && graphQLErrors[0].extensions && graphQLErrors[0].extensions.code === 'BAD_USER_INPUT') {
-      const { exception } = graphQLErrors[0].extensions;
+    let validationErrors = {};
+    const errorMessages = [];
 
-      return {
-        header: graphQLErrors[0].message,
-        fields: exception.fields,
-      };
+    if (graphQLErrors) {
+      graphQLErrors.forEach((err) => {
+        const { extensions } = err;
+
+        errorMessages.push(err.message);
+
+        if (extensions.code === 'BAD_USER_INPUT') {
+          // merge validation errors for now
+          validationErrors = {
+            ...validationErrors,
+            ...extensions.exception.validationErrors,
+          };
+        }
+      });
     }
 
-    return unknownError;
+    if (errorMessages.length) {
+      errorMessages.forEach((message) => {
+        window.UIkit.notification({
+          message,
+          status: 'danger',
+          pos: 'top-center',
+          timeout: 5000,
+        });
+      });
+    }
+
+    if (Object.keys(validationErrors).length) {
+      this.setState({
+        error: {
+          validationErrors,
+        },
+      });
+    }
   };
 
   render() {
@@ -84,117 +108,74 @@ class SignUp extends React.Component {
     }
 
     return (
-      <div className='signup-container'>
-        <Grid centered style={{ height: '100%' }} verticalAlign='middle'>
-          <Grid.Column style={{ maxWidth: 450 }}>
-            <Mutation mutation={REGISTER} onCompleted={this.handleSuccess}>
-              {
-                (register, { data, loading, error }) => {
-                  const parsedError = error ? this.parseErrorMessage(error) : null;
+      <Mutation mutation={REGISTER} onCompleted={this.handleSuccess} onError={this.handleError}>
+        {
+          (register, { data, loading }) => {
+            const {
+              username, error, email, firstName, lastName, code,
+            } = this.state;
 
-                  return (
-                    <Segment raised>
-                      <Message
-                        header='Welcome!'
-                        content='Fill out the form below to sign-up for a new account'
-                      />
-                      <Form className='fluid signup-form' loading={loading} error={!!error} success={!!data} onSubmit={(e) => {
-                        e.preventDefault();
+            return (
+              <React.Fragment>
+                <div className='uk-flex uk-flex-middle uk-flex-center' style={{ height: '100%' }}>
+                  <Card className='uk-width-large'>
+                    <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
+                    <Form loading={loading} onSubmit={(e) => {
+                      e.preventDefault();
 
-                        const {
-                          username, email, firstName, lastName, code,
-                        } = this.state;
-
-                        register({
-                          variables: {
-                            input: {
-                              username,
-                              email,
-                              firstName,
-                              lastName,
-                              code,
-                            },
+                      register({
+                        variables: {
+                          input: {
+                            username,
+                            email,
+                            firstName,
+                            lastName,
+                            code,
                           },
-                        });
-                      }}>
+                        },
+                      });
+                    }}>
+                      <Form.Fieldset>
                         <Form.Input
-                          fluid
-                          error={ parsedError ? !!parsedError.fields.username : null }
-                          icon='user'
-                          iconPosition='left'
+                          error={ error ? error.validationErrors.username : null }
                           name='username'
+                          onChange={this.handleChange}
                           placeholder='Username'
                           required
-                          value={this.state.username}
-                          onChange={this.handleChange}
-                        />
+                          value={username}/>
                         <Form.Input
-                          fluid icon='at'
-                          error={ parsedError ? !!parsedError.fields.email : null }
-                          iconPosition='left'
+                          error={ error ? error.validationErrors.email : null }
                           name='email'
-                          placeholder='E-mail address'
-                          value={this.state.email}
-                          readOnly
-                          disabled
                           onChange={this.handleChange}
-                        />
-                        <Form.Input
-                          fluid
-                          name='firstName'
-                          placeholder='First Name'
-                          value={this.state.firstName}
-                          onChange={this.handleChange}
-                        />
-                        <Form.Input
-                          fluid
-                          name='lastName'
-                          placeholder='Last Name'
-                          value={this.state.lastName}
-                          onChange={this.handleChange}/>
-                        <Form.Input
-                          fluid
-                          error={ parsedError ? !!parsedError.fields.code : null }
-                          name='code'
-                          placeholder='Invitation Code'
-                          value={this.state.code}
+                          placeholder='Email'
                           required
-                          onChange={this.handleChange}/>
-                        <Message
-                          success
-                          header='Registration Successful'
-                          content='Redirecting to Dashboard' />
-                        {
-                          parsedError &&
-                          <Message
-                            error
-                            header={parsedError.header}
-                            content={parsedError.message}
-                            list={Object.keys(parsedError.fields).map(key => parsedError.fields[key])}
-                          />
-                        }
-                        <Form.Field>
-                          <Button fluid size='large' primary type='submit'>
-                            Submit
-                          </Button>
-                        </Form.Field>
-                        <Form.Field>
-                          <Button fluid size='large' onClick={(e) => {
-                            e.preventDefault();
-                            this.props.history.push('/login');
-                          }}>
-                            Cancel
-                          </Button>
-                        </Form.Field>
-                      </Form>
-                    </Segment>
-                  );
-                }
-              }
-            </Mutation>
-          </Grid.Column>
-        </Grid>
-      </div>
+                          disabled
+                          value={email}/>
+                        <Form.Input
+                          name='firstName'
+                          onChange={this.handleChange}
+                          value={firstName}/>
+                        <Form.Input
+                          name='lastName'
+                          onChange={this.handleChange}
+                          value={lastName}/>
+                        <Form.Input
+                          error={ error ? error.validationErrors.code : null }
+                          name='code'
+                          onChange={this.handleChange}
+                          placeholder={'Invitation Code'}
+                          required
+                          value={code}/>
+                      </Form.Fieldset>
+                      <Button className='uk-width-1-1' variation='primary'>Submit</Button>
+                    </Form>
+                  </Card>
+                </div>
+              </React.Fragment>
+            );
+          }
+        }
+      </Mutation>
     );
   }
 }
