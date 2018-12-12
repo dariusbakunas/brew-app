@@ -3,19 +3,15 @@ $brand1: rgb(159, 176, 62);
 $brand2: rgb(114, 145, 139);
 $brand3: rgb(60, 63, 64);
 
-$borderColor: rgba(0, 0, 0, 0.13);
-$solidBorderColor: #DDDDDD;
-$whiteBorderColor: $white;
-
 $font_family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 $font-weight: 300;
-
 $text_color: $brand3;
 
-
 // UIkit modifications
+$global-background: $white;
 $card-default-background: $global-background;
 $card-hover-background: $global-background;
 $base-code-background: $global-background;
 $button-default-background: $global-background;
 $form-background: $global-background;
+$global-primary-background: $brand1;
