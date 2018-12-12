@@ -9,6 +9,7 @@ import { USER_STATUS } from '../contants';
 import ErrorBoundary from './errors/errorBoundary';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import Footer from './components/Footer';
 
 class App extends React.Component {
   static propTypes = {
@@ -44,6 +45,7 @@ class App extends React.Component {
         <Route path='/register' component={SignUp}/>
         <Route path='/privacy' component={Privacy}/>
         <Route path='/terms' component={Terms}/>
+        <Footer/>
       </ErrorBoundary>
     );
   }
