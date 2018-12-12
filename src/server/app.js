@@ -13,7 +13,6 @@ import authRoutes from './routes/auth';
 import secured from './middleware/secured';
 import auth0Strategy from './middleware/auth0';
 import authApiToken from './middleware/authApiToken';
-import { USER_STATUS } from '../contants';
 
 if (!process.env.SESSION_SECRET) throw new Error('`env.SESSION_SECRET` is required for sessions');
 
@@ -22,6 +21,15 @@ if (!process.env.AUTH0_CLIENT_ID || !process.env.AUTH0_CLIENT_SECRET || !process
 }
 
 const app = express();
+
+// force HTTPS in production
+app.get('*', (req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+    res.redirect(`https://${req.headers.host}${req.url}`);
+  } else {
+    next();
+  }
+});
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname));
