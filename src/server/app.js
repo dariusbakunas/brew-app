@@ -97,6 +97,7 @@ const router = express.Router();
 
 router.use('/', authRoutes);
 router.use('/login', serverRenderer);
+router.use('/privacy', serverRenderer);
 
 router.use('/api', authApiToken);
 router.use('/api', proxy(apiProxyConfig));
