@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import Header from '../components/Header';
-import Grid from '../components/Grid';
+import Container from '../components/container';
 
 const GET_LOGIN_QUOTE = gql`
   query GetRandomQuote {
@@ -26,8 +26,8 @@ class Login extends React.Component {
             }
 
             return (
-              <Grid centered verticalAlign='middle' style={{ height: '100%' }}>
-                <Grid.Column style={{ maxWidth: 450 }}>
+              <div className='uk-flex uk-flex-middle' style={{ height: '100%' }}>
+                <Container size='small'>
                   <Header as='h1' textAlign='center'>BREW BEER</Header>
                   <div className='power-btn'>
                     <a href='/auth' aria-label='Login'>
@@ -39,13 +39,13 @@ class Login extends React.Component {
                     </a>
                   </div>
                   <blockquote className='login-quote'>
-                    <p><q>{data && data.randomQuote ? data.randomQuote.text : ''}</q></p>
+                    <p className="uk-margin-small-bottom"><q>{data && data.randomQuote ? data.randomQuote.text : ''}</q></p>
                     <footer>
-                      <small>{data && data.randomQuote ? data.randomQuote.author : ''}</small>
+                      <cite>{data && data.randomQuote ? data.randomQuote.author : ''}</cite>
                     </footer>
                   </blockquote>
-                </Grid.Column>
-              </Grid>
+                </Container>
+              </div>
             );
           }
         }
