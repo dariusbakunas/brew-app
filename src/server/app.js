@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import uuidv4 from 'uuid/v4';
 import jwt from 'jsonwebtoken';
 import proxy from 'http-proxy-middleware';
+import compression from 'compression';
 import serverRenderer from './middleware/renderer';
 import authRoutes from './routes/auth';
 import secured from './middleware/secured';
@@ -21,6 +22,8 @@ if (!process.env.AUTH0_CLIENT_ID || !process.env.AUTH0_CLIENT_SECRET || !process
 }
 
 const app = express();
+
+app.use(compression());
 
 // force HTTPS in production
 app.get('*', (req, res, next) => {
