@@ -14,6 +14,6 @@
     }
   ],
   "start_url": "/login",
-  "background_color": "#9fb03e",
+  "background_color": "#feffff",
   "display": "standalone"
 }
