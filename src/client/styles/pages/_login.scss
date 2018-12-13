@@ -4,9 +4,9 @@
   margin-right: auto;
 
   circle, path, line {
-    fill: none;
+    fill: $brand1;
     stroke: $brand1;
-    stroke-width: 3px;
+    stroke-miterlimit:10;
   }
 }
 
