@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { withApollo, graphql } from 'react-apollo';
 import Header from '../components/Header/Header';
 import Container from '../components/Container/Container';
+import Button from '../components/Button/Button';
 
 const ACTIVATE_USER = gql`
   mutation ActivateUser($token: String!) {
@@ -19,7 +20,7 @@ class Activate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
     };
   }
 
@@ -27,7 +28,11 @@ class Activate extends React.Component {
     const { success } = data.activateUser;
 
     if (success) {
-      window.location.href = '/auth';
+      this.setState({
+        loading: false,
+        success: true,
+        error: false,
+      });
     } else {
       this.setState({
         loading: false,
@@ -36,22 +41,20 @@ class Activate extends React.Component {
     }
   };
 
-  handleError = (data) => {
-    this.setState({ loading: false });
+  handleLogin = () => {
+    window.location.href = '/auth';
   };
 
   componentDidMount() {
     const { location } = this.props;
     const { token } = queryString.parse(location.search);
 
-    this.setState({ loading: true }, () => {
-      this.props.client.mutate({
-        variables: { token },
-        mutation: ACTIVATE_USER,
-      })
-        .then(response => this.handleComplete(response.data))
-        .catch(this.handleError);
-    });
+    this.props.client.mutate({
+      variables: { token },
+      mutation: ACTIVATE_USER,
+    })
+      .then(response => this.handleComplete(response.data))
+      .catch(this.handleError);
   }
 
   render() {
@@ -91,11 +94,15 @@ class Activate extends React.Component {
     }
 
     return (
-      <div className='signup-container'>
-        <Container className='uk-width-large uk-text-center'>
-          Redirecting, please wait..
-        </Container>
-      </div>
+        <div className='signup-container'>
+          <Container className='uk-width-large uk-text-center'>
+            <Header>Activation Complete</Header>
+            <p>Your account is now activated, go ahead and log in</p>
+            <div>
+              <Button variation='primary' onClick={this.handleLogin}>Login</Button>
+            </div>
+          </Container>
+        </div>
     );
   }
 }
