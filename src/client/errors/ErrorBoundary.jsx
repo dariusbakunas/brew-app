@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withServerContext from '../HOC/withServerContext';
+import formatClientError from './formatClientError';
 
 class ErrorBoundary extends React.Component {
   static propTypes = {
@@ -11,16 +12,13 @@ class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: props.error,
+      error: props.error ? props.error.message : null,
     };
   }
 
   componentDidCatch(error) {
-    if (error.constructor.name === 'AuthorizationError') {
-      this.setState({ error: 'Your are not authorized to access this resource' });
-    } else if (error.constructor.name === 'ServerError') {
-      this.setState({ error: 'Unknown error occurred, please try again' });
-    }
+    const { message } = formatClientError(error);
+    this.setState({ error: message });
   }
 
   render() {

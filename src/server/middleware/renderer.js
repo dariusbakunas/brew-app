@@ -7,6 +7,7 @@ import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
 import ErrorBoundary from '../../client/errors/ErrorBoundary';
+import formatClientError from "../../client/errors/formatClientError";
 
 export default (req, res, next) => {
   const apolloClient = getApolloClient(req.user || {});
@@ -42,16 +43,14 @@ export default (req, res, next) => {
     });
   }).catch((error) => {
     // TODO: error handling
-    console.error(error);
-
-    serverContext.error = 'Unknown error occurred, please try again';
+    serverContext.error = formatClientError(error);
 
     const html = ReactDOMServer.renderToString(
       <StaticRouter location={req.originalUrl} context={{}}>
         <ServerContextProvider value={serverContext}>
           <App/>
         </ServerContextProvider>
-      </StaticRouter>
+      </StaticRouter>,
     );
 
     res.render('index', {
