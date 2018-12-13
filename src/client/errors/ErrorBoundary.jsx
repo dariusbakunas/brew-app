@@ -6,7 +6,9 @@ import formatClientError from './formatClientError';
 class ErrorBoundary extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    error: PropTypes.string,
+    error: PropTypes.shape({
+      message: PropTypes.string,
+    }),
   };
 
   constructor(props) {

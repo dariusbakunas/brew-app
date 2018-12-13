@@ -51,7 +51,7 @@ class SignUp extends React.Component {
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleSuccess = () => {
-    window.location.href = '/auth';
+    this.props.history.push('/activate');
   };
 
   handleError = (error) => {
@@ -124,7 +124,7 @@ class SignUp extends React.Component {
                 <div className='signup-container'>
                   <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
-                    <Form loading={loading || data} onSubmit={(e) => {
+                    <Form loading={loading || !!data} onSubmit={(e) => {
                       e.preventDefault();
 
                       register({

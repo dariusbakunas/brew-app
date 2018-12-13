@@ -9,6 +9,7 @@ import { USER_STATUS } from '../contants';
 import ErrorBoundary from './errors/ErrorBoundary';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
+import Activate from './pages/Activate';
 import Footer from './components/Footer';
 
 class App extends React.Component {
@@ -44,6 +45,7 @@ class App extends React.Component {
           <Route path='/' exact component={Dashboard}/>
           <Route path='/login' component={Login}/>
           <Route path='/register' component={SignUp}/>
+          <Route path='/activate' component={Activate}/>
           <Route path='/privacy' component={Privacy}/>
           <Route path='/terms' component={Terms}/>
           <Footer/>

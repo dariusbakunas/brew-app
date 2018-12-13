@@ -101,6 +101,7 @@ const router = express.Router();
 router.use('/', authRoutes);
 router.use('/login', serverRenderer);
 router.use('/privacy', serverRenderer);
+router.use('/activate', serverRenderer);
 router.use('/terms', serverRenderer);
 
 router.use('/api', authApiToken);
