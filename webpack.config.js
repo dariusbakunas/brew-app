@@ -18,6 +18,8 @@ module.exports = (env, argv) => {
   const serverPlugins = [
     new CopyWebpackPlugin([
       { from: 'src/server/index.ejs', to: 'index.ejs' },
+      { from: 'src/client/public/images', to: 'images' },
+      { from: 'src/manifest.json', to: 'manifest.json' },
     ]),
   ];
 
