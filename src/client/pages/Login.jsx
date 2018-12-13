@@ -29,7 +29,7 @@ class Login extends React.Component {
               <div className='login-container'>
                 <Container size='small'>
                   <Header as='h1' textAlign='center'>BREW BEER</Header>
-                  <div className='power-btn'>
+                  <div className='hop-logo'>
                     <a href='/auth' aria-label='Login'>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.28 227.96" className='animated pulse infinite'>
                         <g id="Layer1" data-name="Main">
