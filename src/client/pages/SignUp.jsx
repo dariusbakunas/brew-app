@@ -6,11 +6,10 @@ import { Redirect, withRouter } from 'react-router-dom';
 import Form from '../components/Form';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
-import Card from '../components/Card';
 import Button from '../components/Button';
 import Header from '../components/Header';
 import Container from '../components/Container';
-import { ServerError, AuthorizationError } from '../errors/errors';
+import { ServerError } from '../errors/errors';
 
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {
@@ -125,7 +124,7 @@ class SignUp extends React.Component {
                 <div className='signup-container'>
                   <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
-                    <Form loading={loading} onSubmit={(e) => {
+                    <Form loading={loading || data} onSubmit={(e) => {
                       e.preventDefault();
 
                       register({

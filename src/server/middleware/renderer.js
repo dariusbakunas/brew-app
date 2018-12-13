@@ -42,6 +42,8 @@ export default (req, res, next) => {
     });
   }).catch((error) => {
     // TODO: error handling
+    console.error(error);
+
     serverContext.error = 'Unknown error occurred, please try again';
 
     const html = ReactDOMServer.renderToString(
