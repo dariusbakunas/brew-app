@@ -80,8 +80,10 @@ const sessionConfig = {
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  const FileStore = require('session-file-store')(session);
-  sessionConfig.store = new FileStore();
+  const MemcachedStore = require('connect-memcached')(session);
+  sessionConfig.store = new MemcachedStore({
+    hosts: [`${process.env.MEMCACHED_HOST}:${process.env.MEMCACHED_PORT || 11211}`],
+  });
 }
 
 if (app.get('env') === 'production') {

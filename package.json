@@ -9,6 +9,7 @@
   "scripts": {
     "build:dev": "webpack --watch --progress",
     "build:prod": "webpack --mode=production --progress",
+    "client:dev": "",
     "server:dev": "nodemon -r dotenv/config dist/server.bundle.js",
     "server:prod": "node dist/server.bundle.js",
     "heroku-postbuild": "webpack --mode=production --progress",
@@ -70,6 +71,7 @@
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-transform-react-handled-props": "^1.0.2",
+    "connect-memcached": "^1.0.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
     "dotenv": "^6.1.0",
@@ -91,7 +93,6 @@
     "postcss-loader": "^3.0.0",
     "react-styleguidist": "^8.0.6",
     "sass-loader": "^7.1.0",
-    "session-file-store": "^1.2.0",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",
