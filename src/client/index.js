@@ -7,6 +7,7 @@ import { onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './styles/main.scss';
+import 'uikit';
 import { ServerContextProvider } from './ServerContext';
 import App from './App';
 
