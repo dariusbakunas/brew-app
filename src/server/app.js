@@ -79,6 +79,11 @@ const sessionConfig = {
   saveUninitialized: true,
 };
 
+if (process.env.NODE_ENV !== 'production') {
+  const FileStore = require('session-file-store')(session);
+  sessionConfig.store = new FileStore();
+}
+
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1); // trust first proxy
   sessionConfig.cookie.secure = true; // serve secure cookies

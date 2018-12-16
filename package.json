@@ -92,6 +92,7 @@
     "postcss-loader": "^3.0.0",
     "react-styleguidist": "^8.0.6",
     "sass-loader": "^7.1.0",
+    "session-file-store": "^1.2.0",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.26.0",

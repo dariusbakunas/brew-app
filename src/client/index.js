@@ -6,13 +6,12 @@ import { createHttpLink } from 'apollo-link-http';
 import { onError } from 'apollo-link-error';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter as Router } from 'react-router-dom';
+import './styles/main.scss';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 import { ServerContextProvider } from './ServerContext';
 import App from './App';
-import './styles/main.scss';
 
-// loads the Icon plugin
 UIkit.use(Icons);
 
 const errLink = onError(({ graphQLErrors, networkError }) => {
