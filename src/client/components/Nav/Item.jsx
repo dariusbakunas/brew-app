@@ -8,7 +8,7 @@ function Item(props) {
     as, className, label, location, url,
   } = props;
 
-  const isActive = !!matchPath(location.pathname, { path: url });
+  const isActive = !!matchPath(location.pathname, { path: url, exact: true });
 
   const classes = classNames(
     className,
