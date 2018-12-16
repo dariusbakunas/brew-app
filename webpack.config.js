@@ -72,6 +72,10 @@ module.exports = (env, argv) => {
           test: /\.otf(\?.*)?$/,
           use: 'file-loader?name=/fonts/[name].  [ext]&mimetype=application/font-otf',
         },
+        {
+          test: require.resolve('uikit'),
+          loader: 'expose-loader?UIkit',
+        },
       ],
     },
     stats: {

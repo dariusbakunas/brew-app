@@ -117,6 +117,7 @@ router.use('/api', proxy(apiProxyConfig));
 app.use(express.static(path.resolve(__dirname, '.')));
 
 router.use('^/$', secured(), serverRenderer);
+router.use('/account', secured(), serverRenderer);
 router.use('/register', secured(), serverRenderer);
 
 app.use(router);
