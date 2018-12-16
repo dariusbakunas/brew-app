@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Icon from '../Icon';
 
 function Navbar(props) {
-  const { transparent } = props;
+  const { toggleTarget, transparent } = props;
 
   const classes = classNames(
     'uk-navbar',
@@ -15,7 +15,7 @@ function Navbar(props) {
   return (
     <nav className={classes}>
       <div className='uk-navbar-left'>
-        <a className='uk-navbar-toggle uk-navbar-toggle-icon uk-icon' href='' data-uk-toggle='target: #offcanvas-usage'>
+        <a className='uk-navbar-toggle uk-navbar-toggle-icon uk-icon' href='' data-uk-toggle={`target: #${toggleTarget}`}>
           <Icon icon='menu' width='20' height='20'/>
         </a>
       </div>
@@ -27,6 +27,7 @@ function Navbar(props) {
 }
 
 Navbar.propTypes = {
+  toggleTarget: PropTypes.string,
   transparent: PropTypes.bool,
 };
 
