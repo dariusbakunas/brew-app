@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, withRouter } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
+import { Route, withRouter, Switch } from 'react-router-dom';
+import Main from './pages/Main';
 import withServerContext from './HOC/withServerContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -26,28 +26,17 @@ class App extends React.Component {
   };
 
   render() {
-    //
-    // if (this.props.user.status === USER_STATUS.NEW) {
-    //   return (
-    //     <div>Looks like your account is not activated yet, comback later</div>
-    //   );
-    // }
-    //
-    // if (this.props.user.status === USER_STATUS.INACTIVE) {
-    //   return (
-    //     <div>Looks like your account was deactivated, comback later</div>
-    //   );
-    // }
-
     return (
       <div className='main-container'>
         <ErrorBoundary>
-          <Route path='/' exact component={Dashboard}/>
-          <Route path='/login' component={Login}/>
-          <Route path='/register' component={SignUp}/>
-          <Route path='/activate' component={Activate}/>
-          <Route path='/privacy' component={Privacy}/>
-          <Route path='/terms' component={Terms}/>
+          <Switch>
+            <Route path='/login' component={Login}/>
+            <Route path='/register' component={SignUp}/>
+            <Route path='/activate' component={Activate}/>
+            <Route path='/privacy' component={Privacy}/>
+            <Route path='/terms' component={Terms}/>
+            <Route path='/' component={Main}/>
+          </Switch>
           <Footer/>
         </ErrorBoundary>
       </div>
