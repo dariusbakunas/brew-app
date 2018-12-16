@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Item from './Item';
 import Header from './Header';
+import Divider from './Divider';
 
 class Nav extends React.Component {
   static propTypes = {
@@ -10,6 +11,7 @@ class Nav extends React.Component {
 
   static Header = Header;
   static Item = Item;
+  static Divider = Divider;
 
   render() {
     const { children } = this.props;
