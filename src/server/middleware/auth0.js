@@ -14,6 +14,7 @@ const getUserByEmail = (apolloClient, email) => apolloClient
           username
           firstName
           lastName
+          isAdmin
           status
         }
       }

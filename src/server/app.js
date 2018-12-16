@@ -118,6 +118,15 @@ app.use(express.static(path.resolve(__dirname, '.')));
 
 router.use('^/$', secured(), serverRenderer);
 router.use('/account', secured(), serverRenderer);
+router.use('/inventory', secured(), serverRenderer);
+router.use('/recipes', secured(), serverRenderer);
+router.use('/sessions', secured(), serverRenderer);
+router.use('/tools', secured(), serverRenderer);
+
+// Admin routes
+router.use('/ingredients', secured(), serverRenderer);
+router.use('/users', secured(), serverRenderer);
+
 router.use('/register', secured(), serverRenderer);
 
 app.use(router);

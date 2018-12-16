@@ -29,6 +29,7 @@ class Main extends React.Component {
     user: PropTypes.shape({
       email: PropTypes.string,
       firstName: PropTypes.string,
+      isAdmin: PropTypes.bool,
       lastName: PropTypes.string,
       status: PropTypes.oneOf(Object.values(USER_STATUS)),
     }),
@@ -52,6 +53,14 @@ class Main extends React.Component {
               <Nav.Item label='Recipes' url='/recipes'/>
               <Nav.Item label='Sessions' url='/sessions'/>
               <Nav.Item label='Tools' url='/tools'/>
+              {
+                this.props.user.isAdmin &&
+                  <React.Fragment>
+                    <Nav.Header label='Admin'/>
+                    <Nav.Item label='Ingredients' url='/ingredients'/>
+                    <Nav.Item label='Users' url='/users'/>
+                  </React.Fragment>
+              }
               <Nav.Header label='Account'/>
               <Nav.Item label='Settings & Profile' url='/account'/>
               <Nav.Item as='a' label='Logout' url='/logout'/>
