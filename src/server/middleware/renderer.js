@@ -9,7 +9,7 @@ import { ServerContextProvider } from '../../client/ServerContext';
 import formatClientError from '../../client/errors/formatClientError';
 
 export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user || {});
+  const apolloClient = getApolloClient(req.user || { scopes: ['getRandomQuote'] });
   const serverContext = {
     user: req.user ? {
       email: req.user.email,
@@ -43,6 +43,7 @@ export default (req, res, next) => {
     });
   }).catch((error) => {
     // TODO: error handling
+    console.error(error);
     serverContext.error = formatClientError(error);
 
     const html = ReactDOMServer.renderToString(

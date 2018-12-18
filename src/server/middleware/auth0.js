@@ -41,7 +41,10 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
     username: profile.user_id,
-    initialAuth: true,
+    scopes: [
+      'getRandomQuote',
+      'initialAuth',
+    ],
   };
 
   const apolloClient = getApolloClient(requestUser);
@@ -54,6 +57,10 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
         const newUser = {
           ...requestUser,
           status: USER_STATUS.GUEST,
+          scopes: [
+            'getRandomQuote',
+            'registerUser',
+          ],
         };
 
         done(null, newUser);
