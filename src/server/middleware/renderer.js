@@ -7,9 +7,10 @@ import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
 import formatClientError from '../../client/errors/formatClientError';
+import { USER_SCOPES } from '../../contants';
 
 export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user || { scopes: ['getRandomQuote'] });
+  const apolloClient = getApolloClient(req.user || { scopes: [USER_SCOPES.GET_RANDOM_QUOTE] });
   const serverContext = {
     user: req.user ? {
       email: req.user.email,
