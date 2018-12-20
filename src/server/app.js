@@ -126,6 +126,7 @@ router.use('/tools', secured(), serverRenderer);
 // Admin routes
 router.use('/ingredients', secured(), serverRenderer);
 router.use('/users', secured(), serverRenderer);
+router.use('/invitations', secured(), serverRenderer);
 
 router.use('/register', secured(), serverRenderer);
 
