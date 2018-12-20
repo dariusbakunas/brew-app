@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Input from './Input';
 import Fieldset from './Fieldset';
+import Spinner from '../Spinner';
 
 class Form extends React.Component {
   static propTypes = {
@@ -20,14 +21,7 @@ class Form extends React.Component {
     return (
       <form onSubmit={onSubmit}>
         {children}
-        {
-          loading &&
-          <div className="uk-overlay-default uk-position-cover">
-            <div className="uk-position-center">
-              <div data-uk-spinner="ratio: 2"/>
-            </div>
-          </div>
-        }
+        <Spinner active={loading}/>
       </form>
     );
   }
