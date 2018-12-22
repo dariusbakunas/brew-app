@@ -8,6 +8,8 @@ import SideMenu from '../components/SideMenu';
 import Nav from '../components/Nav';
 import Account from './Account';
 import Dashboard from './Dashboard';
+import Users from './Admin/Users';
+import Invitations from './Admin/Invitations';
 
 class Main extends React.Component {
   constructor(props) {
@@ -42,7 +44,7 @@ class Main extends React.Component {
         <SideMenu
           id='side-menu'
           overlay={true}
-          mode='push'
+          mode='slide'
           visible={this.state.showSideBar}
           onShow={this.showSideBar}
           onHide={this.hideSideBar}>
@@ -68,6 +70,12 @@ class Main extends React.Component {
         </SideMenu>
         <Route path='/' exact component={Dashboard}/>
         <Route path='/account' component={Account}/>
+        {
+          this.props.user.isAdmin &&
+            <React.Fragment>
+              <Route path='/users' component={Users}/>
+            </React.Fragment>
+        }
       </React.Fragment>
     );
   }

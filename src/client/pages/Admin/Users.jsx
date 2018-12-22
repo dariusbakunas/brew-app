@@ -1,0 +1,139 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { graphql, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
+import Container from '../../components/Container';
+import Table from '../../components/Table';
+import { USER_STATUS } from '../../../contants';
+import Spinner from '../../components/Spinner';
+import Icon from '../../components/Icon';
+import handleGraphQLError from '../../errors/handleGraphQLError';
+
+const GET_ALL_USERS = gql`
+  query GetAllUsers{
+    users {
+      id
+      username
+      email
+      status
+      isAdmin
+    }
+  }
+`;
+
+const REMOVE_USER = gql`
+  mutation RemoveUser($id: ID!) {
+    removeUser(id: $id)
+  }
+`;
+
+class Users extends React.Component {
+  static propTypes = {
+    data: PropTypes.shape({
+      loading: PropTypes.bool,
+      users: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        username: PropTypes.string,
+        email: PropTypes.string,
+        status: PropTypes.oneOf(Object.values(USER_STATUS)),
+      })),
+    }),
+  };
+
+  handleRemove(removeUser, { id, username }) {
+    const options = {
+      labels: { ok: 'Yes', cancel: 'No' },
+    };
+
+    window.UIkit.modal.confirm(`Are you sure you want to remove user '${username}'?`, options).then(() => {
+      removeUser({ variables: { id } });
+    }, () => {});
+  }
+
+  updateUsers(cache, { data: { removeUser: id } }) {
+    const { users } = cache.readQuery({ query: GET_ALL_USERS });
+    cache.writeQuery({
+      query: GET_ALL_USERS,
+      data: { users: users.filter((user) => user.id !== id) },
+    });
+  };
+
+  handleError(error) {
+    const { errorMessages } = handleGraphQLError(error);
+
+    if (errorMessages.length) {
+      errorMessages.forEach((message) => {
+        window.UIkit.notification({
+          message,
+          status: 'danger',
+          pos: 'top-center',
+          timeout: 5000,
+        });
+      });
+    }
+  }
+
+  getStatusString(status) {
+    return {
+      [USER_STATUS.ACTIVE]: 'active',
+      [USER_STATUS.GUEST]: 'guest',
+      [USER_STATUS.INACTIVE]: 'inactive',
+      [USER_STATUS.NEW]: 'new',
+    }[status];
+  }
+
+  // TODO: replace Mutation with HOC for easier testing
+
+  render() {
+    const { loading, users = [] } = this.props.data;
+
+    return (
+      <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
+        <Container>
+          <Mutation mutation={REMOVE_USER} update={this.updateUsers} onError={this.handleError}>
+            {
+              (removeUser, { loading: mutationLoading }) => (
+                <div>
+                  <Table className='uk-margin-large' size='small' stripped>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell>Username</Table.HeaderCell>
+                        <Table.HeaderCell>Email</Table.HeaderCell>
+                        <Table.HeaderCell>Status</Table.HeaderCell>
+                        <Table.HeaderCell/>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {
+                        users.map(user => (
+                          <Table.Row key={user.id}>
+                            <Table.Cell>{user.username}</Table.Cell>
+                            <Table.Cell>{user.email}</Table.Cell>
+                            <Table.Cell>{this.getStatusString(user.status)}</Table.Cell>
+                            <Table.Cell nowrap>
+                              <ul className='uk-iconnav'>
+                                <li>
+                                  <a href='#' className='uk-icon' onClick={() => this.handleRemove(removeUser, user)}>
+                                    <Icon className='uk-preserve-width' icon='trash' width='20px' height='20px'/>
+                                  </a>
+                                </li>
+                              </ul>
+                            </Table.Cell>
+                          </Table.Row>
+                        ))
+                      }
+                    </Table.Body>
+                  </Table>
+                  <Spinner active={loading || mutationLoading}/>
+                </div>
+              )
+            }
+          </Mutation>
+        </Container>
+        <Spinner active={loading}/>
+      </div>
+    );
+  }
+}
+
+export default graphql(GET_ALL_USERS)(Users);
