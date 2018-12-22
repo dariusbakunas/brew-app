@@ -6,8 +6,9 @@ import Container from '../../components/Container';
 import Table from '../../components/Table';
 import { USER_STATUS } from '../../../contants';
 import Spinner from '../../components/Spinner';
-import Icon from '../../components/Icon';
+import IconNav from '../../components/IconNav';
 import handleGraphQLError from '../../errors/handleGraphQLError';
+import withServerContext from '../../HOC/withServerContext';
 
 const GET_ALL_USERS = gql`
   query GetAllUsers{
@@ -29,6 +30,9 @@ const REMOVE_USER = gql`
 
 class Users extends React.Component {
   static propTypes = {
+    user: PropTypes.shape({
+      id: PropTypes.string,
+    }).isRequired,
     data: PropTypes.shape({
       loading: PropTypes.bool,
       users: PropTypes.arrayOf(PropTypes.shape({
@@ -111,13 +115,12 @@ class Users extends React.Component {
                             <Table.Cell>{user.email}</Table.Cell>
                             <Table.Cell>{this.getStatusString(user.status)}</Table.Cell>
                             <Table.Cell nowrap>
-                              <ul className='uk-iconnav'>
-                                <li>
-                                  <a href='#' className='uk-icon' onClick={() => this.handleRemove(removeUser, user)}>
-                                    <Icon className='uk-preserve-width' icon='trash' width='20px' height='20px'/>
-                                  </a>
-                                </li>
-                              </ul>
+                              <IconNav>
+                                <IconNav.Item
+                                  disabled={this.props.user.id === user.id}
+                                  icon='trash'
+                                  onClick={() => this.handleRemove(removeUser, user)}/>
+                              </IconNav>
                             </Table.Cell>
                           </Table.Row>
                         ))
@@ -136,4 +139,4 @@ class Users extends React.Component {
   }
 }
 
-export default graphql(GET_ALL_USERS)(Users);
+export default withServerContext(graphql(GET_ALL_USERS)(Users));

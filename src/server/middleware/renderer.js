@@ -13,6 +13,7 @@ export default (req, res, next) => {
   const apolloClient = getApolloClient(req.user || { scopes: [USER_SCOPES.GET_RANDOM_QUOTE] });
   const serverContext = {
     user: req.user ? {
+      id: req.user.id,
       email: req.user.email,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
