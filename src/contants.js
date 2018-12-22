@@ -7,9 +7,11 @@ export const USER_STATUS = {
 
 export const USER_SCOPES = {
   GET_RANDOM_QUOTE: 'getRandomQuote',
-  REGISTER_USER: 'registerUser',
   INITIAL_AUTH: 'initialAuth',
+  LIST_ALL_INVITATIONS: 'listAllInvitations',
   LIST_ALL_USERS: 'listAllUsers',
+  REGISTER_USER: 'registerUser',
+  REMOVE_USER: 'removeUser',
 };
 
 export const TEXT_ALIGNMENTS = ['left', 'center', 'right', 'justify'];
