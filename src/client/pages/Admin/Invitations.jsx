@@ -8,6 +8,7 @@ import IconNav from '../../components/IconNav';
 import Spinner from '../../components/Spinner';
 import Button from '../../components/Button';
 import handleGraphQLError from '../../errors/handleGraphQLError';
+import confirm from '../../utils/confirm';
 
 const GET_ALL_INVITATIONS = gql`
   query GetAllInvitations{
@@ -68,11 +69,7 @@ class Invitations extends React.Component {
   }
 
   handleRemoveInvitation(email) {
-    const options = {
-      labels: { ok: 'Yes', cancel: 'No' },
-    };
-
-    window.UIkit.modal.confirm(`Are you sure you want to remove invitation for '${email}'?`, options).then(() => {
+    confirm(`Are you sure you want to remove invitation for '${email}'?`, () => {
       this.setState({ loading: true }, () => {
         this.props.deleteInvitation({ variables: { email } })
           .then(() => {
@@ -84,11 +81,11 @@ class Invitations extends React.Component {
             });
           });
       });
-    }, () => {});
+    });
   }
 
   render() {
-    const { invitations, loading: invitationsLoading } = this.props.getAllInvitations;
+    const { invitations, loading } = this.props.getAllInvitations;
 
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
@@ -122,7 +119,7 @@ class Invitations extends React.Component {
                 </Table> :
                 <div className='uk-margin-bottom'>No invitations</div>
             }
-            <Spinner active={invitationsLoading || this.state.loading}/>
+            <Spinner active={loading || this.state.loading}/>
             <Button variation='primary'>Create</Button>
           </React.Fragment>
         </Container>
