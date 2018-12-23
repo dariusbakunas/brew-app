@@ -6,6 +6,8 @@ export const USER_STATUS = {
 };
 
 export const USER_SCOPES = {
+  CREATE_INVITATION: 'createInvitation',
+  DELETE_INVITATION: 'deleteInvitation',
   GET_RANDOM_QUOTE: 'getRandomQuote',
   INITIAL_AUTH: 'initialAuth',
   LIST_ALL_INVITATIONS: 'listAllInvitations',

@@ -61,6 +61,7 @@ class Main extends React.Component {
                     <Nav.Header label='Admin'/>
                     <Nav.Item label='Ingredients' url='/ingredients'/>
                     <Nav.Item label='Users' url='/users'/>
+                    <Nav.Item label='Invitations' url='/invitations'/>
                   </React.Fragment>
               }
               <Nav.Header label='Account'/>
@@ -74,6 +75,7 @@ class Main extends React.Component {
           this.props.user.isAdmin &&
             <React.Fragment>
               <Route path='/users' component={Users}/>
+              <Route path='/invitations' component={Invitations}/>
             </React.Fragment>
         }
       </React.Fragment>

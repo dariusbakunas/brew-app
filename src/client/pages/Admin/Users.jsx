@@ -70,7 +70,7 @@ class Users extends React.Component {
         window.UIkit.notification({
           message,
           status: 'danger',
-          pos: 'top-center',
+          pos: 'top-right',
           timeout: 5000,
         });
       });
