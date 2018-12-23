@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Input from './Input';
+import Checkbox from './Checkbox';
 import Fieldset from './Fieldset';
 import Spinner from '../Spinner';
 
@@ -13,7 +14,10 @@ class Form extends React.Component {
   };
 
   static Fieldset = Fieldset;
+
   static Input = Input;
+
+  static Checkbox = Checkbox;
 
   render() {
     const { children, loading, onSubmit } = this.props;
