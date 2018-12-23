@@ -4,10 +4,11 @@ import classNames from 'classnames';
 import { TEXT_ALIGNMENTS } from '../../../contants';
 
 function Header(props) {
-  const { as: Element, children, textAlign } = props;
+  const { as: Element, children, className, textAlign } = props;
 
   const classes = classNames(
     { [`uk-text-${textAlign}`]: textAlign },
+    className,
   );
 
   return (
@@ -21,8 +22,9 @@ Header.defaultProps = {
 
 Header.propTypes = {
   as: PropTypes.oneOf(['h1', 'h2', 'h3', 'h4', 'h5']).isRequired,
-  textAlign: PropTypes.oneOf(TEXT_ALIGNMENTS),
   children: PropTypes.node,
+  className: PropTypes.string,
+  textAlign: PropTypes.oneOf(TEXT_ALIGNMENTS),
 };
 
 export default Header;

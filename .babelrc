@@ -13,6 +13,6 @@
       }
     ],
     "@babel/plugin-syntax-export-default-from",
-    "transform-react-handled-props",
+    "transform-react-handled-props"
   ]
 }
