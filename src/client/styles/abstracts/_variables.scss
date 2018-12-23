@@ -4,6 +4,7 @@ $brand2: rgb(114, 145, 139);
 $brand3: rgb(60, 63, 64);
 
 $font_family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+$global-font-family: $font_family;
 $font-weight: 300;
 $text_color: $brand3;
 
@@ -15,3 +16,5 @@ $base-code-background: $global-background;
 $button-default-background: $global-background;
 $form-background: $global-background;
 $global-primary-background: $brand1;
+$base-heading-font-weight: 300;
+$modal-title-font-size: 1.5rem;
