@@ -63,18 +63,14 @@ class Users extends React.Component {
   };
 
   handleError(error) {
-    const { errorMessages } = handleGraphQLError(error);
+    const { errorMessage } = handleGraphQLError(error, false);
 
-    if (errorMessages.length) {
-      errorMessages.forEach((message) => {
-        window.UIkit.notification({
-          message,
-          status: 'danger',
-          pos: 'top-right',
-          timeout: 5000,
-        });
-      });
-    }
+    window.UIkit.notification({
+      errorMessage,
+      status: 'danger',
+      pos: 'top-right',
+      timeout: 5000,
+    });
   }
 
   getStatusString(status) {

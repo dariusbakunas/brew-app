@@ -1,36 +1,44 @@
 import { ServerError } from './errors';
 
-const handleGraphQLError = (error) => {
+const handleGraphQLError = (error, useBoundary = true) => {
   const { graphQLErrors, networkError } = error;
 
-  if (networkError) {
-    throw new ServerError(networkError);
-  }
-
   let validationErrors = {};
-  const errorMessages = [];
+  let errorMessage = null;
 
-  if (graphQLErrors) {
-    graphQLErrors.forEach((err) => {
-      const { extensions } = err;
+  if (networkError) {
+    if (useBoundary) {
+      throw new ServerError(networkError);
+    } else {
+      errorMessage = 'Unknown error occurred, please try again';
+    }
+  } else if (graphQLErrors) {
+    const internalError = graphQLErrors.find(err => err.extensions.code === 'INTERNAL_SERVER_ERROR');
 
-      if (extensions.code === 'INTERNAL_SERVER_ERROR') {
-        throw new ServerError(err.message);
+    if (internalError) {
+      if (useBoundary) {
+        throw new ServerError(internalError.message);
+      } else {
+        errorMessage = 'Unknown error occurred, please try again';
       }
+    } else {
+      graphQLErrors.forEach((err) => {
+        const { extensions } = err;
 
-      errorMessages.push(err.message);
+        if (extensions.code === 'BAD_USER_INPUT') {
+          errorMessage = 'Please check your input';
 
-      if (extensions.code === 'BAD_USER_INPUT') {
-        // merge validation errors for now
-        validationErrors = {
-          ...validationErrors,
-          ...extensions.exception.validationErrors,
-        };
-      }
-    });
+          // merge validation errors for now
+          validationErrors = {
+            ...validationErrors,
+            ...extensions.exception.validationErrors,
+          };
+        }
+      });
+    }
   }
 
-  return { validationErrors, errorMessages };
+  return { validationErrors, errorMessage };
 };
 
 export default handleGraphQLError;
