@@ -26,8 +26,8 @@ class SideMenu extends React.Component {
   }
 
   componentWillUnmount() {
-    this.ref.current.removeEventListener(this.handleHide);
-    this.ref.current.removeEventListener(this.handleShow);
+    this.ref.current.removeEventListener('hide', this.handleHide);
+    this.ref.current.removeEventListener('show', this.handleShow);
   }
 
   componentDidUpdate(prevProps) {

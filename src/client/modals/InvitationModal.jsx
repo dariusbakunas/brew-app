@@ -40,7 +40,7 @@ class InvitationModal extends React.Component {
   }
 
   componentWillUnmount() {
-    this.ref.current.removeEventListener(this.handleHide);
+    this.ref.current.removeEventListener('hidden', this.handleHide);
   }
 
   close = () => {
