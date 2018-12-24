@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 import Container from '../../components/Container';
 import Table from '../../components/Table';
 import IconNav from '../../components/IconNav';
@@ -9,32 +8,8 @@ import Spinner from '../../components/Spinner';
 import Button from '../../components/Button';
 import handleGraphQLError from '../../errors/handleGraphQLError';
 import confirm from '../../utils/confirm';
-
-const GET_ALL_INVITATIONS = gql`
-  query GetAllInvitations{
-    invitations {
-      id
-      code
-      email
-    }
-  }
-`;
-
-const DELETE_INVITATION = gql`
-  mutation DeleteInvitation($email: String!){
-    deleteInvitation(email: $email)
-  }
-`;
-
-const CREATE_INVITATION = gql`
-  mutation CreateInvitation($email: String!) {
-    createInvitation(email: $email) {
-      id
-      email
-      code
-    }
-  }
-`;
+import InvitationModal from '../../modals/InvitationModal';
+import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../../queries';
 
 class Invitations extends React.Component {
   static propTypes = {
@@ -54,16 +29,14 @@ class Invitations extends React.Component {
   };
 
   handleError(error) {
-    const { errorMessages } = handleGraphQLError(error);
+    const { errorMessage } = handleGraphQLError(error, false);
 
-    if (errorMessages.length) {
-      errorMessages.forEach((message) => {
-        window.UIkit.notification({
-          message,
-          status: 'danger',
-          pos: 'top-right',
-          timeout: 5000,
-        });
+    if (errorMessage) {
+      window.UIkit.notification({
+        errorMessage,
+        status: 'danger',
+        pos: 'top-right',
+        timeout: 5000,
       });
     }
   }
@@ -120,9 +93,10 @@ class Invitations extends React.Component {
                 <div className='uk-margin-bottom'>No invitations</div>
             }
             <Spinner active={loading || this.state.loading}/>
-            <Button variation='primary'>Create</Button>
+            <Button variation='primary' data-uk-toggle="target: #new-invitation-modal">Create</Button>
           </React.Fragment>
         </Container>
+        <InvitationModal id='new-invitation-modal'/>
       </div>
     );
   }
@@ -142,5 +116,4 @@ export default compose(
       },
     },
   }),
-  graphql(CREATE_INVITATION, { name: 'createInvitation' }),
 )(Invitations);
