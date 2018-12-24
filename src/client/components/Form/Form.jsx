@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Input from './Input';
 import Checkbox from './Checkbox';
 import Fieldset from './Fieldset';

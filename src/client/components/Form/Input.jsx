@@ -6,14 +6,16 @@ import getUnhandledProps from '../../utils/getUnhandledProps';
 class Input extends React.Component {
   handleChange = (e) => {
     if (this.props.onChange) {
-      const value = e.target.value;
-      const name = this.props.name;
+      const { value } = e.target;
+      const { name } = this.props;
       this.props.onChange(e, { name, value });
     }
   };
 
   render() {
-    const { error, label, name, width } = this.props;
+    const {
+      error, label, name, width,
+    } = this.props;
 
     const rest = getUnhandledProps(Input, this.props);
 
