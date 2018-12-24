@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import Container from '../../components/Container';
-import Table from '../../components/Table';
-import IconNav from '../../components/IconNav';
-import Spinner from '../../components/Spinner';
-import Button from '../../components/Button';
-import handleGraphQLError from '../../errors/handleGraphQLError';
-import confirm from '../../utils/confirm';
-import InvitationModal from '../../modals/InvitationModal';
-import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../../queries';
+import Container from '../components/Container';
+import Table from '../components/Table';
+import IconNav from '../components/IconNav';
+import Spinner from '../components/Spinner';
+import Button from '../components/Button';
+import handleGraphQLError from '../errors/handleGraphQLError';
+import confirm from '../utils/confirm';
+import InvitationModal from '../modals/InvitationModal';
+import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../queries';
 
 class Invitations extends React.Component {
   static propTypes = {

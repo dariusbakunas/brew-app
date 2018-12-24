@@ -8,8 +8,8 @@ import SideMenu from '../components/SideMenu';
 import Nav from '../components/Nav';
 import Account from './Account';
 import Dashboard from './Dashboard';
-import Users from './Admin/Users';
-import Invitations from './Admin/Invitations';
+import Users from './Users';
+import Invitations from './Invitations';
 
 class Main extends React.Component {
   constructor(props) {

@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql, Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import Container from '../../components/Container';
-import Table from '../../components/Table';
-import { USER_STATUS } from '../../../contants';
-import Spinner from '../../components/Spinner';
-import IconNav from '../../components/IconNav';
-import handleGraphQLError from '../../errors/handleGraphQLError';
-import withServerContext from '../../HOC/withServerContext';
+import Container from '../components/Container';
+import Table from '../components/Table';
+import { USER_STATUS } from '../../contants';
+import Spinner from '../components/Spinner';
+import IconNav from '../components/IconNav';
+import handleGraphQLError from '../errors/handleGraphQLError';
+import withServerContext from '../HOC/withServerContext';
 
 const GET_ALL_USERS = gql`
   query GetAllUsers{
