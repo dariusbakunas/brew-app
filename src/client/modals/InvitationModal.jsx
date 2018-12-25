@@ -2,17 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import Form from '../components/Form';
-import Header from '../components/Header';
-import LoadingBar from '../components/LoadingBar';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
+import Modal from './Modal';
 
 class InvitationModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.ref = React.createRef();
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
     mutate: PropTypes.func.isRequired,
@@ -26,30 +20,9 @@ class InvitationModal extends React.Component {
     validationErrors: null,
   };
 
-  handleHide = () => {
-    this.setState({
-      email: '',
-      error: null,
-      send: true,
-      validationErrors: null,
-    });
-  };
-
-  componentDidMount() {
-    this.ref.current.addEventListener('hidden', this.handleHide);
-  }
-
-  componentWillUnmount() {
-    this.ref.current.removeEventListener('hidden', this.handleHide);
-  }
-
-  close = () => {
-    window.UIkit.modal(this.ref.current).hide();
-  };
-
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
-  handleSubmit = (e) => {
+  handleSubmit = (e, closeModal) => {
     e.preventDefault();
 
     const { mutate } = this.props;
@@ -62,7 +35,7 @@ class InvitationModal extends React.Component {
         },
       }).then(() => {
         this.setState({ loading: false }, () => {
-          this.close();
+          closeModal();
         });
       }).catch((err) => {
         const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
@@ -80,16 +53,12 @@ class InvitationModal extends React.Component {
     const { email, loading, send } = this.state;
 
     return (
-      <div id={id} data-uk-modal ref={this.ref}>
-        <div className='uk-modal-dialog uk-modal-body'>
-          <button className='uk-modal-close-default' type='button' data-uk-close/>
-          <Header as='h2' className='uk-modal-title'>New Invitation</Header>
-          <LoadingBar active={loading}/>
-          {
-            this.state.error &&
-            <span className='uk-text-danger'>{this.state.error}</span>
-          }
-          <Form onSubmit={this.handleSubmit}>
+      <Modal
+        id={id} label='New Invitation'
+        loading={loading}
+        error={this.state.error}
+        render={close => (
+          <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset>
               <Form.Input
                 disabled={loading}
@@ -113,8 +82,8 @@ class InvitationModal extends React.Component {
               <button className='uk-button uk-button-primary' type='submit' disabled={loading}>Submit</button>
             </div>
           </Form>
-        </div>
-      </div>
+        )}
+      />
     );
   }
 }
