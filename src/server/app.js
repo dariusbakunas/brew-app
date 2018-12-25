@@ -123,8 +123,11 @@ router.use('/recipes', secured(), serverRenderer);
 router.use('/sessions', secured(), serverRenderer);
 router.use('/tools', secured(), serverRenderer);
 
+// redirect top level ingredients to child hops page
+router.use('/ingredients(/?)$', (req, res) => res.redirect('/ingredients/hops'));
+router.use('/ingredients/*', secured(), serverRenderer);
+
 // Admin routes
-router.use('/ingredients', secured(), serverRenderer);
 router.use('/users', secured(), serverRenderer);
 router.use('/invitations', secured(), serverRenderer);
 
