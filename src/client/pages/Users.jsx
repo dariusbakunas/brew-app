@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql, Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import Container from '../components/Container';
 import Table from '../components/Table';
 import { USER_STATUS } from '../../contants';
@@ -9,24 +8,7 @@ import Spinner from '../components/Spinner';
 import IconNav from '../components/IconNav';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withServerContext from '../HOC/withServerContext';
-
-const GET_ALL_USERS = gql`
-  query GetAllUsers{
-    users {
-      id
-      username
-      email
-      status
-      isAdmin
-    }
-  }
-`;
-
-const REMOVE_USER = gql`
-  mutation RemoveUser($id: ID!) {
-    removeUser(id: $id)
-  }
-`;
+import { GET_ALL_USERS, REMOVE_USER } from '../queries';
 
 class Users extends React.Component {
   static propTypes = {
