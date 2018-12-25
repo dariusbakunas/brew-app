@@ -20,6 +20,15 @@ class InvitationModal extends React.Component {
     validationErrors: null,
   };
 
+  handleHide = () => {
+    this.setState({
+      email: '',
+      error: null,
+      send: true,
+      validationErrors: null,
+    });
+  };
+
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
   handleSubmit = (e, closeModal) => {
@@ -57,6 +66,7 @@ class InvitationModal extends React.Component {
         id={id} label='New Invitation'
         loading={loading}
         error={this.state.error}
+        onHide={this.handleHide}
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset>
