@@ -7,10 +7,19 @@ import getUnhandledProps from '../../utils/getUnhandledProps';
 
 class Input extends React.Component {
   handleChange = (e) => {
-    if (this.props.onChange) {
-      const { value } = e.target;
-      const { name } = this.props;
-      this.props.onChange(e, { name, value });
+    const {
+      name, onChange, step, type,
+    } = this.props;
+    const { value } = e.target;
+
+    if (onChange) {
+      if (value !== '' && type === 'number') {
+        const num = step === 1 ? parseInt(value, 10) :
+          parseFloat(value);
+        onChange(e, { name, value: num });
+      } else {
+        onChange(e, { name, value });
+      }
     }
   };
 
@@ -31,7 +40,7 @@ class Input extends React.Component {
 
   render() {
     const {
-      error, label, icon, iconWidth, name, type, width,
+      error, label, icon, iconWidth, name, step, type, width,
     } = this.props;
 
     const rest = getUnhandledProps(Input, this.props);
@@ -49,6 +58,7 @@ class Input extends React.Component {
       className={classes}
       name={name}
       onChange={this.handleChange}
+      step={step}
       type={type}
       {...rest}
     />, icon, iconWidth);
@@ -64,6 +74,7 @@ class Input extends React.Component {
 }
 
 Input.defaultProps = {
+  step: 1,
   type: 'text',
   iconWidth: '20px',
 };
@@ -75,6 +86,7 @@ Input.propTypes = {
   icon: PropTypes.oneOf(ICONS),
   iconWidth: PropTypes.string,
   onChange: PropTypes.func,
+  step: PropTypes.number,
   type: PropTypes.oneOf(['text', 'number']),
   width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
 };
