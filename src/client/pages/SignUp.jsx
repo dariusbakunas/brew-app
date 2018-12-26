@@ -139,39 +139,49 @@ class SignUp extends React.Component {
                         },
                       });
                     }}>
-                      <Form.Fieldset>
-                        <Form.Input
-                          error={ error ? error.validationErrors.username : null }
-                          label='USERNAME'
-                          name='username'
-                          onChange={this.handleChange}
-                          required
-                          value={username}/>
-                        <Form.Input
-                          error={ error ? error.validationErrors.email : null }
-                          label='EMAIL'
-                          name='email'
-                          onChange={this.handleChange}
-                          required
-                          disabled
-                          value={email}/>
-                        <Form.Input
-                          label='FIRST NAME'
-                          name='firstName'
-                          onChange={this.handleChange}
-                          value={firstName}/>
-                        <Form.Input
-                          label='LAST NAME'
-                          name='lastName'
-                          onChange={this.handleChange}
-                          value={lastName}/>
-                        <Form.Input
-                          label='INVITATION CODE'
-                          error={ error ? error.validationErrors.code : null }
-                          name='code'
-                          onChange={this.handleChange}
-                          required
-                          value={code}/>
+                      <Form.Fieldset layout='stacked'>
+                        <div className="uk-margin">
+                          <Form.Input
+                            error={ error ? error.validationErrors.username : null }
+                            label='USERNAME'
+                            name='username'
+                            onChange={this.handleChange}
+                            required
+                            value={username}/>
+                        </div>
+                        <div className="uk-margin">
+                          <Form.Input
+                            error={ error ? error.validationErrors.email : null }
+                            label='EMAIL'
+                            name='email'
+                            onChange={this.handleChange}
+                            required
+                            disabled
+                            value={email}/>
+                        </div>
+                        <div className="uk-margin">
+                          <Form.Input
+                            label='FIRST NAME'
+                            name='firstName'
+                            onChange={this.handleChange}
+                            value={firstName}/>
+                        </div>
+                        <div className="uk-margin">
+                          <Form.Input
+                            label='LAST NAME'
+                            name='lastName'
+                            onChange={this.handleChange}
+                            value={lastName}/>
+                        </div>
+                        <div className="uk-margin">
+                          <Form.Input
+                            label='INVITATION CODE'
+                            error={ error ? error.validationErrors.code : null }
+                            name='code'
+                            onChange={this.handleChange}
+                            required
+                            value={code}/>
+                        </div>
                       </Form.Fieldset>
                       <Button className='uk-width-1-1' variation='primary'>Submit</Button>
                     </Form>
