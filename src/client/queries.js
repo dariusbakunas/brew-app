@@ -7,8 +7,10 @@ export const GET_ALL_HOPS = gql`
       name
       aaHigh
       aaLow
-      flavorProfile
-      usage
+      betaHigh
+      betaLow
+      aroma
+      bittering
       origin {
         name
       }
