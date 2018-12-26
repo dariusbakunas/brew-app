@@ -5,6 +5,7 @@ import Checkbox from './Checkbox';
 import Fieldset from './Fieldset';
 import Spinner from '../Spinner';
 import TextArea from './TextArea';
+import Select from './Select';
 
 class Form extends React.Component {
   static propTypes = {
@@ -20,6 +21,8 @@ class Form extends React.Component {
   static Checkbox = Checkbox;
 
   static TextArea = TextArea;
+
+  static Select = Select;
 
   render() {
     const { children, loading, onSubmit } = this.props;
