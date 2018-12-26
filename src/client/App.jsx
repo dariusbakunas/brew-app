@@ -27,8 +27,8 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className='main-container'>
-        <ErrorBoundary>
+      <ErrorBoundary>
+        <div className='main-container'>
           <Switch>
             <Route path='/login' component={Login}/>
             <Route path='/register' component={SignUp}/>
@@ -38,8 +38,8 @@ class App extends React.Component {
             <Route path='/' component={Main}/>
           </Switch>
           <Footer/>
-        </ErrorBoundary>
-      </div>
+        </div>
+      </ErrorBoundary>
     );
   }
 }
