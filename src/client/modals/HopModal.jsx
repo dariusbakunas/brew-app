@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { graphql } from 'react-apollo';
+import { compose, graphql } from 'react-apollo';
 import Form from '../components/Form';
 import Modal from './Modal';
 import Button from '../components/Button';
 import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_HOP, GET_ALL_HOPS } from '../queries';
+import { CREATE_HOP, GET_ALL_HOPS, GET_ALL_COUNTRIES } from '../queries';
 
 class HopModal extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
-    mutate: PropTypes.func.isRequired,
+    createHop: PropTypes.func.isRequired,
+    getAllCountries: PropTypes.shape({
+      loading: PropTypes.bool,
+      countries: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+      })),
+    }),
   };
 
   static getDefaultState = () => ({
@@ -24,6 +31,7 @@ class HopModal extends React.Component {
     error: null,
     loading: false,
     name: '',
+    originId: '',
     validationErrors: null,
   });
 
@@ -38,23 +46,26 @@ class HopModal extends React.Component {
   handleSubmit = (e, closeModal) => {
     e.preventDefault();
 
-    const { mutate } = this.props;
+    const { createHop } = this.props;
 
     this.setState({ loading: true }, () => {
       const {
-        aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name,
+        aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
       } = this.state;
 
-      mutate({
+      createHop({
         variables: {
-          aaLow,
-          aaHigh,
-          betaLow,
-          betaHigh,
-          aroma,
-          bittering,
-          description,
-          name,
+          input: {
+            aaLow,
+            aaHigh,
+            aroma,
+            betaLow,
+            betaHigh,
+            bittering,
+            description,
+            name,
+            originId,
+          },
         },
       }).then(() => {
         this.setState({ loading: false }, () => {
@@ -72,7 +83,7 @@ class HopModal extends React.Component {
   };
 
   render() {
-    const { id } = this.props;
+    const { id, getAllCountries } = this.props;
 
     const {
       error, loading, aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name,
@@ -82,20 +93,32 @@ class HopModal extends React.Component {
       <Modal
         id={id}
         error={error}
-        loading={loading}
+        loading={loading || getAllCountries.loading}
         header='New Hop'
         onHide={this.handleHide}
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset layout='stacked'>
-              <Form.Input
-                disabled={loading}
-                label='Name'
-                name='name'
-                onChange={this.handleChange}
-                value={name}
-                required
-              />
+              <div className="uk-margin">
+                <Form.Input
+                  disabled={loading}
+                  label='Name'
+                  name='name'
+                  onChange={this.handleChange}
+                  value={name}
+                  required
+                />
+              </div>
+              <div className="uk-margin">
+                <Form.Select
+                  name='originId'
+                  onChange={this.handleChange}
+                  options={
+                    getAllCountries.countries.map(
+                      country => ({ value: country.id, label: country.name }),
+                    )}
+                />
+              </div>
               <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
                 <Form.Checkbox
                   checked={aroma}
@@ -125,6 +148,7 @@ class HopModal extends React.Component {
                     name='aaLow'
                     label='Alpha (low)'
                     onChange={this.handleChange}
+                    step={0.1}
                     value={aaLow}
                   />
                 </div>
@@ -140,6 +164,7 @@ class HopModal extends React.Component {
                     name='aaHigh'
                     label='Alpha (high)'
                     onChange={this.handleChange}
+                    step={0.1}
                     value={aaHigh}
                   />
                 </div>
@@ -157,6 +182,7 @@ class HopModal extends React.Component {
                     name='betaLow'
                     label='Beta (low)'
                     onChange={this.handleChange}
+                    step={0.1}
                     value={betaLow}
                   />
                 </div>
@@ -172,6 +198,7 @@ class HopModal extends React.Component {
                     name='betaHigh'
                     label='Beta (high)'
                     onChange={this.handleChange}
+                    step={0.1}
                     value={betaHigh}
                   />
                 </div>
@@ -195,14 +222,18 @@ class HopModal extends React.Component {
   }
 }
 
-export default graphql(CREATE_HOP, {
-  options: {
-    update: (cache, { data: { createHop } }) => {
-      const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
-      cache.writeQuery({
-        query: GET_ALL_HOPS,
-        data: { hops: [...hops, createHop] },
-      });
+export default compose(
+  graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
+  graphql(CREATE_HOP, {
+    name: 'createHop',
+    options: {
+      update: (cache, { data: { createHop } }) => {
+        const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
+        cache.writeQuery({
+          query: GET_ALL_HOPS,
+          data: { hops: [...hops, createHop] },
+        });
+      },
     },
-  },
-})(HopModal);
+  }),
+)(HopModal);
