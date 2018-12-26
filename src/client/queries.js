@@ -79,3 +79,12 @@ export const REMOVE_USER = gql`
     removeUser(id: $id)
   }
 `;
+
+export const GET_ALL_COUNTRIES = gql`
+  query GetAllCountries{
+    countries {
+      id
+      name
+    }
+  }
+`;
