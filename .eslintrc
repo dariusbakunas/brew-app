@@ -1,12 +1,12 @@
 {
-  "extends": ["airbnb-base", "plugin:jest/recommended", "plugin:react/recommended"],
+  "extends": ["airbnb-base", "plugin:jest/recommended", "plugin:react/recommended", "plugin:jsx-a11y/recommended"],
   "env": {
     "es6": true,
     "node": true,
     "jest/globals": true,
     "browser": true
   },
-  "plugins": ["jest", "react"],
+  "plugins": ["jest", "react", "jsx-a11y"],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
     "operator-linebreak": ["error", "after"],
@@ -23,6 +23,13 @@
         "componentDidUpdate",
         "componentWillUnmount"
       ]
+    }],
+    "jsx-a11y/label-has-for": [ 2, {
+      "components": [ "Label" ],
+      "required": {
+        "some": [ "nesting", "id" ]
+      },
+      "allowChildren": false
     }]
   },
   "parser": "babel-eslint",
