@@ -88,3 +88,9 @@ export const GET_ALL_COUNTRIES = gql`
     }
   }
 `;
+
+export const REMOVE_HOP = gql`
+  mutation RemoveHop($id: ID!) {
+    removeHop(id: $id)
+  }
+`;
