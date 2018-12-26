@@ -5,6 +5,10 @@ export const USER_STATUS = {
   NEW: 'NEW',
 };
 
+export const ICONS = [
+  'close', 'logo', 'menu', 'percent', 'trash',
+];
+
 export const USER_SCOPES = {
   CREATE_INVITATION: 'createInvitation',
   DELETE_INVITATION: 'deleteInvitation',

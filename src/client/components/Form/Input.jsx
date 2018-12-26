@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import getUnhandledProps from '../../utils/getUnhandledProps';
+import Icon from '../Icon';
+import { ICONS } from '../../../contants';
 
 class Input extends React.Component {
   handleChange = (e) => {
@@ -12,12 +13,25 @@ class Input extends React.Component {
     }
   };
 
+  withIcon = (children, icon, iconWidth) => {
+    if (icon) {
+      return (
+        <div className='uk-inline'>
+          <span className="uk-form-icon uk-form-icon-flip uk-icon">
+            <Icon icon={icon} width={iconWidth}/>
+          </span>
+          {children}
+        </div>
+      );
+    }
+
+    return children;
+  };
+
   render() {
     const {
-      error, label, name, width,
+      error, label, icon, iconWidth, name, type, width, ...rest
     } = this.props;
-
-    const rest = getUnhandledProps(Input, this.props);
 
     const classes = classNames(
       'uk-input',
@@ -27,27 +41,38 @@ class Input extends React.Component {
 
     const id = `${name}-input`;
 
+    const inputElement = this.withIcon(<input
+      id={id}
+      className={classes}
+      name={name}
+      onChange={this.handleChange}
+      type={type}
+      {...rest}
+    />, icon, iconWidth);
+
     return (
-      <div className='uk-margin uk-form-controls'>
-        {
-          label &&
-          <label className='uk-form-label' htmlFor={id}>{label}</label>
-        }
-        <input id={id} className={classes} name={name} {...rest} onChange={this.handleChange}/>
-        {
-          error &&
-          <span className='uk-text-danger'>{error}</span>
-        }
-      </div>
+      <React.Fragment>
+        { label && <label className='uk-form-label' htmlFor={id}>{label}</label> }
+        {inputElement}
+        { error && <span className='uk-text-danger'>{error}</span> }
+      </React.Fragment>
     );
   }
 }
+
+Input.defaultProps = {
+  type: 'text',
+  iconWidth: '20px',
+};
 
 Input.propTypes = {
   error: PropTypes.string,
   label: PropTypes.string,
   name: PropTypes.string,
+  icon: PropTypes.oneOf(ICONS),
+  iconWidth: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.oneOf(['text', 'number']),
   width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
 };
 
