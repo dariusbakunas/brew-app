@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Column from './Column';
-import getUnhandledProps from '../../utils/getUnhandledProps';
 import { TEXT_ALIGNMENTS, VERTICAL_ALIGNMENTS } from '../../../contants';
 
 function Grid(props) {
@@ -12,6 +11,7 @@ function Grid(props) {
     divider,
     gutter,
     textAlign,
+    ...rest
   } = props;
 
   const classes = classNames(
@@ -20,8 +20,6 @@ function Grid(props) {
     { [`uk-grid-${gutter}`]: gutter },
     { [`uk-text-${textAlign}`]: textAlign },
   );
-
-  const rest = getUnhandledProps(Column, props);
 
   return (
     <div className={classes} {...rest} data-uk-grid>

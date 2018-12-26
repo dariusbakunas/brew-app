@@ -1,7 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import getUnhandledProps from '../../utils/getUnhandledProps';
 
 class Input extends React.Component {
   handleChange = (e) => {
@@ -13,9 +12,7 @@ class Input extends React.Component {
   };
 
   render() {
-    const { label, name } = this.props;
-
-    const rest = getUnhandledProps(Input, this.props);
+    const { label, name, ...rest } = this.props;
 
     const classes = classNames(
       'uk-checkbox',
@@ -24,12 +21,10 @@ class Input extends React.Component {
     const id = `${name}-input`;
 
     return (
-      <div className='uk-margin uk-form-controls'>
-        <label className='uk-form-label' htmlFor={id}>
-          <input id={id} className={classes} name={name} type='checkbox' {...rest} onChange={this.handleChange}/>
-          {' '}{label}
-        </label>
-      </div>
+      <label className='uk-form-label' htmlFor={id}>
+        <input id={id} className={classes} name={name} type='checkbox' {...rest} onChange={this.handleChange}/>
+        {' '}{label}
+      </label>
     );
   }
 }
