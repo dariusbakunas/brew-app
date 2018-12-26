@@ -1,8 +1,26 @@
 import gql from 'graphql-tag';
 
 export const GET_ALL_HOPS = gql`
-  query getAllHops{
+  query GetAllHops{
     hops {
+      id
+      name
+      aaHigh
+      aaLow
+      betaHigh
+      betaLow
+      aroma
+      bittering
+      origin {
+        name
+      }
+    }
+  }
+`;
+
+export const CREATE_HOP = gql`
+  mutation CreateHop($input: HopInput!) {
+    createHop(input: $input) {
       id
       name
       aaHigh
