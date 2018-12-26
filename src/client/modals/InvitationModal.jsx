@@ -59,20 +59,23 @@ class InvitationModal extends React.Component {
 
   render() {
     const { id } = this.props;
-    const { email, loading, send } = this.state;
+    const {
+      email, error, loading, send, validationErrors,
+    } = this.state;
 
     return (
       <Modal
-        id={id} label='New Invitation'
+        id={id}
+        header='New Invitation'
         loading={loading}
-        error={this.state.error}
+        error={error}
         onHide={this.handleHide}
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset>
               <Form.Input
                 disabled={loading}
-                error={this.state.validationErrors ? this.state.validationErrors.email : null}
+                error={validationErrors ? validationErrors.email : null}
                 label='Email'
                 name='email'
                 value={email}
