@@ -7,6 +7,9 @@ import Button from '../components/Button';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { CREATE_HOP, GET_ALL_HOPS, GET_ALL_COUNTRIES } from '../queries';
 
+// TODO: find a better way to do this
+const UNITED_STATES_ID = 236;
+
 class HopModal extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -56,11 +59,11 @@ class HopModal extends React.Component {
       createHop({
         variables: {
           input: {
-            aaLow,
-            aaHigh,
+            aaLow: aaLow !== '' ? aaLow : null,
+            aaHigh: aaHigh !== '' ? aaHigh : null,
             aroma,
-            betaLow,
-            betaHigh,
+            betaLow: betaLow !== '' ? betaLow : null,
+            betaHigh: betaHigh !== '' ? betaHigh : null,
             bittering,
             description,
             name,
@@ -111,12 +114,13 @@ class HopModal extends React.Component {
               </div>
               <div className="uk-margin">
                 <Form.Select
+                  defaultValue={UNITED_STATES_ID}
                   name='originId'
                   onChange={this.handleChange}
                   options={
-                    getAllCountries.countries.map(
+                    getAllCountries.countries ? getAllCountries.countries.map(
                       country => ({ value: country.id, label: country.name }),
-                    )}
+                    ) : []}
                 />
               </div>
               <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
