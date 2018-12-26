@@ -10,6 +10,7 @@ import Account from './Account';
 import Dashboard from './Dashboard';
 import Users from './Users';
 import Invitations from './Invitations';
+import Ingredients from './Ingredients';
 
 class Main extends React.Component {
   constructor(props) {
@@ -59,9 +60,14 @@ class Main extends React.Component {
                 this.props.user.isAdmin &&
                   <React.Fragment>
                     <Nav.Header label='Admin'/>
-                    <Nav.Item label='Ingredients' url='/ingredients'/>
                     <Nav.Item label='Users' url='/users'/>
                     <Nav.Item label='Invitations' url='/invitations'/>
+                    <Nav.Header label='Ingredients'/>
+                    <Nav.Item label='Hops' url='/ingredients/hops'/>
+                    <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
+                    <Nav.Item label='Yeast' url='/ingredients/yeast'/>
+                    <Nav.Item label='Water' url='/ingredients/water'/>
+                    <Nav.Item label='Other' url='/ingredients/other'/>
                   </React.Fragment>
               }
               <Nav.Header label='Account'/>
@@ -76,6 +82,7 @@ class Main extends React.Component {
             <React.Fragment>
               <Route path='/users' component={Users}/>
               <Route path='/invitations' component={Invitations}/>
+              <Route path='/ingredients' component={Ingredients}/>
             </React.Fragment>
         }
       </React.Fragment>
