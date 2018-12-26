@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Icon from '../Icon';
 import { ICONS } from '../../../contants';
+import getUnhandledProps from '../../utils/getUnhandledProps';
 
 class Input extends React.Component {
   handleChange = (e) => {
@@ -30,8 +31,10 @@ class Input extends React.Component {
 
   render() {
     const {
-      error, label, icon, iconWidth, name, type, width, ...rest
+      error, label, icon, iconWidth, name, type, width,
     } = this.props;
+
+    const rest = getUnhandledProps(Input, this.props);
 
     const classes = classNames(
       'uk-input',
