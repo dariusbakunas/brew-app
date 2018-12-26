@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import getUnhandledProps from '../../utils/getUnhandledProps';
 
 class TextArea extends React.Component {
   handleChange = (e) => {
@@ -13,8 +14,10 @@ class TextArea extends React.Component {
 
   render() {
     const {
-      error, label, name, resize, rows, width, ...rest
+      error, label, name, resize, rows, width,
     } = this.props;
+
+    const rest = getUnhandledProps(TextArea, this.props);
 
     const classes = classNames(
       'uk-textarea',
