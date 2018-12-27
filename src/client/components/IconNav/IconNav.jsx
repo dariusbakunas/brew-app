@@ -7,15 +7,17 @@ import Item from './Item';
 class IconNav extends React.Component {
   static propTypes = {
     children: PropTypes.node,
+    className: PropTypes.string,
   };
 
   static Item = Item;
 
   render() {
-    const { children } = this.props;
+    const { children, className } = this.props;
 
     const classes = classNames(
       'uk-iconnav',
+      className,
     );
 
     return (
