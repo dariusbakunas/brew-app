@@ -1,15 +1,20 @@
 import React from 'react';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { ICONS } from '../../../contants';
 
 const icons = {
+  check: {
+    viewBox: '0 0 20 20 ',
+    contents: (
+      <polyline fill="none" stroke="#000" strokeWidth="1.1" points="4,10 8,15 17,4"/>
+    ),
+  },
   close: {
-    viewBox: '0 0 14 14',
+    viewBox: '0 0 20 20',
     contents: (
       <React.Fragment>
-        <line fill="none" stroke="#000" strokeWidth="1.1" x1="1" y1="1" x2="13" y2="13"/>
-        <line fill="none" stroke="#000" strokeWidth="1.1" x1="13" y1="1" x2="1" y2="13"/>
+        <line fill="none" stroke="#000" strokeWidth="1.1" x1="4" y1="4" x2="17" y2="17"/>
+        <line fill="none" stroke="#000" strokeWidth="1.1" x1="17" y1="4" x2="4" y2="17"/>
       </React.Fragment>
     ),
   },
@@ -34,6 +39,15 @@ const icons = {
         <rect y="9" width="20" height="2"/>
         <rect y="3" width="20" height="2"/>
         <rect y="15" width="20" height="2"/>
+      </React.Fragment>
+    ),
+  },
+  pencil: {
+    viewBox: '0 0 20 20',
+    contents: (
+      <React.Fragment>
+        <path fill="none" stroke="#000" d="M17.25,6.01 L7.12,16.1 L3.82,17.2 L5.02,13.9 L15.12,3.88 C15.71,3.29 16.66,3.29 17.25,3.88 C17.83,4.47 17.83,5.42 17.25,6.01 L17.25,6.01 Z"/>
+        <path fill="none" stroke="#000" d="M15.98,7.268 L13.851,5.148"/>
       </React.Fragment>
     ),
   },
