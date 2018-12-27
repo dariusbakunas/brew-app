@@ -4,7 +4,8 @@ import { compose, graphql } from 'react-apollo';
 import Table from '../components/Table';
 import Spinner from '../components/Spinner';
 import IconNav from '../components/IconNav';
-import {GET_ALL_HOPS, GET_ALL_INVITATIONS, REMOVE_HOP} from '../queries';
+import Icon from '../components/Icon';
+import { GET_ALL_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 import Button from '../components/Button';
 import HopModal from '../modals/HopModal';
@@ -32,6 +33,8 @@ class Hops extends React.Component {
 
   state = {
     loading: false,
+    hopModalOpen: false,
+    currentHop: null,
   };
 
   static formatAcidValue(low, high) {
@@ -45,8 +48,22 @@ class Hops extends React.Component {
 
     const num = low || high;
 
-    return `${num.toFixed(1)}`;
+    return `${num.toFixed(1)}%`;
   }
+
+  handleAddHop = () => {
+    this.setState({
+      currentHop: null,
+      hopModalOpen: true,
+    });
+  };
+
+  handleEditHop = (hop) => {
+    this.setState({
+      currentHop: hop,
+      hopModalOpen: true,
+    });
+  };
 
   handleRemoveHop = ({ id, name, origin }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
@@ -76,8 +93,10 @@ class Hops extends React.Component {
                 <Table.Row>
                   <Table.HeaderCell>Name</Table.HeaderCell>
                   <Table.HeaderCell>Origin</Table.HeaderCell>
-                  <Table.HeaderCell>Alpha</Table.HeaderCell>
-                  <Table.HeaderCell>Beta</Table.HeaderCell>
+                  <Table.HeaderCell className='uk-visible@s'>Alpha</Table.HeaderCell>
+                  <Table.HeaderCell className='uk-visible@m'>Beta</Table.HeaderCell>
+                  <Table.HeaderCell className='uk-visible@s uk-table-shrink '>Aroma</Table.HeaderCell>
+                  <Table.HeaderCell className='uk-visible@s uk-table-shrink'>Bittering</Table.HeaderCell>
                   <Table.HeaderCell/>
                 </Table.Row>
               </Table.Header>
@@ -86,11 +105,26 @@ class Hops extends React.Component {
                   hops.map(hop => (
                     <Table.Row key={hop.id}>
                       <Table.Cell>{hop.name}</Table.Cell>
-                      <Table.Cell>{hop.origin.name}</Table.Cell>
-                      <Table.Cell>{Hops.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
-                      <Table.Cell>{Hops.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                      <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
+                      <Table.Cell className='uk-visible@s uk-text-nowrap'>{Hops.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
+                      <Table.Cell className='uk-visible@m uk-text-nowrap'>{Hops.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                      <Table.Cell className='uk-visible@s'>
+                        {
+                          hop.aroma ?
+                            <Icon icon='check' width='20px'/> :
+                            <Icon icon='close' width='20px'/>
+                        }
+                      </Table.Cell>
+                      <Table.Cell className='uk-visible@s'>
+                        {
+                          hop.bittering ?
+                            <Icon icon='check' width='20px'/> :
+                            <Icon icon='close' width='20px'/>
+                        }
+                      </Table.Cell>
                       <Table.Cell>
-                        <IconNav>
+                        <IconNav className='uk-text-nowrap'>
+                          <IconNav.Item icon='pencil' onClick={() => this.handleEditHop(hop)}/>
                           <IconNav.Item icon='trash' onClick={() => this.handleRemoveHop(hop)}/>
                         </IconNav>
                       </Table.Cell>
@@ -102,8 +136,13 @@ class Hops extends React.Component {
             <div className='uk-margin-bottom'>No hops</div>
         }
         <Spinner active={loading || this.state.loading}/>
-        <Button variation='primary' data-uk-toggle="target: #hop-modal">Add</Button>
-        <HopModal id='hop-modal'/>
+        <Button variation='primary' onClick={this.handleAddHop}>Add</Button>
+        <HopModal
+          hop={this.state.currentHop}
+          id='hop-modal'
+          open={this.state.hopModalOpen}
+          onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
+        />
       </React.Fragment>
     );
   }
