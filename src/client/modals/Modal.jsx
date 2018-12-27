@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import LoadingBar from '../components/LoadingBar';
 import Header from '../components/Header';
 
@@ -12,6 +11,7 @@ class Modal extends React.Component {
     header: PropTypes.string,
     loading: PropTypes.bool,
     onHide: PropTypes.func,
+    open: PropTypes.bool,
     render: PropTypes.func.isRequired,
   };
 
@@ -37,8 +37,20 @@ class Modal extends React.Component {
     this.ref.current.removeEventListener('hidden', this.handleHide);
   }
 
-  close = () => {
+  componentDidUpdate(prevProps) {
+    if (prevProps.open && !this.props.open) {
+      this.hide();
+    } else if (!prevProps.open && this.props.open) {
+      this.show();
+    }
+  }
+
+  hide = () => {
     window.UIkit.modal(this.ref.current).hide();
+  };
+
+  show = () => {
+    window.UIkit.modal(this.ref.current).show();
   };
 
   render() {
@@ -55,9 +67,9 @@ class Modal extends React.Component {
             <LoadingBar active={loading}/>
             {
               error &&
-              <span className='uk-text-danger'>{this.state.error}</span>
+              <span className='uk-text-danger'>{error}</span>
             }
-            {this.props.render(this.close)}
+            {this.props.render(this.hide)}
           </div>
         </div>,
         document.body,
