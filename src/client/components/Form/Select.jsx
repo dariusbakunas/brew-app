@@ -31,7 +31,7 @@ class Select extends React.Component {
     const id = `${name}-input`;
 
     const selectElement = (
-      <select id={id} className={classes} onBlur={this.handleChange} {...rest}>
+      <select id={id} className={classes} onChange={this.handleChange} {...rest}>
         {
           options.map(option => (
             <option key={option.value} value={option.value}>{option.label}</option>
