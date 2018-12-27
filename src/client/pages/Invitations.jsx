@@ -11,6 +11,8 @@ import confirm from '../utils/confirm';
 import InvitationModal from '../modals/InvitationModal';
 import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../queries';
 
+// TODO: handle errors for getAllInvitations call
+
 class Invitations extends React.Component {
   static propTypes = {
     deleteInvitation: PropTypes.func,

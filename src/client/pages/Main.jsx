@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
-import Navbar from '../components/Navbar';
 import SideMenu from '../components/SideMenu';
 import Nav from '../components/Nav';
 import Account from './Account';
@@ -41,7 +40,6 @@ class Main extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar toggleTarget='side-menu' transparent/>
         <SideMenu
           id='side-menu'
           overlay={true}
