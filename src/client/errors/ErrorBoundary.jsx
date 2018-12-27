@@ -26,11 +26,9 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <div className='main-container'>
-          <div className='error-boundary'>
-            <h1>UH OH!</h1>
-            <div className='uk-text-center uk-text-danger'>{this.state.error}</div>
-          </div>
+        <div className='error-boundary'>
+          <h1>UH OH!</h1>
+          <div className='uk-text-center uk-text-danger'>{this.state.error}</div>
         </div>
       );
     }

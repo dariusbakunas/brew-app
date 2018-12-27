@@ -11,7 +11,6 @@ import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 import Activate from './pages/Activate';
 import Footer from './components/Footer';
-import NavBar from './components/Navbar';
 
 class App extends React.Component {
   static propTypes = {
@@ -29,18 +28,15 @@ class App extends React.Component {
   render() {
     return (
       <ErrorBoundary>
-        <NavBar toggleTarget='side-menu'/>
-        <div className='main-container'>
-          <Switch>
-            <Route path='/login' component={Login}/>
-            <Route path='/register' component={SignUp}/>
-            <Route path='/activate' component={Activate}/>
-            <Route path='/privacy' component={Privacy}/>
-            <Route path='/terms' component={Terms}/>
-            <Route path='/' component={Main}/>
-          </Switch>
-          <Footer/>
-        </div>
+        <Switch>
+          <Route path='/login' component={Login}/>
+          <Route path='/register' component={SignUp}/>
+          <Route path='/activate' component={Activate}/>
+          <Route path='/privacy' component={Privacy}/>
+          <Route path='/terms' component={Terms}/>
+          <Route path='/' component={Main}/>
+        </Switch>
+        <Footer/>
       </ErrorBoundary>
     );
   }

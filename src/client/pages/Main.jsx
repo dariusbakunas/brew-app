@@ -10,6 +10,7 @@ import Dashboard from './Dashboard';
 import Users from './Users';
 import Invitations from './Invitations';
 import Ingredients from './Ingredients';
+import NavBar from '../components/Navbar/Navbar';
 
 class Main extends React.Component {
   constructor(props) {
@@ -40,13 +41,15 @@ class Main extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <SideMenu
-          id='side-menu'
-          overlay={true}
-          mode='slide'
-          visible={this.state.showSideBar}
-          onShow={this.showSideBar}
-          onHide={this.hideSideBar}>
+        <NavBar toggleTarget='side-menu'/>
+        <div className='main-container'>
+          <SideMenu
+            id='side-menu'
+            overlay={true}
+            mode='slide'
+            visible={this.state.showSideBar}
+            onShow={this.showSideBar}
+            onHide={this.hideSideBar}>
             <Nav>
               <Nav.Header label='Brew'/>
               <Nav.Item label='Dashboard' url='/'/>
@@ -56,33 +59,34 @@ class Main extends React.Component {
               <Nav.Item label='Tools' url='/tools'/>
               {
                 this.props.user.isAdmin &&
-                  <React.Fragment>
-                    <Nav.Header label='Admin'/>
-                    <Nav.Item label='Users' url='/users'/>
-                    <Nav.Item label='Invitations' url='/invitations'/>
-                    <Nav.Header label='Ingredients'/>
-                    <Nav.Item label='Hops' url='/ingredients/hops'/>
-                    <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
-                    <Nav.Item label='Yeast' url='/ingredients/yeast'/>
-                    <Nav.Item label='Water' url='/ingredients/water'/>
-                    <Nav.Item label='Other' url='/ingredients/other'/>
-                  </React.Fragment>
+                <React.Fragment>
+                  <Nav.Header label='Admin'/>
+                  <Nav.Item label='Users' url='/users'/>
+                  <Nav.Item label='Invitations' url='/invitations'/>
+                  <Nav.Header label='Ingredients'/>
+                  <Nav.Item label='Hops' url='/ingredients/hops'/>
+                  <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
+                  <Nav.Item label='Yeast' url='/ingredients/yeast'/>
+                  <Nav.Item label='Water' url='/ingredients/water'/>
+                  <Nav.Item label='Other' url='/ingredients/other'/>
+                </React.Fragment>
               }
               <Nav.Header label='Account'/>
               <Nav.Item label='Settings & Profile' url='/account'/>
               <Nav.Item as='a' label='Logout' url='/logout'/>
             </Nav>
-        </SideMenu>
-        <Route path='/' exact component={Dashboard}/>
-        <Route path='/account' component={Account}/>
-        {
-          this.props.user.isAdmin &&
+          </SideMenu>
+          <Route path='/' exact component={Dashboard}/>
+          <Route path='/account' component={Account}/>
+          {
+            this.props.user.isAdmin &&
             <React.Fragment>
               <Route path='/users' component={Users}/>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={Ingredients}/>
             </React.Fragment>
-        }
+          }
+        </div>
       </React.Fragment>
     );
   }
