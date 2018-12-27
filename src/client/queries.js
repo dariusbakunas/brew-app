@@ -7,11 +7,13 @@ export const GET_ALL_HOPS = gql`
       name
       aaHigh
       aaLow
+      aroma
       betaHigh
       betaLow
-      aroma
       bittering
+      description
       origin {
+        id
         name
       }
     }
@@ -29,7 +31,29 @@ export const CREATE_HOP = gql`
       betaLow
       aroma
       bittering
+      description
       origin {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UPDATE_HOP = gql`
+  mutation UpdateHop($id: ID!, $input: HopInput!) {
+    updateHop(id: $id, input: $input) {
+      id
+      name
+      aaHigh
+      aaLow
+      betaHigh
+      betaLow
+      aroma
+      bittering
+      description
+      origin {
+        id
         name
       }
     }
