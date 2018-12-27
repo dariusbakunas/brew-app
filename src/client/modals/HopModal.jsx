@@ -5,7 +5,7 @@ import Form from '../components/Form';
 import Modal from './Modal';
 import Button from '../components/Button';
 import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_HOP, GET_ALL_HOPS, GET_ALL_COUNTRIES } from '../queries';
+import { CREATE_HOP, GET_ALL_HOPS, GET_ALL_COUNTRIES, UPDATE_HOP } from '../queries';
 
 // TODO: find a better way to do this
 const UNITED_STATES_ID = 236;
@@ -14,6 +14,19 @@ class HopModal extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
     createHop: PropTypes.func.isRequired,
+    hop: PropTypes.shape({
+      aaLow: PropTypes.number,
+      aaHigh: PropTypes.number,
+      aroma: PropTypes.bool,
+      bittering: PropTypes.bool,
+      betaLow: PropTypes.number,
+      betaHigh: PropTypes.number,
+      description: PropTypes.string,
+      name: PropTypes.string,
+      origin: PropTypes.shape({
+        id: PropTypes.string,
+      }),
+    }),
     getAllCountries: PropTypes.shape({
       loading: PropTypes.bool,
       countries: PropTypes.arrayOf(PropTypes.shape({
@@ -21,6 +34,9 @@ class HopModal extends React.Component {
         name: PropTypes.string,
       })),
     }),
+    onHide: PropTypes.func,
+    open: PropTypes.bool,
+    updateHop: PropTypes.func,
   };
 
   static getDefaultState = () => ({
@@ -34,13 +50,43 @@ class HopModal extends React.Component {
     error: null,
     loading: false,
     name: '',
-    originId: '',
+    originId: UNITED_STATES_ID,
     validationErrors: null,
   });
 
-  state = HopModal.getDefaultState();
+  constructor(props) {
+    super(props);
+
+    if (props.hop) {
+      this.state = {
+        ...props.hop,
+        originId: props.hop.origin.id,
+        loading: false,
+        error: null,
+        validationErrors: null,
+      };
+    } else {
+      this.state = HopModal.getDefaultState();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.hop && this.props.hop) {
+      this.setState({
+        ...this.props.hop,
+        originId: this.props.hop.origin.id,
+        loading: false,
+        error: null,
+        validationErrors: null,
+      });
+    }
+  }
 
   handleHide = () => {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+
     this.setState(HopModal.getDefaultState());
   };
 
@@ -49,28 +95,35 @@ class HopModal extends React.Component {
   handleSubmit = (e, closeModal) => {
     e.preventDefault();
 
-    const { createHop } = this.props;
+    const { createHop, hop, updateHop } = this.props;
 
     this.setState({ loading: true }, () => {
       const {
         aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
       } = this.state;
 
-      createHop({
-        variables: {
-          input: {
-            aaLow: aaLow !== '' ? aaLow : null,
-            aaHigh: aaHigh !== '' ? aaHigh : null,
-            aroma,
-            betaLow: betaLow !== '' ? betaLow : null,
-            betaHigh: betaHigh !== '' ? betaHigh : null,
-            bittering,
-            description,
-            name,
-            originId,
-          },
+      const variables = {
+        input: {
+          aaLow: aaLow !== '' ? aaLow : null,
+          aaHigh: aaHigh !== '' ? aaHigh : null,
+          aroma,
+          betaLow: betaLow !== '' ? betaLow : null,
+          betaHigh: betaHigh !== '' ? betaHigh : null,
+          bittering,
+          description,
+          name,
+          originId: originId !== '' ? originId : null,
         },
-      }).then(() => {
+      };
+
+      let fn = createHop;
+
+      if (hop) {
+        variables.id = hop.id;
+        fn = updateHop;
+      }
+
+      fn({ variables }).then(() => {
         this.setState({ loading: false }, () => {
           closeModal();
         });
@@ -86,10 +139,13 @@ class HopModal extends React.Component {
   };
 
   render() {
-    const { id, getAllCountries } = this.props;
+    const {
+      hop, id, getAllCountries, open,
+    } = this.props;
 
     const {
-      error, loading, aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name,
+      error, loading, aaLow, aaHigh, betaLow, betaHigh,
+      aroma, bittering, description, name, originId, validationErrors,
     } = this.state;
 
     return (
@@ -97,14 +153,16 @@ class HopModal extends React.Component {
         id={id}
         error={error}
         loading={loading || getAllCountries.loading}
-        header='New Hop'
+        header={hop ? hop.name : 'New Hop'}
         onHide={this.handleHide}
+        open={open}
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset layout='stacked'>
               <div className="uk-margin">
                 <Form.Input
                   disabled={loading}
+                  error={validationErrors ? validationErrors.name : null}
                   label='Name'
                   name='name'
                   onChange={this.handleChange}
@@ -114,8 +172,9 @@ class HopModal extends React.Component {
               </div>
               <div className="uk-margin">
                 <Form.Select
-                  defaultValue={UNITED_STATES_ID}
+                  error={validationErrors ? validationErrors.originId : null}
                   name='originId'
+                  value={originId}
                   onChange={this.handleChange}
                   options={
                     getAllCountries.countries ? getAllCountries.countries.map(
@@ -143,6 +202,7 @@ class HopModal extends React.Component {
                 <div>
                   <Form.Input
                     disabled={loading}
+                    error={validationErrors ? validationErrors.aaLow : null}
                     icon='percent'
                     iconWidth='12px'
                     min={0}
@@ -159,6 +219,7 @@ class HopModal extends React.Component {
                 <div>
                   <Form.Input
                     disabled={loading}
+                    error={validationErrors ? validationErrors.aaHigh : null}
                     icon='percent'
                     iconWidth='12px'
                     min={0}
@@ -177,6 +238,7 @@ class HopModal extends React.Component {
                 <div>
                   <Form.Input
                     disabled={loading}
+                    error={validationErrors ? validationErrors.betaLow : null}
                     icon='percent'
                     iconWidth='12px'
                     min={0}
@@ -193,6 +255,7 @@ class HopModal extends React.Component {
                 <div>
                   <Form.Input
                     disabled={loading}
+                    error={validationErrors ? validationErrors.betaHigh : null}
                     icon='percent'
                     iconWidth='12px'
                     min={0}
@@ -236,6 +299,22 @@ export default compose(
         cache.writeQuery({
           query: GET_ALL_HOPS,
           data: { hops: [...hops, createHop] },
+        });
+      },
+    },
+  }),
+  graphql(UPDATE_HOP, {
+    name: 'updateHop',
+    options: {
+      update: (cache, { data: { updateHop } }) => {
+        const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
+
+        const idx = hops.findIndex(hop => hop.id === updateHop.id);
+        hops.splice(idx, 1, updateHop);
+
+        cache.writeQuery({
+          query: GET_ALL_HOPS,
+          data: { hops },
         });
       },
     },
