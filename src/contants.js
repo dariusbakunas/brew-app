@@ -6,7 +6,7 @@ export const USER_STATUS = {
 };
 
 export const ICONS = [
-  'check', 'close', 'logo', 'menu', 'pencil', 'percent', 'trash',
+  'check', 'chevronLeft', 'chevronRight', 'close', 'logo', 'menu', 'pencil', 'percent', 'trash',
 ];
 
 export const USER_SCOPES = {

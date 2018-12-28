@@ -4,9 +4,21 @@ import { ICONS } from '../../../contants';
 
 const icons = {
   check: {
-    viewBox: '0 0 20 20 ',
+    viewBox: '0 0 20 20',
     contents: (
       <polyline fill="none" stroke="#000" strokeWidth="1.1" points="4,10 8,15 17,4"/>
+    ),
+  },
+  chevronLeft: {
+    viewBox: '0 0 20 20',
+    contents: (
+      <polyline fill="none" stroke="#000" strokeWidth="1.03" points="13 16 7 10 13 4"/>
+    ),
+  },
+  chevronRight: {
+    viewBox: '0 0 20 20',
+    contents: (
+      <polyline fill="none" stroke="#000" strokeWidth="1.03" points="7 4 13 10 7 16"/>
     ),
   },
   close: {
