@@ -101,7 +101,7 @@ function Icon(props) {
 
 Icon.propTypes = {
   className: PropTypes.string,
-  width: PropTypes.string,
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   height: PropTypes.string,
   icon: PropTypes.oneOf(ICONS),
 };
