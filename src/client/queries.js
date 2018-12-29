@@ -1,20 +1,25 @@
 import gql from 'graphql-tag';
 
 export const GET_ALL_HOPS = gql`
-  query GetAllHops{
-    hops {
-      id
-      name
-      aaHigh
-      aaLow
-      aroma
-      betaHigh
-      betaLow
-      bittering
-      description
-      origin {
+  query GetAllHops($cursor: String, $limit: Int!){
+    pagedHops(cursor: $cursor, limit: $limit) {
+      hops {
         id
         name
+        aaHigh
+        aaLow
+        aroma
+        betaHigh
+        betaLow
+        bittering
+        description
+        origin {
+          id
+          name
+        }
+      }
+      metadata {
+        nextCursor
       }
     }
   }

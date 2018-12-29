@@ -13,20 +13,26 @@ import HopModal from '../modals/HopModal';
 class Hops extends React.Component {
   static propTypes = {
     getAllHops: PropTypes.shape({
+      fetchMore: PropTypes.func,
       loading: PropTypes.bool,
-      hops: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-        aaHigh: PropTypes.number,
-        aaLow: PropTypes.number,
-        betaHigh: PropTypes.number,
-        betaLow: PropTypes.number,
-        aroma: PropTypes.bool,
-        bittering: PropTypes.bool,
-        origin: PropTypes.shape({
+      pagedHops: PropTypes.shape({
+        hops: PropTypes.arrayOf(PropTypes.shape({
+          id: PropTypes.string,
           name: PropTypes.string,
+          aaHigh: PropTypes.number,
+          aaLow: PropTypes.number,
+          betaHigh: PropTypes.number,
+          betaLow: PropTypes.number,
+          aroma: PropTypes.bool,
+          bittering: PropTypes.bool,
+          origin: PropTypes.shape({
+            name: PropTypes.string,
+          }),
+        })),
+        metadata: PropTypes.shape({
+          nextCursor: PropTypes.string,
         }),
-      })),
+      }),
     }),
     removeHop: PropTypes.func.isRequired,
   };
@@ -35,6 +41,7 @@ class Hops extends React.Component {
     loading: false,
     hopModalOpen: false,
     currentHop: null,
+    pages: [],
   };
 
   static formatAcidValue(low, high) {
@@ -81,58 +88,127 @@ class Hops extends React.Component {
     });
   };
 
+  getNextPage = () => {
+    const { fetchMore, pagedHops } = this.props.getAllHops;
+    const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
+
+    if (nextCursor) {
+      const { pages } = this.state;
+      pages.push(nextCursor);
+
+      this.setState({ pages });
+
+      fetchMore({
+        query: GET_ALL_HOPS,
+        variables: { cursor: nextCursor, limit: 10 },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          const previousHops = previousResult.pagedHops.hops;
+          const newHops = fetchMoreResult.pagedHops.hops;
+          const newCursor = fetchMoreResult.pagedHops.metadata.nextCursor;
+
+          return {
+            pagedHops: {
+              ...previousResult.pagedHops,
+              hops: [...newHops],
+              metadata: {
+                ...previousResult.pagedHops.metadata,
+                nextCursor: newCursor,
+              },
+            },
+          };
+        },
+      });
+    }
+  };
+
+  getPreviousPage = () => {
+    const { fetchMore, pagedHops } = this.props.getAllHops;
+    const { pages } = this.state;
+    pages.pop();
+
+    const cursor = pages.length > 0 ? pages[pages.length - 1] : null;
+
+    fetchMore({
+      query: GET_ALL_HOPS,
+      variables: { cursor, limit: 10 },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        const newHops = fetchMoreResult.pagedHops.hops;
+        const newCursor = fetchMoreResult.pagedHops.metadata.nextCursor;
+
+        return {
+          pagedHops: {
+            ...previousResult.pagedHops,
+            hops: [...newHops],
+            metadata: {
+              ...previousResult.pagedHops.metadata,
+              nextCursor: newCursor,
+            },
+          },
+        };
+      },
+    });
+  };
+
   render() {
-    const { hops, loading } = this.props.getAllHops;
+    const { pagedHops, loading } = this.props.getAllHops;
+    const hops = pagedHops ? pagedHops.hops : null;
+    const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
 
     return (
       <React.Fragment>
         {
           hops && hops.length ?
-            <Table size='small' stripped>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Name</Table.HeaderCell>
-                  <Table.HeaderCell>Origin</Table.HeaderCell>
-                  <Table.HeaderCell className='uk-visible@s'>Alpha</Table.HeaderCell>
-                  <Table.HeaderCell className='uk-visible@m'>Beta</Table.HeaderCell>
-                  <Table.HeaderCell className='uk-visible@s uk-table-shrink '>Aroma</Table.HeaderCell>
-                  <Table.HeaderCell className='uk-visible@s uk-table-shrink'>Bittering</Table.HeaderCell>
-                  <Table.HeaderCell/>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {
-                  hops.map(hop => (
-                    <Table.Row key={hop.id}>
-                      <Table.Cell>{hop.name}</Table.Cell>
-                      <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
-                      <Table.Cell className='uk-visible@s uk-text-nowrap'>{Hops.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
-                      <Table.Cell className='uk-visible@m uk-text-nowrap'>{Hops.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
-                      <Table.Cell className='uk-visible@s'>
-                        {
-                          hop.aroma ?
-                            <Icon icon='check' width='20px'/> :
-                            <Icon icon='close' width='20px'/>
-                        }
-                      </Table.Cell>
-                      <Table.Cell className='uk-visible@s'>
-                        {
-                          hop.bittering ?
-                            <Icon icon='check' width='20px'/> :
-                            <Icon icon='close' width='20px'/>
-                        }
-                      </Table.Cell>
-                      <Table.Cell>
-                        <IconNav className='uk-text-nowrap'>
-                          <IconNav.Item icon='pencil' onClick={() => this.handleEditHop(hop)}/>
-                          <IconNav.Item icon='trash' onClick={() => this.handleRemoveHop(hop)}/>
-                        </IconNav>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
-              </Table.Body>
-            </Table> :
+            <React.Fragment>
+              <ul className="uk-pagination uk-flex-right uk-margin-medium-top" data-uk-margin>
+                <li><Button variation='icon' icon='chevronLeft' onClick={this.getPreviousPage}/></li>
+                <li><Button variation='icon' icon='chevronRight' onClick={this.getNextPage} disabled={!nextCursor}/></li>
+              </ul>
+              <Table size='small' stripped>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.HeaderCell>Name</Table.HeaderCell>
+                    <Table.HeaderCell>Origin</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Alpha</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@m'>Beta</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s uk-table-shrink '>Aroma</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s uk-table-shrink'>Bittering</Table.HeaderCell>
+                    <Table.HeaderCell/>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {
+                    hops.map(hop => (
+                      <Table.Row key={hop.id}>
+                        <Table.Cell>{hop.name}</Table.Cell>
+                        <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
+                        <Table.Cell className='uk-visible@s uk-text-nowrap'>{Hops.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
+                        <Table.Cell className='uk-visible@m uk-text-nowrap'>{Hops.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                        <Table.Cell className='uk-visible@s'>
+                          {
+                            hop.aroma ?
+                              <Icon icon='check' width='20px'/> :
+                              <Icon icon='close' width='20px'/>
+                          }
+                        </Table.Cell>
+                        <Table.Cell className='uk-visible@s'>
+                          {
+                            hop.bittering ?
+                              <Icon icon='check' width='20px'/> :
+                              <Icon icon='close' width='20px'/>
+                          }
+                        </Table.Cell>
+                        <Table.Cell>
+                          <IconNav className='uk-text-nowrap'>
+                            <IconNav.Item icon='pencil' onClick={() => this.handleEditHop(hop)}/>
+                            <IconNav.Item icon='trash' onClick={() => this.handleRemoveHop(hop)}/>
+                          </IconNav>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))
+                  }
+                </Table.Body>
+              </Table>
+            </React.Fragment> :
             <div className='uk-margin-bottom'>No hops</div>
         }
         <Spinner active={loading || this.state.loading}/>
@@ -149,7 +225,12 @@ class Hops extends React.Component {
 }
 
 export default compose(
-  graphql(GET_ALL_HOPS, { name: 'getAllHops' }),
+  graphql(GET_ALL_HOPS, {
+    name: 'getAllHops',
+    options: {
+      variables: { limit: 10 },
+    },
+  }),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
     options: {
