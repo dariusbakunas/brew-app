@@ -7,7 +7,7 @@ import Icon from '../Icon';
 
 function Button(props) {
   const {
-    children, className, icon, link, type, variation,
+    children, className, icon, iconPosition, link, type, variation,
   } = props;
   const Element = link ? 'a' : 'button';
 
@@ -24,13 +24,16 @@ function Button(props) {
     <Element className={classes} type={type} {...rest}>
       {
         variation === 'icon' && icon ?
-          <span className='uk-icon'><Icon icon={icon} width={20}/></span> : children
+          <React.Fragment>
+            {iconPosition === 'right' ? <span>{children}</span> : null} <span className='uk-icon'><Icon icon={icon} width={20}/></span> {iconPosition === 'left' ? <span>{children}</span> : null}
+          </React.Fragment> : children
       }
     </Element>
   );
 }
 
 Button.defaultProps = {
+  iconPosition: 'left',
   type: 'button',
   variation: 'default',
 };
@@ -39,6 +42,7 @@ Button.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
   icon: PropTypes.oneOf(ICONS),
+  iconPosition: PropTypes.oneOf(['left', 'right']),
   link: PropTypes.bool,
   type: PropTypes.oneOf(['button', 'submit']),
   variation: PropTypes.oneOf(['default', 'primary', 'secondary', 'danger', 'text', 'link', 'icon']),
