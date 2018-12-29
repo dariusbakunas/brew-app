@@ -89,7 +89,7 @@ class Hops extends React.Component {
   };
 
   getNextPage = () => {
-    const { fetchMore, pagedHops } = this.props.getAllHops;
+    const { pagedHops } = this.props.getAllHops;
     const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
 
     if (nextCursor) {
@@ -97,36 +97,12 @@ class Hops extends React.Component {
       pages.push(nextCursor);
 
       this.setState({ pages });
-
-      fetchMore({
-        query: GET_ALL_HOPS,
-        variables: { cursor: nextCursor, limit: 10 },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
-          const previousHops = previousResult.pagedHops.hops;
-          const newHops = fetchMoreResult.pagedHops.hops;
-          const newCursor = fetchMoreResult.pagedHops.metadata.nextCursor;
-
-          return {
-            pagedHops: {
-              ...previousResult.pagedHops,
-              hops: [...newHops],
-              metadata: {
-                ...previousResult.pagedHops.metadata,
-                nextCursor: newCursor,
-              },
-            },
-          };
-        },
-      });
+      this.getPage(nextCursor);
     }
   };
 
-  getPreviousPage = () => {
-    const { fetchMore, pagedHops } = this.props.getAllHops;
-    const { pages } = this.state;
-    pages.pop();
-
-    const cursor = pages.length > 0 ? pages[pages.length - 1] : null;
+  getPage(cursor) {
+    const { fetchMore } = this.props.getAllHops;
 
     fetchMore({
       query: GET_ALL_HOPS,
@@ -147,6 +123,16 @@ class Hops extends React.Component {
         };
       },
     });
+  }
+
+  getPreviousPage = () => {
+    const { pages } = this.state;
+    pages.pop();
+
+    this.setState({ pages });
+
+    const cursor = pages.length > 0 ? pages[pages.length - 1] : null;
+    this.getPage(cursor);
   };
 
   render() {
@@ -159,9 +145,27 @@ class Hops extends React.Component {
         {
           hops && hops.length ?
             <React.Fragment>
-              <ul className="uk-pagination uk-flex-right uk-margin-medium-top" data-uk-margin>
-                <li><Button variation='icon' icon='chevronLeft' onClick={this.getPreviousPage}/></li>
-                <li><Button variation='icon' icon='chevronRight' onClick={this.getNextPage} disabled={!nextCursor}/></li>
+              <ul className="uk-pagination uk-flex-right">
+                {
+                  (this.state.pages.length > 0) &&
+                  <li>
+                    <Button variation='icon' icon='chevronLeft' onClick={this.getPreviousPage}>
+                      Prev
+                    </Button>
+                  </li>
+                }
+                {
+                  nextCursor &&
+                  <li>
+                    <Button
+                      variation='icon'
+                      icon='chevronRight'
+                      iconPosition='right'
+                      onClick={this.getNextPage}>
+                      Next
+                    </Button>
+                  </li>
+                }
               </ul>
               <Table size='small' stripped>
                 <Table.Header>

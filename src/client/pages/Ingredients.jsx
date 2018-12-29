@@ -11,7 +11,7 @@ class Ingredients extends React.Component {
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
         <Container>
           <React.Fragment>
-            <Tabs align='center' className='uk-visible@s'>
+            <Tabs align='center' className='uk-visible@s uk-margin-medium-bottom'>
               <Nav.Item url='/ingredients/hops' label='Hops'/>
               <Nav.Item url='/ingredients/fermentables' label='Fermentables'/>
               <Nav.Item url='/ingredients/yeast' label='Yeast'/>
