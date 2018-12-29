@@ -24,6 +24,7 @@
         "componentWillUnmount"
       ]
     }],
+    "no-underscore-dangle": "off",
     "jsx-a11y/label-has-for": [ 2, {
       "components": [ "Label" ],
       "required": {
