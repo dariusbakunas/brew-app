@@ -18,8 +18,8 @@ function Card(props) {
   return (
     <div className={classes}>
       {
-        title
-        && <h3 className="uk-card-title">{title}</h3>
+        title &&
+        <h3 className="uk-card-title">{title}</h3>
       }
       {children}
     </div>

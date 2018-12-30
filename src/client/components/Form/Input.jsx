@@ -58,7 +58,7 @@ class Input extends React.Component {
       className={classes}
       name={name}
       onChange={this.handleChange}
-      step={step}
+      step={type === 'number' ? step : null}
       type={type}
       {...rest}
     />, icon, iconWidth);
