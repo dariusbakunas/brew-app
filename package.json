@@ -14,7 +14,8 @@
     "server:prod": "node dist/server.bundle.js",
     "heroku-postbuild": "webpack --mode=production --progress",
     "start": "node dist/server.bundle.js",
-    "test": "jest"
+    "test": "jest",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -73,6 +74,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-transform-react-handled-props": "^1.0.2",
     "connect-memcached": "^1.0.0",
+    "coveralls": "^3.0.2",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.1",
     "dotenv": "^6.1.0",

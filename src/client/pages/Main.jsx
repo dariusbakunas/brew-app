@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
-import { Nav, NavBar, SideMenu } from '../components';
+import { Nav, Navbar, SideMenu } from '../components';
 import Account from './Account';
 import Dashboard from './Dashboard';
 import Users from './Users';
@@ -39,7 +39,7 @@ class Main extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <NavBar toggleTarget='side-menu'/>
+        <Navbar toggleTarget='side-menu'/>
         <div className='main-container'>
           <SideMenu
             id='side-menu'
