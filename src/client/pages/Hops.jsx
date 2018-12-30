@@ -10,6 +10,8 @@ import confirm from '../utils/confirm';
 import Button from '../components/Button';
 import HopModal from '../modals/HopModal';
 
+const DEFAULT_PAGE_SIZE = 8;
+
 class Hops extends React.Component {
   static propTypes = {
     getAllHops: PropTypes.shape({
@@ -34,7 +36,12 @@ class Hops extends React.Component {
         }),
       }),
     }),
+    pageSize: PropTypes.number,
     removeHop: PropTypes.func.isRequired,
+  };
+
+  static defaultProps = {
+    pageSize: DEFAULT_PAGE_SIZE,
   };
 
   state = {
@@ -135,10 +142,11 @@ class Hops extends React.Component {
 
   getPage(cursor) {
     const { fetchMore } = this.props.getAllHops;
+    const { pageSize: limit } = this.props;
 
     fetchMore({
       query: GET_ALL_HOPS,
-      variables: { cursor, limit: 10 },
+      variables: { cursor, limit, sortBy: 'name' },
       updateQuery: (previousResult, { fetchMoreResult }) => {
         const newHops = fetchMoreResult.pagedHops.hops;
         const { nextCursor, currentCursor } = fetchMoreResult.pagedHops.metadata;
@@ -258,7 +266,8 @@ class Hops extends React.Component {
             query: GET_ALL_HOPS,
             variables: {
               cursor: pagedHops ? pagedHops.metadata.currentCursor : null,
-              limit: 10,
+              sortBy: 'name',
+              limit: this.props.pageSize,
             },
           }}
         />
@@ -270,9 +279,13 @@ class Hops extends React.Component {
 export default compose(
   graphql(GET_ALL_HOPS, {
     name: 'getAllHops',
-    options: {
-      variables: { limit: 10 },
-    },
+    options: props => ({
+      variables: {
+        // default props don't seem to work here
+        limit: props.pageSize || DEFAULT_PAGE_SIZE,
+        sortBy: 'name',
+      },
+    }),
   }),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
@@ -287,7 +300,8 @@ export default compose(
             query: GET_ALL_HOPS,
             variables: {
               cursor: currentCursor,
-              limit: 10,
+              sortBy: 'name',
+              limit: props.pageSize,
             },
           },
         ],
