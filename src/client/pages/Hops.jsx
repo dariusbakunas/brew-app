@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import Table from '../components/Table';
-import Spinner from '../components/Spinner';
-import IconNav from '../components/IconNav';
-import Icon from '../components/Icon';
+import {
+  Button, Icon, IconNav, Pager, Spinner, Table,
+} from '../components';
 import { GET_ALL_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
-import Button from '../components/Button';
-import Pager from '../components/Pager';
 import HopModal from '../modals/HopModal';
 
 const DEFAULT_PAGE_SIZE = 8;

@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
-import SideMenu from '../components/SideMenu';
-import Nav from '../components/Nav';
+import { Nav, NavBar, SideMenu } from '../components';
 import Account from './Account';
 import Dashboard from './Dashboard';
 import Users from './Users';
 import Invitations from './Invitations';
 import Ingredients from './Ingredients';
-import NavBar from '../components/Navbar/Navbar';
 
 class Main extends React.Component {
   constructor(props) {

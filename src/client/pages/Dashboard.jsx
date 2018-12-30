@@ -1,9 +1,7 @@
 import React from 'react';
-import Container from '../components/Container';
-import Grid from '../components/Grid';
-import Card from '../components/Card';
+import { Card, Container, Grid } from '../components';
 
-function Dashboard(props) {
+function Dashboard() {
   return (
     <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
       <Container>

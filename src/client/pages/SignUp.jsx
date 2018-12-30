@@ -3,12 +3,11 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Redirect, withRouter } from 'react-router-dom';
-import Form from '../components/Form';
+import {
+  Button, Container, Form, Header,
+} from '../components';
 import withServerContext from '../HOC/withServerContext';
 import { USER_STATUS } from '../../contants';
-import Button from '../components/Button';
-import Header from '../components/Header';
-import Container from '../components/Container';
 import { ServerError } from '../errors/errors';
 
 const REGISTER = gql`

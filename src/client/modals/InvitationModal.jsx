@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
-import Form from '../components/Form';
+import { Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
 import Modal from './Modal';

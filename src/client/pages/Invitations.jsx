@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import Container from '../components/Container';
-import Table from '../components/Table';
-import IconNav from '../components/IconNav';
-import Spinner from '../components/Spinner';
-import Button from '../components/Button';
+import {
+  Container, Table, IconNav, Spinner, Button,
+} from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import confirm from '../utils/confirm';
 import InvitationModal from '../modals/InvitationModal';

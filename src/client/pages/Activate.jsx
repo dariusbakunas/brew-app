@@ -3,10 +3,8 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import queryString from 'query-string';
 import gql from 'graphql-tag';
-import { withApollo, graphql } from 'react-apollo';
-import Header from '../components/Header/Header';
-import Container from '../components/Container/Container';
-import Button from '../components/Button/Button';
+import { withApollo } from 'react-apollo';
+import { Header, Container, Button } from '../components';
 
 const ACTIVATE_USER = gql`
   mutation ActivateUser($token: String!) {

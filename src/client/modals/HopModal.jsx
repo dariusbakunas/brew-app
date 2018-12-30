@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import Form from '../components/Form';
 import Modal from './Modal';
-import Button from '../components/Button';
+import { Button, Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,

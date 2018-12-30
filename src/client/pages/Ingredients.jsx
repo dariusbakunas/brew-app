@@ -1,8 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Container from '../components/Container';
-import Tabs from '../components/Tabs';
-import Nav from '../components/Nav';
+import { Container, Tabs, Nav } from '../components';
 import Hops from './Hops';
 
 class Ingredients extends React.Component {

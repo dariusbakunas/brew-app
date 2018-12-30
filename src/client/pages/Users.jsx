@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql, Mutation } from 'react-apollo';
-import Container from '../components/Container';
-import Table from '../components/Table';
+import {
+  Container, Table, Spinner, IconNav,
+} from '../components';
 import { USER_STATUS } from '../../contants';
-import Spinner from '../components/Spinner';
-import IconNav from '../components/IconNav';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withServerContext from '../HOC/withServerContext';
 import { GET_ALL_USERS, REMOVE_USER } from '../queries';
@@ -40,9 +39,9 @@ class Users extends React.Component {
     const { users } = cache.readQuery({ query: GET_ALL_USERS });
     cache.writeQuery({
       query: GET_ALL_USERS,
-      data: { users: users.filter((user) => user.id !== id) },
+      data: { users: users.filter(user => user.id !== id) },
     });
-  };
+  }
 
   handleError(error) {
     const { errorMessage } = handleGraphQLError(error, false);

@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import LoadingBar from '../components/LoadingBar';
-import Header from '../components/Header';
+import { LoadingBar, Header } from '../components';
 
 class Modal extends React.Component {
   static propTypes = {
