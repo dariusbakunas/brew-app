@@ -3,5 +3,5 @@ cache: npm
 node_js:
   - "10"
 script:
-  - npm tests
+  - npm test
   - npm run coveralls
