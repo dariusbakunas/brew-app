@@ -58,6 +58,30 @@ class Hops extends React.Component {
     return `${num.toFixed(1)}%`;
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = (e) => {
+    switch (e.key) {
+      case 'ArrowLeft':
+        if (this.hasPreviousPage()) {
+          this.getPreviousPage();
+        }
+        break;
+      case 'ArrowRight':
+        if (this.hasNextPage()) {
+          this.getNextPage();
+        }
+        break;
+      default:
+    }
+  };
+
   handleAddHop = () => {
     this.setState({
       currentHop: null,
@@ -88,6 +112,14 @@ class Hops extends React.Component {
     });
   };
 
+  hasNextPage = () => {
+    const { pagedHops } = this.props.getAllHops;
+    const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
+    return !!nextCursor;
+  };
+
+  hasPreviousPage = () => this.state.pages.length > 0;
+
   getNextPage = () => {
     const { pagedHops } = this.props.getAllHops;
     const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
@@ -109,15 +141,16 @@ class Hops extends React.Component {
       variables: { cursor, limit: 10 },
       updateQuery: (previousResult, { fetchMoreResult }) => {
         const newHops = fetchMoreResult.pagedHops.hops;
-        const newCursor = fetchMoreResult.pagedHops.metadata.nextCursor;
+        const { nextCursor, currentCursor } = fetchMoreResult.pagedHops.metadata;
 
         return {
           pagedHops: {
-            ...previousResult.pagedHops,
+            __typename: previousResult.pagedHops.__typename,
             hops: [...newHops],
             metadata: {
-              ...previousResult.pagedHops.metadata,
-              nextCursor: newCursor,
+              __typename: previousResult.pagedHops.metadata.__typename,
+              nextCursor,
+              currentCursor,
             },
           },
         };
@@ -138,7 +171,6 @@ class Hops extends React.Component {
   render() {
     const { pagedHops, loading } = this.props.getAllHops;
     const hops = pagedHops ? pagedHops.hops : null;
-    const nextCursor = pagedHops ? pagedHops.metadata.nextCursor : null;
 
     return (
       <React.Fragment>
@@ -147,7 +179,7 @@ class Hops extends React.Component {
             <React.Fragment>
               <ul className="uk-pagination uk-flex-right">
                 {
-                  (this.state.pages.length > 0) &&
+                  this.hasPreviousPage() &&
                   <li>
                     <Button variation='icon' icon='chevronLeft' onClick={this.getPreviousPage}>
                       Prev
@@ -155,7 +187,7 @@ class Hops extends React.Component {
                   </li>
                 }
                 {
-                  nextCursor &&
+                  this.hasNextPage() &&
                   <li>
                     <Button
                       variation='icon'
@@ -222,6 +254,13 @@ class Hops extends React.Component {
           id='hop-modal'
           open={this.state.hopModalOpen}
           onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
+          refetchQuery={{
+            query: GET_ALL_HOPS,
+            variables: {
+              cursor: pagedHops ? pagedHops.metadata.currentCursor : null,
+              limit: 10,
+            },
+          }}
         />
       </React.Fragment>
     );
@@ -237,14 +276,22 @@ export default compose(
   }),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
-    options: {
-      update: (cache, { data: { removeHop: id } }) => {
-        const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
-        cache.writeQuery({
-          query: GET_ALL_HOPS,
-          data: { hops: hops.filter(hop => hop.id !== id) },
-        });
-      },
+    options: (props) => {
+      const { pagedHops } = props.getAllHops;
+      const currentCursor = pagedHops ? pagedHops.metadata.currentCursor : null;
+
+      return {
+        awaitRefetchQueries: true,
+        refetchQueries: [
+          {
+            query: GET_ALL_HOPS,
+            variables: {
+              cursor: currentCursor,
+              limit: 10,
+            },
+          },
+        ],
+      };
     },
   }),
 )(Hops);

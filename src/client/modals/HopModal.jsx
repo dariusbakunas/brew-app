@@ -5,7 +5,9 @@ import Form from '../components/Form';
 import Modal from './Modal';
 import Button from '../components/Button';
 import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_HOP, GET_ALL_HOPS, GET_ALL_COUNTRIES, UPDATE_HOP } from '../queries';
+import {
+  CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
+} from '../queries';
 
 // TODO: find a better way to do this
 const UNITED_STATES_ID = 236;
@@ -36,6 +38,7 @@ class HopModal extends React.Component {
     }),
     onHide: PropTypes.func,
     open: PropTypes.bool,
+    refetchQuery: PropTypes.object,
     updateHop: PropTypes.func,
   };
 
@@ -293,30 +296,16 @@ export default compose(
   graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
   graphql(CREATE_HOP, {
     name: 'createHop',
-    options: {
-      update: (cache, { data: { createHop } }) => {
-        const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
-        cache.writeQuery({
-          query: GET_ALL_HOPS,
-          data: { hops: [...hops, createHop] },
-        });
-      },
-    },
+    options: props => ({
+      awaitRefetchQueries: true,
+      refetchQueries: [props.refetchQuery],
+    }),
   }),
   graphql(UPDATE_HOP, {
     name: 'updateHop',
-    options: {
-      update: (cache, { data: { updateHop } }) => {
-        const { hops } = cache.readQuery({ query: GET_ALL_HOPS });
-
-        const idx = hops.findIndex(hop => hop.id === updateHop.id);
-        hops.splice(idx, 1, updateHop);
-
-        cache.writeQuery({
-          query: GET_ALL_HOPS,
-          data: { hops },
-        });
-      },
-    },
+    options: props => ({
+      awaitRefetchQueries: true,
+      refetchQueries: [props.refetchQuery],
+    }),
   }),
 )(HopModal);
