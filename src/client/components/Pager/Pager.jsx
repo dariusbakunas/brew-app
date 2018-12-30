@@ -41,7 +41,7 @@ class Pager extends React.Component {
         {
           hasPrevPage &&
           <li>
-            <Button variation='icon' icon='chevronLeft' onClick={onPrevPage}>
+            <Button icon='chevronLeft' onClick={onPrevPage}>
               Prev
             </Button>
           </li>
@@ -50,7 +50,6 @@ class Pager extends React.Component {
           hasNextPage &&
           <li>
             <Button
-              variation='icon'
               icon='chevronRight'
               iconPosition='right'
               onClick={onNextPage}>

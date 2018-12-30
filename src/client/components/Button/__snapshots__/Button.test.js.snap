@@ -21,27 +21,6 @@ exports[`Button renders icon on the left by default 1`] = `
 </button>
 `;
 
-exports[`Button renders icon on the rifht if specified 1`] = `
-<button
-  className="uk-button icon"
-  type="button"
->
-  <span>
-    test
-  </span>
-   
-  <span
-    className="uk-icon"
-  >
-    <Icon
-      icon="trash"
-      width={20}
-    />
-  </span>
-   
-</button>
-`;
-
 exports[`Button renders icon on the right if specified 1`] = `
 <button
   className="uk-button icon"
