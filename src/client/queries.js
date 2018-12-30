@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_ALL_HOPS = gql`
-  query GetAllHops($cursor: String, $limit: Int!, $sortBy: SortableHopField){
-    pagedHops(cursor: $cursor, limit: $limit, sortBy: $sortBy) @connection(key: "hops") {
+  query GetAllHops($cursor: String, $limit: Int!, $sortBy: SortableHopField, $sortDirection: SortDirection){
+    pagedHops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
       hops {
         id
         name
@@ -18,7 +18,7 @@ export const GET_ALL_HOPS = gql`
           name
         }
       }
-      metadata {
+      paging {
         currentCursor
         nextCursor
       }
