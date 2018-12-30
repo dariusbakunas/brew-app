@@ -13,8 +13,8 @@ function Button(props) {
 
   const classes = classNames(
     'uk-button',
-    { icon: variation === 'icon' },
-    { [`uk-button-${variation}`]: variation !== 'icon' },
+    { icon: !!icon },
+    { [`uk-button-${variation}`]: !icon },
     className,
   );
 
@@ -23,7 +23,7 @@ function Button(props) {
   return (
     <Element className={classes} type={type} {...rest}>
       {
-        variation === 'icon' && icon ?
+        icon ?
           <React.Fragment>
             {iconPosition === 'right' ? <span>{children}</span> : null} <span className='uk-icon'><Icon icon={icon} width={20}/></span> {iconPosition === 'left' ? <span>{children}</span> : null}
           </React.Fragment> : children
@@ -45,7 +45,7 @@ Button.propTypes = {
   iconPosition: PropTypes.oneOf(['left', 'right']),
   link: PropTypes.bool,
   type: PropTypes.oneOf(['button', 'submit']),
-  variation: PropTypes.oneOf(['default', 'primary', 'secondary', 'danger', 'text', 'link', 'icon']),
+  variation: PropTypes.oneOf(['default', 'primary', 'secondary', 'danger', 'text', 'link']),
 };
 
 export default Button;
