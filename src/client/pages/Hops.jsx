@@ -4,7 +4,7 @@ import { compose, graphql } from 'react-apollo';
 import {
   Button, Icon, IconNav, Pager, Spinner, Table,
 } from '../components';
-import { GET_ALL_HOPS, REMOVE_HOP } from '../queries';
+import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 import HopModal from '../modals/HopModal';
 
@@ -12,11 +12,11 @@ const DEFAULT_PAGE_SIZE = 8;
 
 class Hops extends React.Component {
   static propTypes = {
-    getAllHops: PropTypes.shape({
+    getHops: PropTypes.shape({
       fetchMore: PropTypes.func,
       loading: PropTypes.bool,
-      pagedHops: PropTypes.shape({
-        hops: PropTypes.arrayOf(PropTypes.shape({
+      hops: PropTypes.shape({
+        data: PropTypes.arrayOf(PropTypes.shape({
           id: PropTypes.string,
           name: PropTypes.string,
           aaHigh: PropTypes.number,
@@ -29,7 +29,7 @@ class Hops extends React.Component {
             name: PropTypes.string,
           }),
         })),
-        paging: PropTypes.shape({
+        pageInfo: PropTypes.shape({
           nextCursor: PropTypes.string,
           currentCursor: PropTypes.string,
         }),
@@ -95,16 +95,16 @@ class Hops extends React.Component {
   };
 
   hasNextPage = () => {
-    const { pagedHops } = this.props.getAllHops;
-    const nextCursor = pagedHops ? pagedHops.paging.nextCursor : null;
+    const { hops } = this.props.getHops;
+    const nextCursor = hops ? hops.pageInfo.nextCursor : null;
     return !!nextCursor;
   };
 
   hasPreviousPage = () => this.state.pages.length > 0;
 
   getNextPage = () => {
-    const { pagedHops } = this.props.getAllHops;
-    const nextCursor = pagedHops ? pagedHops.paging.nextCursor : null;
+    const { hops } = this.props.getHops;
+    const nextCursor = hops ? hops.pageInfo.nextCursor : null;
 
     if (nextCursor) {
       const { pages } = this.state;
@@ -116,22 +116,22 @@ class Hops extends React.Component {
   };
 
   getPage(cursor) {
-    const { fetchMore } = this.props.getAllHops;
+    const { fetchMore } = this.props.getHops;
     const { pageSize: limit } = this.props;
 
     fetchMore({
-      query: GET_ALL_HOPS,
+      query: GET_HOPS,
       variables: { cursor, limit, sortBy: 'name' },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        const newHops = fetchMoreResult.pagedHops.hops;
-        const { nextCursor, currentCursor } = fetchMoreResult.pagedHops.paging;
+        const newHops = fetchMoreResult.hops.data;
+        const { nextCursor, currentCursor } = fetchMoreResult.hops.pageInfo;
 
         return {
-          pagedHops: {
-            __typename: previousResult.pagedHops.__typename,
-            hops: [...newHops],
-            paging: {
-              __typename: previousResult.pagedHops.paging.__typename,
+          hops: {
+            __typename: previousResult.hops.__typename,
+            data: [...newHops],
+            pageInfo: {
+              __typename: previousResult.hops.pageInfo.__typename,
               nextCursor,
               currentCursor,
             },
@@ -152,8 +152,8 @@ class Hops extends React.Component {
   };
 
   render() {
-    const { pagedHops, loading } = this.props.getAllHops;
-    const hops = pagedHops ? pagedHops.hops : null;
+    const { hops: response, loading } = this.props.getHops;
+    const hops = response ? response.data : null;
 
     return (
       <React.Fragment>
@@ -221,9 +221,9 @@ class Hops extends React.Component {
           open={this.state.hopModalOpen}
           onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
           refetchQuery={{
-            query: GET_ALL_HOPS,
+            query: GET_HOPS,
             variables: {
-              cursor: pagedHops ? pagedHops.paging.currentCursor : null,
+              cursor: response ? response.pageInfo.currentCursor : null,
               sortBy: 'name',
               limit: this.props.pageSize,
             },
@@ -235,8 +235,8 @@ class Hops extends React.Component {
 }
 
 export default compose(
-  graphql(GET_ALL_HOPS, {
-    name: 'getAllHops',
+  graphql(GET_HOPS, {
+    name: 'getHops',
     options: props => ({
       notifyOnNetworkStatusChange: true,
       variables: {
@@ -249,14 +249,14 @@ export default compose(
   graphql(REMOVE_HOP, {
     name: 'removeHop',
     options: (props) => {
-      const { hops } = props.getAllHops;
-      const currentCursor = hops ? hops.paging.currentCursor : null;
+      const { hops } = props.getHops;
+      const currentCursor = hops ? hops.pageInfo.currentCursor : null;
 
       return {
         awaitRefetchQueries: true,
         refetchQueries: [
           {
-            query: GET_ALL_HOPS,
+            query: GET_HOPS,
             variables: {
               cursor: currentCursor,
               sortBy: 'name',

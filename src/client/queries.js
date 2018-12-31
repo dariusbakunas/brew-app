@@ -1,9 +1,9 @@
 import gql from 'graphql-tag';
 
-export const GET_ALL_HOPS = gql`
-  query GetAllHops($cursor: String, $limit: Int!, $sortBy: SortableHopField, $sortDirection: SortDirection){
-    pagedHops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
-      hops {
+export const GET_HOPS = gql`
+  query GetHops($cursor: String, $limit: Int!, $sortBy: SortableHopField, $sortDirection: SortDirection){
+    hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
+      data {
         id
         name
         aaHigh
@@ -18,7 +18,31 @@ export const GET_ALL_HOPS = gql`
           name
         }
       }
-      paging {
+      pageInfo {
+        currentCursor
+        nextCursor
+      }
+    }
+  }
+`;
+
+export const GET_FERMENTABLES = gql`
+  query GetFermentables($cursor: String, $limit: Int!, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
+    fermentables(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
+      data {
+        id
+        name
+        category
+        color
+        description
+        origin {
+          id
+          name
+        }
+        potential
+        type
+      }
+      pageInfo {
         currentCursor
         nextCursor
       }

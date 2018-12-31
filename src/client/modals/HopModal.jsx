@@ -42,16 +42,8 @@ class HopModal extends React.Component {
   };
 
   static getDefaultState = () => ({
-    aaLow: '',
-    aaHigh: '',
-    betaLow: '',
-    betaHigh: '',
-    aroma: false,
-    bittering: false,
-    description: '',
     error: null,
     loading: false,
-    name: '',
     originId: UNITED_STATES_ID,
     validationErrors: null,
   });
@@ -168,7 +160,7 @@ class HopModal extends React.Component {
                   label='Name'
                   name='name'
                   onChange={this.handleChange}
-                  value={name}
+                  value={name || ''}
                   required
                 />
               </div>
@@ -186,14 +178,14 @@ class HopModal extends React.Component {
               </div>
               <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
                 <Form.Checkbox
-                  checked={aroma}
+                  checked={!!aroma}
                   disabled={loading}
                   label='Aroma'
                   name='aroma'
                   onChange={this.handleChange}
                 />
                 <Form.Checkbox
-                  checked={bittering}
+                  checked={!!bittering}
                   disabled={loading}
                   label='Bittering'
                   name='bittering'
@@ -215,7 +207,7 @@ class HopModal extends React.Component {
                     label='Alpha (low)'
                     onChange={this.handleChange}
                     step={0.1}
-                    value={aaLow}
+                    value={aaLow || ''}
                   />
                 </div>
                 <div>
@@ -232,7 +224,7 @@ class HopModal extends React.Component {
                     label='Alpha (high)'
                     onChange={this.handleChange}
                     step={0.1}
-                    value={aaHigh}
+                    value={aaHigh || ''}
                   />
                 </div>
               </div>
@@ -251,7 +243,7 @@ class HopModal extends React.Component {
                     label='Beta (low)'
                     onChange={this.handleChange}
                     step={0.1}
-                    value={betaLow}
+                    value={betaLow || ''}
                   />
                 </div>
                 <div>
@@ -268,7 +260,7 @@ class HopModal extends React.Component {
                     label='Beta (high)'
                     onChange={this.handleChange}
                     step={0.1}
-                    value={betaHigh}
+                    value={betaHigh || ''}
                   />
                 </div>
               </div>
@@ -277,7 +269,7 @@ class HopModal extends React.Component {
                 name='description'
                 label='Description'
                 onChange={this.handleChange}
-                value={description}
+                value={description || ''}
               />
             </Form.Fieldset>
             <div className='uk-text-right'>
