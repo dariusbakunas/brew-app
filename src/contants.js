@@ -9,7 +9,7 @@ export const ICONS = [
   'check', 'chevronLeft', 'chevronRight', 'close', 'logo', 'menu', 'pencil', 'percent', 'trash',
 ];
 
-export const USER_SCOPES = {
+export const USER_PERMISSIONS = {
   CREATE_INVITATION: 'createInvitation',
   DELETE_INVITATION: 'deleteInvitation',
   GET_RANDOM_QUOTE: 'getRandomQuote',
