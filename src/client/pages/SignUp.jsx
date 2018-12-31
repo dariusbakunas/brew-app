@@ -182,7 +182,7 @@ class SignUp extends React.Component {
                             value={code}/>
                         </div>
                       </Form.Fieldset>
-                      <Button className='uk-width-1-1' variation='primary'>Submit</Button>
+                      <Button className='uk-width-1-1' variation='primary' type='submit'>Submit</Button>
                     </Form>
                   </Container>
                 </div>

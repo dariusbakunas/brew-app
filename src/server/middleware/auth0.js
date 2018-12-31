@@ -2,7 +2,7 @@ import passport from 'passport';
 import Auth0Strategy from 'passport-auth0';
 import gql from 'graphql-tag';
 import getApolloClient from '../apolloClient';
-import { USER_STATUS, USER_PERMISSIONS } from '../../contants';
+import { USER_STATUS } from '../../contants';
 
 const getUserByEmail = (apolloClient, email) => apolloClient
   .query({
@@ -16,7 +16,9 @@ const getUserByEmail = (apolloClient, email) => apolloClient
           lastName
           isAdmin
           status
-          permissions
+          roles {
+            name
+          }
         }
       }
     `,
@@ -42,10 +44,7 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
     username: profile.user_id,
-    permissions: [
-      USER_PERMISSIONS.GET_RANDOM_QUOTE,
-      USER_PERMISSIONS.INITIAL_AUTH,
-    ],
+    initialAuth: true,
   };
 
   const apolloClient = getApolloClient(requestUser);
@@ -58,10 +57,6 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
         const newUser = {
           ...requestUser,
           status: USER_STATUS.GUEST,
-          permissions: [
-            USER_PERMISSIONS.GET_RANDOM_QUOTE,
-            USER_PERMISSIONS.REGISTER_USER,
-          ],
         };
 
         done(null, newUser);

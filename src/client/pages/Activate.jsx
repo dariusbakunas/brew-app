@@ -47,12 +47,14 @@ class Activate extends React.Component {
     const { location } = this.props;
     const { token } = queryString.parse(location.search);
 
-    this.props.client.mutate({
-      variables: { token },
-      mutation: ACTIVATE_USER,
-    })
-      .then(response => this.handleComplete(response.data))
-      .catch(this.handleError);
+    if (token) {
+      this.props.client.mutate({
+        variables: { token },
+        mutation: ACTIVATE_USER,
+      })
+        .then(response => this.handleComplete(response.data))
+        .catch(this.handleError);
+    }
   }
 
   render() {

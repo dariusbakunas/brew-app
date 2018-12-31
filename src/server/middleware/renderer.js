@@ -7,10 +7,10 @@ import App from '../../client/App';
 import getApolloClient from '../apolloClient';
 import { ServerContextProvider } from '../../client/ServerContext';
 import formatClientError from '../../client/errors/formatClientError';
-import { USER_PERMISSIONS } from '../../contants';
+import { USER_STATUS } from '../../contants';
 
 export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user || { permissions: [USER_PERMISSIONS.GET_RANDOM_QUOTE] });
+  const apolloClient = getApolloClient(req.user || { status: USER_STATUS.GUEST });
   const serverContext = {
     user: req.user ? {
       id: req.user.id,
