@@ -30,8 +30,8 @@ class Hops extends React.Component {
     getNextPage: PropTypes.func,
     getPreviousPage: PropTypes.func,
     getRefetchQuery: PropTypes.func,
-    hasNextPage: PropTypes.func,
-    hasPreviousPage: PropTypes.func,
+    hasNextPage: PropTypes.bool,
+    hasPreviousPage: PropTypes.bool,
     loading: PropTypes.bool,
     removeHop: PropTypes.func.isRequired,
   };
@@ -106,8 +106,8 @@ class Hops extends React.Component {
           hops && hops.length ?
             <React.Fragment>
               <Pager
-                hasNextPage={this.props.hasNextPage()}
-                hasPrevPage={this.props.hasPreviousPage()}
+                hasNextPage={this.props.hasNextPage}
+                hasPrevPage={this.props.hasPreviousPage}
                 onNextPage={this.props.getNextPage}
                 onPrevPage={this.props.getPreviousPage}/>
               <Table size='small' stripped>

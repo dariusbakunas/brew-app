@@ -59,7 +59,7 @@ function withPagedQuery(query, key, pageSize) {
             const { nextCursor, currentCursor } = fetchMoreResult[key].pageInfo;
 
             return {
-              hops: {
+              [key]: {
                 __typename: previousResult[key].__typename,
                 data: [...newData],
                 pageInfo: {
@@ -99,8 +99,8 @@ function withPagedQuery(query, key, pageSize) {
           <WrappedComponent
             data={pagedData ? pagedData.data : null}
             loading={this.props.getPagedData.loading}
-            hasNextPage={this.hasNextPage}
-            hasPreviousPage={this.hasPreviousPage}
+            hasNextPage={this.hasNextPage()}
+            hasPreviousPage={this.hasPreviousPage()}
             getNextPage={this.getNextPage}
             getPreviousPage={this.getPreviousPage}
             getRefetchQuery={this.getRefetchQuery}
