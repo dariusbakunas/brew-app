@@ -47,7 +47,7 @@ class Users extends React.Component {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
-      errorMessage,
+      message: errorMessage,
       status: 'danger',
       pos: 'top-right',
       timeout: 5000,

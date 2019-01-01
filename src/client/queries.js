@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_HOPS = gql`
-  query GetHops($cursor: String, $limit: Int!, $sortBy: SortableHopField, $sortDirection: SortDirection){
+  query GetHops($cursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
     hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
       data {
         id
@@ -27,7 +27,7 @@ export const GET_HOPS = gql`
 `;
 
 export const GET_FERMENTABLES = gql`
-  query GetFermentables($cursor: String, $limit: Int!, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
+  query GetFermentables($cursor: String, $limit: Int, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
     fermentables(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
       data {
         id
@@ -70,6 +70,24 @@ export const CREATE_HOP = gql`
   }
 `;
 
+export const CREATE_FERMENTABLE = gql`
+  mutation CreateFermentable($input: FermentableInput!) {
+    createFermentable(input: $input) {
+      id
+      name
+      category
+      color
+      description
+      origin {
+        id
+        name
+      }
+      potential
+      type
+    }
+  }
+`;
+
 export const UPDATE_HOP = gql`
   mutation UpdateHop($id: ID!, $input: HopInput!) {
     updateHop(id: $id, input: $input) {
@@ -86,6 +104,24 @@ export const UPDATE_HOP = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const UPDATE_FERMENTABLE = gql`
+  mutation UpdateFermentable($id: ID!, $input: FermentableInput!) {
+    updateFermentable(id: $id, input: $input) {
+      id
+      name
+      category
+      color
+      description
+      origin {
+        id
+        name
+      }
+      potential
+      type
     }
   }
 `;
@@ -146,5 +182,11 @@ export const GET_ALL_COUNTRIES = gql`
 export const REMOVE_HOP = gql`
   mutation RemoveHop($id: ID!) {
     removeHop(id: $id)
+  }
+`;
+
+export const REMOVE_FERMENTABLE = gql`
+  mutation RemoveFermentable($id: ID!) {
+    removeFermentable(id: $id)
   }
 `;

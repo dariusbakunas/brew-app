@@ -3,29 +3,20 @@ import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
 import Modal from './Modal';
 import { Button, Form } from '../components';
+import { GET_ALL_COUNTRIES, CREATE_FERMENTABLE, UPDATE_FERMENTABLE } from '../queries';
 import handleGrpahQLError from '../errors/handleGraphQLError';
-import {
-  CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
-} from '../queries';
 
-// TODO: find a better way to do this
 const UNITED_STATES_ID = 236;
 
-class HopModal extends React.Component {
+class FermentableModal extends React.Component {
   static propTypes = {
     id: PropTypes.string.isRequired,
-    createHop: PropTypes.func.isRequired,
-    hop: PropTypes.shape({
-      aaLow: PropTypes.number,
-      aaHigh: PropTypes.number,
-      aroma: PropTypes.bool,
-      bittering: PropTypes.bool,
-      betaLow: PropTypes.number,
-      betaHigh: PropTypes.number,
-      description: PropTypes.string,
+    createFermentable: PropTypes.func.isRequired,
+    fermentable: PropTypes.shape({
       name: PropTypes.string,
       origin: PropTypes.shape({
         id: PropTypes.string,
+        name: PropTypes.string,
       }),
     }),
     getAllCountries: PropTypes.shape({
@@ -38,45 +29,42 @@ class HopModal extends React.Component {
     onHide: PropTypes.func,
     open: PropTypes.bool,
     refetchQuery: PropTypes.object,
-    updateHop: PropTypes.func,
+    updateFermentable: PropTypes.func.isRequired,
   };
 
   static getDefaultState = () => ({
-    aaLow: null,
-    aaHigh: null,
-    aroma: false,
-    bittering: false,
-    betaLow: null,
-    betaHigh: null,
+    category: 'GRAIN',
+    color: null,
     description: null,
-    name: null,
     error: null,
     loading: false,
+    name: null,
     originId: UNITED_STATES_ID,
+    potential: null,
+    type: 'BASE',
     validationErrors: null,
   });
 
   constructor(props) {
     super(props);
-
-    if (props.hop) {
+    if (props.fermentable) {
       this.state = {
-        ...props.hop,
-        originId: props.hop.origin.id,
+        ...props.fermentable,
+        originId: props.fermentable.origin.id,
         loading: false,
         error: null,
         validationErrors: null,
       };
     } else {
-      this.state = HopModal.getDefaultState();
+      this.state = FermentableModal.getDefaultState();
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.hop && this.props.hop) {
+    if (!prevProps.fermentable && this.props.fermentable) {
       this.setState({
-        ...this.props.hop,
-        originId: this.props.hop.origin.id,
+        ...this.props.fermentable,
+        originId: this.props.fermentable.origin.id,
         loading: false,
         error: null,
         validationErrors: null,
@@ -89,40 +77,45 @@ class HopModal extends React.Component {
       this.props.onHide();
     }
 
-    this.setState(HopModal.getDefaultState());
+    this.setState(FermentableModal.getDefaultState());
   };
 
   handleChange = (e, { name, value }) => this.setState({ [name]: value });
 
+  handleCategoryChange = (e, { value }) => {
+    this.setState({
+      category: value,
+      type: value === 'GRAIN' ? 'BASE' : null,
+    });
+  };
+
   handleSubmit = (e, closeModal) => {
     e.preventDefault();
 
-    const { createHop, hop, updateHop } = this.props;
+    const { createFermentable, fermentable, updateFermentable } = this.props;
 
     this.setState({ loading: true }, () => {
       const {
-        aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
+        category, color, description, name, originId, potential, type,
       } = this.state;
 
       const variables = {
         input: {
-          aaLow: aaLow !== '' ? aaLow : null,
-          aaHigh: aaHigh !== '' ? aaHigh : null,
-          aroma,
-          betaLow: betaLow !== '' ? betaLow : null,
-          betaHigh: betaHigh !== '' ? betaHigh : null,
-          bittering,
+          category,
+          color: color !== '' ? color : null,
           description,
           name,
           originId: originId !== '' ? originId : null,
+          potential: potential !== '' ? potential : null,
+          type,
         },
       };
 
-      let fn = createHop;
+      let fn = createFermentable;
 
-      if (hop) {
-        variables.id = hop.id;
-        fn = updateHop;
+      if (fermentable) {
+        variables.id = fermentable.id;
+        fn = updateFermentable;
       }
 
       fn({ variables }).then(() => {
@@ -142,26 +135,44 @@ class HopModal extends React.Component {
 
   render() {
     const {
-      hop, id, getAllCountries, open,
+      fermentable, id, getAllCountries, open,
     } = this.props;
 
     const {
-      error, loading, aaLow, aaHigh, betaLow, betaHigh,
-      aroma, bittering, description, name, originId, validationErrors,
+      category, color, description, error, loading, name, originId, potential,
+      type, validationErrors,
     } = this.state;
+
+    const categories = [
+      { value: 'DRY_EXTRACT', label: 'Dry Extract' },
+      { value: 'FRUIT', label: 'Fruit' },
+      { value: 'GRAIN', label: 'Grain' },
+      { value: 'JUICE', label: 'Juice' },
+      { value: 'LIQUID_EXTRACT', label: 'Liquid Extract' },
+      { value: 'SUGAR', label: 'Sugar' },
+    ];
+
+    const types = [
+      { value: 'BASE', label: 'Base' },
+      { value: 'COLOR', label: 'Color' },
+      { value: 'CARAMEL_CRYSTAL', label: 'Caramel & Crystal' },
+      { value: 'ROASTED', label: 'Roasted' },
+      { value: 'ADJUNCT', label: 'Adjunct' },
+      { value: 'SPECIALTY', label: 'Specialty' },
+    ];
 
     return (
       <Modal
-        id={id}
         error={error}
-        loading={loading || getAllCountries.loading}
-        header={hop ? hop.name : 'New Hop'}
+        loading={loading}
+        header={fermentable ? fermentable.name : 'New Fermentable'}
         onHide={this.handleHide}
         open={open}
+        id={id}
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset layout='stacked'>
-              <div className="uk-margin">
+              <div className='uk-margin'>
                 <Form.Input
                   disabled={loading}
                   error={validationErrors ? validationErrors.name : null}
@@ -174,8 +185,8 @@ class HopModal extends React.Component {
               </div>
               <div className="uk-margin">
                 <Form.Select
-                  error={validationErrors ? validationErrors.originId : null}
                   label='Origin'
+                  error={validationErrors ? validationErrors.originId : null}
                   name='originId'
                   value={originId}
                   onChange={this.handleChange}
@@ -185,91 +196,58 @@ class HopModal extends React.Component {
                     ) : []}
                 />
               </div>
-              <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                <Form.Checkbox
-                  checked={!!aroma}
-                  disabled={loading}
-                  label='Aroma'
-                  name='aroma'
-                  onChange={this.handleChange}
-                />
-                <Form.Checkbox
-                  checked={!!bittering}
-                  disabled={loading}
-                  label='Bittering'
-                  name='bittering'
-                  onChange={this.handleChange}
+              <div className="uk-margin">
+                <Form.Select
+                  label='Category'
+                  error={validationErrors ? validationErrors.category : null}
+                  name='category'
+                  value={category}
+                  onChange={this.handleCategoryChange}
+                  options={categories}
                 />
               </div>
+              {
+                (!category || (category === 'GRAIN')) &&
+                <div className="uk-margin">
+                  <Form.Select
+                    label='Type'
+                    error={validationErrors ? validationErrors.type : null}
+                    name='type'
+                    value={type || 'BASE'}
+                    onChange={this.handleChange}
+                    options={types}
+                  />
+                </div>
+              }
               <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
                 <div>
                   <Form.Input
                     disabled={loading}
-                    error={validationErrors ? validationErrors.aaLow : null}
-                    icon='percent'
-                    iconWidth='12px'
                     min={0}
-                    max={100}
+                    max={1000}
                     width='small'
                     type='number'
-                    name='aaLow'
-                    label='Alpha (low)'
+                    name='color'
+                    label='Color (SRM)'
                     onChange={this.handleChange}
                     step={0.1}
-                    value={aaLow || ''}
+                    value={color || ''}
+                    required
                   />
                 </div>
                 <div>
                   <Form.Input
                     disabled={loading}
-                    error={validationErrors ? validationErrors.aaHigh : null}
-                    icon='percent'
-                    iconWidth='12px'
                     min={0}
-                    max={100}
+                    max={2000}
                     width='small'
                     type='number'
-                    name='aaHigh'
-                    label='Alpha (high)'
+                    name='potential'
+                    label='Potential (SG)'
                     onChange={this.handleChange}
-                    step={0.1}
-                    value={aaHigh || ''}
-                  />
-                </div>
-              </div>
-              <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-                <div>
-                  <Form.Input
-                    disabled={loading}
-                    error={validationErrors ? validationErrors.betaLow : null}
-                    icon='percent'
-                    iconWidth='12px'
-                    min={0}
-                    max={100}
-                    width='small'
-                    type='number'
-                    name='betaLow'
-                    label='Beta (low)'
-                    onChange={this.handleChange}
-                    step={0.1}
-                    value={betaLow || ''}
-                  />
-                </div>
-                <div>
-                  <Form.Input
-                    disabled={loading}
-                    error={validationErrors ? validationErrors.betaHigh : null}
-                    icon='percent'
-                    iconWidth='12px'
-                    min={0}
-                    max={100}
-                    width='small'
-                    type='number'
-                    name='betaHigh'
-                    label='Beta (high)'
-                    onChange={this.handleChange}
-                    step={0.1}
-                    value={betaHigh || ''}
+                    step={0.001}
+                    value={potential || ''}
+                    required
                   />
                 </div>
               </div>
@@ -294,18 +272,18 @@ class HopModal extends React.Component {
 
 export default compose(
   graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
-  graphql(CREATE_HOP, {
-    name: 'createHop',
+  graphql(CREATE_FERMENTABLE, {
+    name: 'createFermentable',
     options: props => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
-  graphql(UPDATE_HOP, {
-    name: 'updateHop',
+  graphql(UPDATE_FERMENTABLE, {
+    name: 'updateFermentable',
     options: props => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
-)(HopModal);
+)(FermentableModal);
