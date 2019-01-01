@@ -167,6 +167,7 @@ class HopModal extends React.Component {
               <div className="uk-margin">
                 <Form.Select
                   error={validationErrors ? validationErrors.originId : null}
+                  label='Origin'
                   name='originId'
                   value={originId}
                   onChange={this.handleChange}
