@@ -7,6 +7,7 @@ import {
 import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 import HopModal from '../modals/HopModal';
+import handleGraphQLError from '../errors/handleGraphQLError';
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -77,6 +78,17 @@ class Hops extends React.Component {
       hopModalOpen: true,
     });
   };
+
+  handleError(error) {
+    const { errorMessage } = handleGraphQLError(error, false);
+
+    window.UIkit.notification({
+      message: errorMessage,
+      status: 'danger',
+      pos: 'top-right',
+      timeout: 5000,
+    });
+  }
 
   handleRemoveHop = ({ id, name, origin }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
