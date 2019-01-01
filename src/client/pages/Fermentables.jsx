@@ -99,9 +99,9 @@ class Fermentables extends React.Component {
                     <Table.HeaderCell>Name</Table.HeaderCell>
                     <Table.HeaderCell>Origin</Table.HeaderCell>
                     <Table.HeaderCell>Category</Table.HeaderCell>
-                    <Table.HeaderCell>Type</Table.HeaderCell>
-                    <Table.HeaderCell>Color (SRM)</Table.HeaderCell>
-                    <Table.HeaderCell>Potential (SG)</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@m'>Type</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Color (SRM)</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Potential (SG)</Table.HeaderCell>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -111,9 +111,9 @@ class Fermentables extends React.Component {
                         <Table.Cell>{fermentable.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{fermentable.origin.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{fermentable.category}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{fermentable.type}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
+                        <Table.Cell className='uk-text-nowrap uk-visible@m'>{fermentable.type}</Table.Cell>
+                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
+                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
                         <Table.Cell>
                           <IconNav className='uk-text-nowrap'>
                             <IconNav.Item icon='pencil' onClick={() => this.handleEditFermentable(fermentable)}/>
