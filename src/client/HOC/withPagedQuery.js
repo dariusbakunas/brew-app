@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
+import { PagingContext } from '../context/PagingProvider';
 
 function withPagedQuery(query, key, pageSize) {
   return (WrappedComponent) => {
@@ -16,15 +17,20 @@ function withPagedQuery(query, key, pageSize) {
           [key]: PropTypes.shape({
             pageInfo: PropTypes.shape({
               nextCursor: PropTypes.string,
-              currentCursor: PropTypes.string,
             }),
           }),
         }).isRequired,
       };
 
-      state = {
-        pages: [],
-      };
+      static contextType = PagingContext;
+
+      componentDidMount() {
+        const { getPreviousPage, setPage } = this.context;
+
+        if (!getPreviousPage || !setPage) {
+          console.error('Warning: Wrap component with PagingProvider to enable paging functionality');
+        }
+      }
 
       hasNextPage = () => {
         const entries = this.props.getPagedData[key];
@@ -32,17 +38,14 @@ function withPagedQuery(query, key, pageSize) {
         return !!nextCursor;
       };
 
-      hasPreviousPage = () => this.state.pages.length > 0;
+      hasPreviousPage = () => this.context.pages[key] && this.context.pages[key].length > 0;
 
       getNextPage = () => {
         const pageData = this.props.getPagedData[key];
         const nextCursor = pageData ? pageData.pageInfo.nextCursor : null;
 
         if (nextCursor) {
-          const { pages } = this.state;
-          pages.push(nextCursor);
-
-          this.setState({ pages });
+          this.context.setPage(key, nextCursor);
           this.getPage(nextCursor);
         }
       };
@@ -56,7 +59,7 @@ function withPagedQuery(query, key, pageSize) {
           variables: { cursor, limit: pageSize, sortBy },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             const newData = fetchMoreResult[key].data;
-            const { nextCursor, currentCursor } = fetchMoreResult[key].pageInfo;
+            const { nextCursor } = fetchMoreResult[key].pageInfo;
 
             return {
               [key]: {
@@ -65,7 +68,6 @@ function withPagedQuery(query, key, pageSize) {
                 pageInfo: {
                   __typename: previousResult[key].pageInfo.__typename,
                   nextCursor,
-                  currentCursor,
                 },
               },
             };
@@ -74,19 +76,15 @@ function withPagedQuery(query, key, pageSize) {
       };
 
       getPreviousPage = () => {
-        const { pages } = this.state;
-        pages.pop();
-
-        this.setState({ pages });
-
-        const cursor = pages.length > 0 ? pages[pages.length - 1] : null;
-        this.getPage(cursor);
+        this.context.getPreviousPage(key, (cursor) => {
+          this.getPage(cursor);
+        });
       };
 
       getRefetchQuery = sortBy => ({
         query,
         variables: {
-          cursor: this.props.getPagedData[key] ? this.props.getPagedData[key].currentCursor : null,
+          cursor: this.context.getCurrentCursor(key),
           sortBy,
           limit: pageSize,
         },

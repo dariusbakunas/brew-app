@@ -4,13 +4,14 @@ import { Container, Tabs, Nav } from '../components';
 import Hops from './Hops';
 import Fermentables from './Fermentables';
 import Yeast from './Yeast';
+import PagingProvider from '../context/PagingProvider';
 
 class Ingredients extends React.Component {
   render() {
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
         <Container>
-          <React.Fragment>
+          <PagingProvider>
             <Tabs align='center' className='uk-visible@s uk-margin-medium-bottom'>
               <Nav.Item url='/ingredients/hops' label='Hops'/>
               <Nav.Item url='/ingredients/fermentables' label='Fermentables'/>
@@ -22,7 +23,7 @@ class Ingredients extends React.Component {
               <Route path='/ingredients/fermentables' component={Fermentables}/>
               <Route path='/ingredients/yeast' component={Yeast}/>
             </Switch>
-          </React.Fragment>
+          </PagingProvider>
         </Container>
       </div>
     );

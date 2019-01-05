@@ -19,7 +19,6 @@ export const GET_HOPS = gql`
         }
       }
       pageInfo {
-        currentCursor
         nextCursor
       }
     }
@@ -43,7 +42,6 @@ export const GET_FERMENTABLES = gql`
         type
       }
       pageInfo {
-        currentCursor
         nextCursor
       }
     }
@@ -65,7 +63,6 @@ export const GET_YEAST = gql`
         }
       }
       pageInfo {
-        currentCursor
         nextCursor
       }
     }
