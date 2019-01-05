@@ -18,6 +18,7 @@ class Fermentables extends React.Component {
       id: PropTypes.string,
       name: PropTypes.string,
       category: PropTypes.string,
+      description: PropTypes.string,
       type: PropTypes.string,
     })),
     getNextPage: PropTypes.func,
@@ -102,6 +103,7 @@ class Fermentables extends React.Component {
                     <Table.HeaderCell className='uk-visible@m'>Type</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@s'>Color (SRM)</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@s'>Potential (SG)</Table.HeaderCell>
+                    <Table.HeaderCell/>
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>

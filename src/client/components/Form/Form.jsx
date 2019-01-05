@@ -6,6 +6,7 @@ import Fieldset from './Fieldset';
 import Spinner from '../Spinner';
 import TextArea from './TextArea';
 import Select from './Select';
+import Radio from './Radio';
 
 class Form extends React.Component {
   static propTypes = {
@@ -19,6 +20,8 @@ class Form extends React.Component {
   static Input = Input;
 
   static Checkbox = Checkbox;
+
+  static Radio = Radio;
 
   static TextArea = TextArea;
 

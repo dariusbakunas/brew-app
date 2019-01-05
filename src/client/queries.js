@@ -50,6 +50,28 @@ export const GET_FERMENTABLES = gql`
   }
 `;
 
+export const GET_YEAST = gql`
+  query GetYeast($cursor: String, $limit: Int, $sortBy: SortableYeastField, $sortDirection: SortDirection) {
+    yeast(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "yeast") {
+      data {
+        id
+        name
+        form
+        type
+        description
+        lab {
+          id
+          name
+        }
+      }
+      pageInfo {
+        currentCursor
+        nextCursor
+      }
+    }
+  }
+`;
+
 export const CREATE_HOP = gql`
   mutation CreateHop($input: HopInput!) {
     createHop(input: $input) {
@@ -88,6 +110,22 @@ export const CREATE_FERMENTABLE = gql`
   }
 `;
 
+export const CREATE_YEAST = gql`
+  mutation CreateYeast($input: YeastInput!) {
+    createYeast(input: $input) {
+      id
+      name
+      form
+      type
+      description
+      lab {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const UPDATE_HOP = gql`
   mutation UpdateHop($id: ID!, $input: HopInput!) {
     updateHop(id: $id, input: $input) {
@@ -122,6 +160,22 @@ export const UPDATE_FERMENTABLE = gql`
       }
       potential
       type
+    }
+  }
+`;
+
+export const UPDATE_YEAST = gql`
+  mutation UpdateYeast($id: ID!, $input: YeastInput!) {
+    updateYeast(id: $id, input: $input) {
+      id
+      name
+      form
+      type
+      description
+      lab {
+        id
+        name
+      }
     }
   }
 `;
@@ -179,9 +233,24 @@ export const GET_ALL_COUNTRIES = gql`
   }
 `;
 
+export const GET_YEAST_LABS = gql`
+  query GetYeastLabs{
+    yeastLabs {
+      id
+      name
+    }
+  }
+`;
+
 export const REMOVE_HOP = gql`
   mutation RemoveHop($id: ID!) {
     removeHop(id: $id)
+  }
+`;
+
+export const REMOVE_YEAST = gql`
+  mutation RemoveYeast($id: ID!) {
+    removeYeast(id: $id)
   }
 `;
 

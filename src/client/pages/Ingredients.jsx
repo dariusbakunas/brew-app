@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { Container, Tabs, Nav } from '../components';
 import Hops from './Hops';
 import Fermentables from './Fermentables';
+import Yeast from './Yeast';
 
 class Ingredients extends React.Component {
   render() {
@@ -15,11 +16,11 @@ class Ingredients extends React.Component {
               <Nav.Item url='/ingredients/fermentables' label='Fermentables'/>
               <Nav.Item url='/ingredients/yeast' label='Yeast'/>
               <Nav.Item url='/ingredients/water' label='Water'/>
-              <Nav.Item url='/ingredients/other' label='Other'/>
             </Tabs>
             <Switch>
               <Route path='/ingredients/hops' component={Hops}/>
               <Route path='/ingredients/fermentables' component={Fermentables}/>
+              <Route path='/ingredients/yeast' component={Yeast}/>
             </Switch>
           </React.Fragment>
         </Container>

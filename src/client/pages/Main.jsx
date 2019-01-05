@@ -66,7 +66,6 @@ class Main extends React.Component {
                   <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
                   <Nav.Item label='Yeast' url='/ingredients/yeast'/>
                   <Nav.Item label='Water' url='/ingredients/water'/>
-                  <Nav.Item label='Other' url='/ingredients/other'/>
                 </React.Fragment>
               }
               <Nav.Header label='Account'/>
