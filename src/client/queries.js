@@ -69,6 +69,29 @@ export const GET_YEAST = gql`
   }
 `;
 
+export const GET_WATER = gql`
+  query GetWater($cursor: String, $limit: Int, $sortBy: SortableWaterField, $sortDirection: SortDirection) {
+    water(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "water") {
+      data {
+        id
+        name
+        pH
+        alkalinity
+        calcium
+        magnesium
+        sodium
+        sulfate
+        chloride
+        bicarbonate
+        description
+      }
+      pageInfo {
+        nextCursor
+      }
+    }
+  }
+`;
+
 export const CREATE_HOP = gql`
   mutation CreateHop($input: HopInput!) {
     createHop(input: $input) {
@@ -123,6 +146,24 @@ export const CREATE_YEAST = gql`
   }
 `;
 
+export const CREATE_WATER = gql`
+  mutation CreateWater($input: WaterInput!) {
+    createWater(input: $input) {
+      id
+      name
+      pH
+      alkalinity
+      calcium
+      magnesium
+      sodium
+      sulfate
+      chloride
+      bicarbonate
+      description
+    }
+  }
+`;
+
 export const UPDATE_HOP = gql`
   mutation UpdateHop($id: ID!, $input: HopInput!) {
     updateHop(id: $id, input: $input) {
@@ -173,6 +214,24 @@ export const UPDATE_YEAST = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const UPDATE_WATER = gql`
+  mutation UpdateWater($id: ID!, $input: WaterInput!) {
+    updateWater(id: $id, input: $input) {
+      id
+      name
+      pH
+      alkalinity
+      description
+      calcium
+      magnesium
+      sodium
+      sulfate
+      chloride
+      bicarbonate
     }
   }
 `;
@@ -254,5 +313,11 @@ export const REMOVE_YEAST = gql`
 export const REMOVE_FERMENTABLE = gql`
   mutation RemoveFermentable($id: ID!) {
     removeFermentable(id: $id)
+  }
+`;
+
+export const REMOVE_WATER = gql`
+  mutation RemoveWater($id: ID!) {
+    removeWater(id: $id)
   }
 `;

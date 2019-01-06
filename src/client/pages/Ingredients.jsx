@@ -4,6 +4,7 @@ import { Container, Tabs, Nav } from '../components';
 import Hops from './Hops';
 import Fermentables from './Fermentables';
 import Yeast from './Yeast';
+import Water from './Water';
 import PagingProvider from '../context/PagingProvider';
 
 class Ingredients extends React.Component {
@@ -22,6 +23,7 @@ class Ingredients extends React.Component {
               <Route path='/ingredients/hops' component={Hops}/>
               <Route path='/ingredients/fermentables' component={Fermentables}/>
               <Route path='/ingredients/yeast' component={Yeast}/>
+              <Route path='/ingredients/water' component={Water}/>
             </Switch>
           </PagingProvider>
         </Container>
