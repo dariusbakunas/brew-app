@@ -42,6 +42,7 @@ class FermentableModal extends React.Component {
     originId: UNITED_STATES_ID,
     potential: null,
     type: 'BASE',
+    yield: null,
     validationErrors: null,
   });
 
@@ -107,6 +108,7 @@ class FermentableModal extends React.Component {
           name,
           originId: originId !== '' ? originId : null,
           potential: potential !== '' ? potential : null,
+          yield: this.state.yield,
           type,
         },
       };
@@ -228,7 +230,7 @@ class FermentableModal extends React.Component {
                     width='small'
                     type='number'
                     name='color'
-                    label='Color (SRM)'
+                    label='Color, SRM'
                     onChange={this.handleChange}
                     step={0.1}
                     value={color || ''}
@@ -243,10 +245,25 @@ class FermentableModal extends React.Component {
                     width='small'
                     type='number'
                     name='potential'
-                    label='Potential (SG)'
+                    label='Potential, SG'
                     onChange={this.handleChange}
                     step={0.001}
                     value={potential || ''}
+                    required
+                  />
+                </div>
+                <div>
+                  <Form.Input
+                    disabled={loading}
+                    min={0}
+                    max={100}
+                    width='small'
+                    type='number'
+                    name='yield'
+                    label='Yield, %'
+                    onChange={this.handleChange}
+                    step={0.01}
+                    value={this.state.yield || ''}
                     required
                   />
                 </div>

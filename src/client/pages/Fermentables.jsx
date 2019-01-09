@@ -101,8 +101,9 @@ class Fermentables extends React.Component {
                     <Table.HeaderCell>Origin</Table.HeaderCell>
                     <Table.HeaderCell>Category</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@m'>Type</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Color (SRM)</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Potential (SG)</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Color, SRM</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Potential, SG</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Yield, %</Table.HeaderCell>
                     <Table.HeaderCell/>
                   </Table.Row>
                 </Table.Header>
@@ -116,6 +117,7 @@ class Fermentables extends React.Component {
                         <Table.Cell className='uk-text-nowrap uk-visible@m'>{fermentable.type}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
+                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.yield}</Table.Cell>
                         <Table.Cell>
                           <IconNav className='uk-text-nowrap'>
                             <IconNav.Item icon='pencil' onClick={() => this.handleEditFermentable(fermentable)}/>

@@ -40,6 +40,7 @@ export const GET_FERMENTABLES = gql`
         }
         potential
         type
+        yield
       }
       pageInfo {
         nextCursor
@@ -126,6 +127,7 @@ export const CREATE_FERMENTABLE = gql`
       }
       potential
       type
+      yield
     }
   }
 `;
@@ -198,6 +200,7 @@ export const UPDATE_FERMENTABLE = gql`
       }
       potential
       type
+      yield
     }
   }
 `;
