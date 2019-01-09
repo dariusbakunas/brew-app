@@ -73,22 +73,26 @@ class InvitationModal extends React.Component {
         render={close => (
           <Form onSubmit={e => this.handleSubmit(e, close)}>
             <Form.Fieldset>
-              <Form.Input
-                disabled={loading}
-                error={validationErrors ? validationErrors.email : null}
-                label='Email'
-                name='email'
-                value={email}
-                onChange={this.handleChange}
-                required
-              />
-              <Form.Checkbox
-                disabled={loading}
-                label='Send invitation email'
-                name='send'
-                checked={send}
-                onChange={this.handleChange}
-              />
+              <div className="uk-margin">
+                <Form.Input
+                  disabled={loading}
+                  error={validationErrors ? validationErrors.email : null}
+                  label='Email'
+                  name='email'
+                  value={email}
+                  onChange={this.handleChange}
+                  required
+                />
+              </div>
+              <div className="uk-margin">
+                <Form.Checkbox
+                  disabled={loading}
+                  label='Send invitation email'
+                  name='send'
+                  checked={send}
+                  onChange={this.handleChange}
+                />
+              </div>
             </Form.Fieldset>
             <div className='uk-text-right'>
               <button className='uk-button uk-button-default uk-modal-close uk-margin-small-right' type='button' disabled={loading}>Cancel</button>
