@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+export const GET_ROLES = gql`
+  query GetRoles {
+    roles {
+      id
+      name
+      code
+    }
+  }
+`;
+
 export const GET_HOPS = gql`
   query GetHops($cursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
     hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
