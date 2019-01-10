@@ -41,6 +41,10 @@ module.exports = (env, argv) => {
     module: {
       rules: [
         {
+          test: /\.tsx?$/,
+          loader: 'awesome-typescript-loader'
+        },
+        {
           test: /\.jsx?$/,
           loader: 'babel-loader',
         },
@@ -86,7 +90,7 @@ module.exports = (env, argv) => {
       filename: '[name].bundle.js',
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     plugins: clientPlugins,
   };
@@ -104,6 +108,10 @@ module.exports = (env, argv) => {
     target: 'node',
     module: {
       rules: [
+        {
+          test: /\.tsx?$/,
+          loader: 'awesome-typescript-loader'
+        },
         {
           test: /\.jsx?$/,
           loader: 'babel-loader',
@@ -137,7 +145,7 @@ module.exports = (env, argv) => {
       __dirname: false,
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     plugins: serverPlugins,
   };

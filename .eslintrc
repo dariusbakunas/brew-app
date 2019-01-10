@@ -1,5 +1,10 @@
 {
-  "extends": ["airbnb-base", "plugin:jest/recommended", "plugin:react/recommended", "plugin:jsx-a11y/recommended"],
+  "extends": [
+    "airbnb-base",
+    "plugin:jest/recommended",
+    "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended"
+  ],
   "env": {
     "es6": true,
     "node": true,
@@ -33,7 +38,7 @@
       "allowChildren": false
     }]
   },
-  "parser": "babel-eslint",
+  "parser": "typescript-eslint-parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true,

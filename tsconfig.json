@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": true,
+    "removeComments": true,
+    "target": "es2015",
+    "lib": ["es6", "dom", "esnext"],
+    "baseUrl": ".",
+    "moduleResolution": "node"
+  }
+}

@@ -1,5 +1,5 @@
-import express from 'express';
-import passport from 'passport';
+import * as express from 'express';
+import * as passport from 'passport';
 
 const router = express.Router();
 
@@ -11,15 +11,14 @@ router.get('/auth', passport.authenticate('auth0', {
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
-router.get('/callback', (req, res, next) => {
-  passport.authenticate('auth0', (err, user, info) => {
+router.get('/callback', (req: express.Request, res, next) => {
+  passport.authenticate('auth0', (err, user) => {
     if (err) { return next(err); }
     if (!user) { return res.redirect('/login'); }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      const returnTo = req.session.returnTo;
-      delete req.session.returnTo;
-      res.redirect(returnTo || '/');
+
+    return req.login(user, (reqErr) => {
+      if (reqErr) { return next(reqErr); }
+      return res.redirect('/');
     });
   })(req, res, next);
 });

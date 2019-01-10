@@ -1,12 +1,23 @@
-import passport from 'passport';
-import Auth0Strategy from 'passport-auth0';
+import * as passport from 'passport';
+import * as Auth0Strategy from 'passport-auth0';
 import gql from 'graphql-tag';
 import getApolloClient from '../apolloClient';
 import { USER_STATUS } from '../../contants';
 
-const getUserByEmail = (apolloClient, email) => apolloClient
-  .query({
-    query: gql`
+type User = {
+  email: string,
+};
+
+type UserResponse = {
+  userByEmail: User,
+};
+
+const getUserByEmail =
+(
+  apolloClient: ReturnType<typeof getApolloClient>,
+  email: string,
+) => apolloClient.query<UserResponse>({
+  query: gql`
       query GetUserByEmail($email: String!) {
         userByEmail(email: $email) {
           id
@@ -22,10 +33,10 @@ const getUserByEmail = (apolloClient, email) => apolloClient
         }
       }
     `,
-    variables: {
-      email,
-    },
-  });
+  variables: {
+    email,
+  },
+});
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -35,7 +46,13 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-export const verify = (accessToken, refreshToken, extraParams, profile, done) => {
+export const verify: Auth0Strategy.VerifyFunction = (
+  accessToken,
+  refreshToken,
+  extraParams,
+  profile,
+  done,
+) => {
   // accessToken is the token to call Auth0 API (not needed in the most cases)
   // extraParams.id_token has the JSON Web Token
   // profile has all the information from the user
@@ -43,7 +60,7 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
     email: profile.emails[0].value,
     firstName: profile.name.givenName,
     lastName: profile.name.familyName,
-    username: profile.user_id,
+    username: profile.id,
     initialAuth: true,
   };
 
@@ -66,6 +83,7 @@ export const verify = (accessToken, refreshToken, extraParams, profile, done) =>
     });
 };
 
+// @ts-ignore
 export default new Auth0Strategy(
   {
     domain: process.env.AUTH0_DOMAIN,

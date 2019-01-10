@@ -1,4 +1,10 @@
-import request from 'request';
+import * as request from 'request';
+
+interface Token {
+  accessToken: string,
+  tokenType: string,
+  expiresAt: number,
+}
 
 const options = {
   method: 'POST',
@@ -14,9 +20,9 @@ const options = {
   json: true,
 };
 
-let token = null;
+let token: Token = null;
 
-const getAuth0Token = () => new Promise((resolve, reject) => {
+const getAuth0Token = (): Promise<Token> => new Promise((resolve, reject) => {
   // subtract 5 minutes for safety
   if (token && new Date().getTime() < token.expiresAt - 5 * 1000 * 60) {
     return resolve(token);
@@ -24,7 +30,7 @@ const getAuth0Token = () => new Promise((resolve, reject) => {
 
   console.log('Getting new Auth0 API token');
 
-  request(options, (error, response, body) => {
+  return request(options, (error, response, body) => {
     if (error) return reject(new Error(error));
 
     const { access_token: accessToken, expires_in: expiresIn, token_type: tokenType } = body;
