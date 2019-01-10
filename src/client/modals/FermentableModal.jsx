@@ -230,7 +230,7 @@ class FermentableModal extends React.Component {
                     width='small'
                     type='number'
                     name='color'
-                    label='Color, SRM'
+                    label='Color, °L'
                     onChange={this.handleChange}
                     step={0.1}
                     value={color || ''}

@@ -101,7 +101,7 @@ class Fermentables extends React.Component {
                     <Table.HeaderCell>Origin</Table.HeaderCell>
                     <Table.HeaderCell>Category</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@m'>Type</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Color, SRM</Table.HeaderCell>
+                    <Table.HeaderCell className='uk-visible@s'>Color, °L</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@s'>Potential, SG</Table.HeaderCell>
                     <Table.HeaderCell className='uk-visible@s'>Yield, %</Table.HeaderCell>
                     <Table.HeaderCell/>
