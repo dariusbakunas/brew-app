@@ -1,47 +1,69 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
+import { ApolloError } from 'apollo-client';
 import Modal from './Modal';
 import { Button, Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
+import { InputChangeHandlerType } from '../components/Form/Input';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
 } from '../queries';
 
 // TODO: find a better way to do this
-const UNITED_STATES_ID = 236;
+const UNITED_STATES_ID = '236';
 
-class HopModal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    createHop: PropTypes.func.isRequired,
-    hop: PropTypes.shape({
-      aaLow: PropTypes.number,
-      aaHigh: PropTypes.number,
-      aroma: PropTypes.bool,
-      bittering: PropTypes.bool,
-      betaLow: PropTypes.number,
-      betaHigh: PropTypes.number,
-      description: PropTypes.string,
-      name: PropTypes.string,
-      origin: PropTypes.shape({
-        id: PropTypes.string,
-      }),
-    }),
-    getAllCountries: PropTypes.shape({
-      loading: PropTypes.bool,
-      countries: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-      })),
-    }),
-    onHide: PropTypes.func,
-    open: PropTypes.bool,
-    refetchQuery: PropTypes.object,
-    updateHop: PropTypes.func,
-  };
+type BaseHop = {
+  aaLow?: number,
+  aaHigh?: number,
+  aroma: boolean,
+  bittering: boolean,
+  betaLow?: number,
+  betaHigh?: number,
+  description: string,
+  name: string,
+};
 
-  static getDefaultState = () => ({
+type Hop = BaseHop & {
+  id?: string,
+  origin: {
+    id: string,
+  }
+};
+
+type Country = {
+  id: string,
+  name: string,
+};
+
+type HopInput = { input: BaseHop } & { id?: string, input: { originId: string } };
+
+type HopModalProps = {
+  id: string,
+  createHop: (args: { variables: HopInput }) => Promise<void>,
+  getAllCountries: {
+    loading: boolean,
+    countries: Country[],
+  },
+  hop: Hop,
+  onHide: () => void,
+  open: boolean,
+  refetchQuery: any,
+  updateHop: (args: { variables: HopInput }) => Promise<void>,
+};
+
+type HopModalState = BaseHop & {
+  error?: string,
+  loading: boolean,
+  originId: string,
+  validationErrors: {
+    [key: string]: string,
+  }
+};
+
+class HopModal extends React.Component<HopModalProps> {
+  readonly state: HopModalState;
+
+  static getDefaultState: () => HopModalState = () => ({
     aaLow: null,
     aaHigh: null,
     aroma: false,
@@ -56,7 +78,7 @@ class HopModal extends React.Component {
     validationErrors: null,
   });
 
-  constructor(props) {
+  constructor(props: HopModalProps) {
     super(props);
 
     if (props.hop) {
@@ -72,7 +94,7 @@ class HopModal extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: HopModalProps) {
     if (!prevProps.hop && this.props.hop) {
       this.setState({
         ...this.props.hop,
@@ -92,9 +114,9 @@ class HopModal extends React.Component {
     this.setState(HopModal.getDefaultState());
   };
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
-  handleSubmit = (e, closeModal) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
     e.preventDefault();
 
     const { createHop, hop, updateHop } = this.props;
@@ -104,13 +126,13 @@ class HopModal extends React.Component {
         aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
       } = this.state;
 
-      const variables = {
+      const variables: HopInput = {
         input: {
-          aaLow: aaLow !== '' ? aaLow : null,
-          aaHigh: aaHigh !== '' ? aaHigh : null,
+          aaLow,
+          aaHigh,
           aroma,
-          betaLow: betaLow !== '' ? betaLow : null,
-          betaHigh: betaHigh !== '' ? betaHigh : null,
+          betaLow,
+          betaHigh,
           bittering,
           description,
           name,
@@ -129,7 +151,7 @@ class HopModal extends React.Component {
         this.setState({ loading: false }, () => {
           closeModal();
         });
-      }).catch((err) => {
+      }).catch((err: ApolloError) => {
         const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
         this.setState({
           error: errorMessage,
@@ -296,14 +318,14 @@ export default compose(
   graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
   graphql(CREATE_HOP, {
     name: 'createHop',
-    options: props => ({
+    options: (props: HopModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_HOP, {
     name: 'updateHop',
-    options: props => ({
+    options: (props: HopModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
