@@ -1,17 +1,25 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 
 export const PagingContext = React.createContext({ pages: {} });
 
-class PagingProvider extends React.Component {
-  static propTypes = {
-    children: PropTypes.node,
-  };
+type PagingProviderProps = {
+  children: ReactNode,
+};
 
-  state = {
+type PagingProviderState = {
+  pages: {
+    [key: string]: string[],
+  },
+  getPreviousPage: (key: string, callback: (cursor?: string) => void) => void,
+  setPage: (key: string, cursor: string) => void,
+  getCurrentCursor: (key: string) => string,
+};
+
+class PagingProvider extends React.Component<PagingProviderProps> {
+  readonly state: Readonly<PagingProviderState> = {
     pages: {},
     getPreviousPage: (key, callback) => {
-      this.setState((prevState) => {
+      this.setState((prevState: Readonly<PagingProviderState>) => {
         const pages = prevState.pages[key] ? [...prevState.pages[key]] : [];
         pages.pop();
 
@@ -27,7 +35,7 @@ class PagingProvider extends React.Component {
       });
     },
     setPage: (key, cursor) => {
-      this.setState((prevState) => {
+      this.setState((prevState: Readonly<PagingProviderState>) => {
         const pages = prevState.pages[key] ? [...prevState.pages[key]] : [];
         pages.push(cursor);
 
