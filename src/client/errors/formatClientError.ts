@@ -1,4 +1,6 @@
-const formatClientError = (error) => {
+timport { ApolloError } from 'apollo-client';
+
+const formatClientError = (error: ApolloError) => {
   const displayError = {
     message: 'Unknown error occurred, please try again',
   };
