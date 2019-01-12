@@ -1,24 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
+import { ApolloError } from 'apollo-client';
 import withServerContext from '../HOC/withServerContext';
 import formatClientError from './formatClientError';
 
-class ErrorBoundary extends React.Component {
-  static propTypes = {
-    children: PropTypes.node,
-    error: PropTypes.shape({
-      message: PropTypes.string,
-    }),
-  };
+type ErrorBoundaryProps = {
+  children: ReactNode,
+  error?: {
+    message: string,
+  }
+};
 
-  constructor(props) {
+type ErrorBoundaryState = {
+  error?: string,
+};
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
+  readonly state: ErrorBoundaryState;
+
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
       error: props.error ? props.error.message : null,
     };
   }
 
-  componentDidCatch(error) {
+  componentDidCatch(error: ApolloError) {
     const { message } = formatClientError(error);
     this.setState({ error: message });
   }

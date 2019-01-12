@@ -1,4 +1,4 @@
-timport { ApolloError } from 'apollo-client';
+import { ApolloError } from 'apollo-client';
 
 const formatClientError = (error: ApolloError) => {
   const displayError = {

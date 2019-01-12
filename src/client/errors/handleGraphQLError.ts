@@ -1,6 +1,7 @@
+import { ApolloError } from 'apollo-client';
 import { ServerError } from './errors';
 
-const handleGraphQLError = (error, useBoundary = true) => {
+const handleGraphQLError = (error: ApolloError, useBoundary = true) => {
   const { graphQLErrors, networkError } = error;
 
   let validationErrors = {};
@@ -8,7 +9,7 @@ const handleGraphQLError = (error, useBoundary = true) => {
 
   if (networkError) {
     if (useBoundary) {
-      throw new ServerError(networkError);
+      throw new ServerError(networkError.message);
     } else {
       errorMessage = 'Unknown error occurred, please try again';
     }
