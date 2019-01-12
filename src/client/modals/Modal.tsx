@@ -1,20 +1,21 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import { LoadingBar, Header } from '../components';
 
-class Modal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    error: PropTypes.string,
-    header: PropTypes.string,
-    loading: PropTypes.bool,
-    onHide: PropTypes.func,
-    open: PropTypes.bool,
-    render: PropTypes.func.isRequired,
-  };
+type ModalProps = {
+  id: string,
+  error?: string,
+  header: string,
+  loading: boolean,
+  onHide: () => void,
+  open: boolean,
+  render: (callback: () => void) => ReactNode,
+};
 
-  constructor(props) {
+class Modal extends React.Component<ModalProps> {
+  private ref: React.RefObject<HTMLDivElement>;
+
+  constructor(props: ModalProps) {
     super(props);
     this.ref = React.createRef();
     this.state = {
@@ -36,7 +37,7 @@ class Modal extends React.Component {
     this.ref.current.removeEventListener('hidden', this.handleHide);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: ModalProps) {
     if (prevProps.open && !this.props.open) {
       this.hide();
     } else if (!prevProps.open && this.props.open) {
