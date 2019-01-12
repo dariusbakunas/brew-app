@@ -1,10 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { ApolloClient, ApolloError } from 'apollo-client';
 import queryString from 'query-string';
 import gql from 'graphql-tag';
-import { withApollo } from 'react-apollo';
+import { ExecutionResult, withApollo } from 'react-apollo';
 import { Header, Container, Button } from '../components';
+import handleGraphQLError from '../errors/handleGraphQLError';
 
 const ACTIVATE_USER = gql`
   mutation ActivateUser($token: String!) {
@@ -14,16 +15,26 @@ const ACTIVATE_USER = gql`
   }
 `;
 
-class Activate extends React.Component {
-  constructor(props) {
+type ActivateProps = {
+  client: ApolloClient<any>,
+};
+
+type Result = { activateUser: { success: boolean }};
+
+class Activate extends React.Component<ActivateProps & RouteComponentProps<any>> {
+  readonly state: { loading: boolean, success: boolean, error: boolean };
+
+  constructor(props: ActivateProps & RouteComponentProps<any>) {
     super(props);
     this.state = {
       loading: true,
+      success: false,
+      error: false,
     };
   }
 
-  handleComplete = (data) => {
-    const { success } = data.activateUser;
+  handleComplete = (result: ExecutionResult<Result>) => {
+    const { success } = result.data.activateUser;
 
     if (success) {
       this.setState({
@@ -43,17 +54,30 @@ class Activate extends React.Component {
     window.location.href = '/auth';
   };
 
+  private static handleError(error: ApolloError) {
+    const { errorMessage } = handleGraphQLError(error, false);
+
+    if (errorMessage) {
+      window.UIkit.notification({
+        errorMessage,
+        status: 'danger',
+        pos: 'top-right',
+        timeout: 5000,
+      });
+    }
+  }
+
   componentDidMount() {
     const { location } = this.props;
     const { token } = queryString.parse(location.search);
 
     if (token) {
-      this.props.client.mutate({
+      this.props.client.mutate<Result>({
         variables: { token },
         mutation: ACTIVATE_USER,
       })
-        .then(response => this.handleComplete(response.data))
-        .catch(this.handleError);
+        .then(response => this.handleComplete(response))
+        .catch(Activate.handleError);
     }
   }
 
@@ -66,7 +90,8 @@ class Activate extends React.Component {
         <div className='signup-container'>
           <Container className='uk-width-large uk-text-center'>
             <Header>Almost There</Header>
-            <p>We&#39;ve sent you email with an activation link. Simply click the link and your account will be activated</p>
+            <p>We&#39;ve sent you email with an activation link.
+              Simply click the link and your account will be activated</p>
           </Container>
         </div>
       );
@@ -106,12 +131,5 @@ class Activate extends React.Component {
     );
   }
 }
-
-Activate.propTypes = {
-  client: PropTypes.object,
-  location: PropTypes.shape({
-    search: PropTypes.string,
-  }).isRequired,
-};
 
 export default withApollo(withRouter(Activate));
