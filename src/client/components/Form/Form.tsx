@@ -9,7 +9,7 @@ import Radio from './Radio';
 
 type FormProps = {
   children: ReactNode,
-  loading: boolean,
+  loading?: boolean,
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
 };
 

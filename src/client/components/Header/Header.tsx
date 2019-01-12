@@ -1,11 +1,11 @@
-import React, {ReactNode} from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 
 type HeaderProps = {
   as: 'h1' | 'h2' | 'h3' | 'h4' | 'h5',
   children: ReactNode,
-  className: string,
-  textAlign: 'left' | 'center' | 'right' | 'justify'
+  className?: string,
+  textAlign?: 'left' | 'center' | 'right' | 'justify'
 };
 
 function Header(props: HeaderProps) {

@@ -10,7 +10,7 @@ type ItemProps = RouteComponentProps<any> & {
   location: {
     pathname: string,
   },
-  onClick: (e: React.MouseEvent<HTMLElement>) => void,
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void,
   url: string,
 };
 

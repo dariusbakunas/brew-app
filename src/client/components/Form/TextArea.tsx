@@ -1,16 +1,17 @@
 import React from 'react';
 import classNames from 'classnames';
-import getUnhandledProps from '../../utils/getUnhandledProps';
 
 type TextAreaProps = {
+  disabled?: boolean,
   error?: string,
   label?: string,
   name: string,
   onChange: (
-    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+    e: React.ChangeEvent<HTMLTextAreaElement>, val: { name: string, value: string | number }
   ) => void,
   resize?: boolean,
   rows: number,
+  value: string,
   width: 'large' | 'medium' | 'small' | 'xsmall'
 };
 
@@ -20,7 +21,7 @@ class TextArea extends React.Component<TextAreaProps> {
     rows: 5,
   };
 
-  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (this.props.onChange) {
       const { value } = e.currentTarget;
       const { name } = this.props;
@@ -30,10 +31,8 @@ class TextArea extends React.Component<TextAreaProps> {
 
   render() {
     const {
-      error, label, name, resize, rows, width,
+      disabled, error, label, name, resize, rows, value, width,
     } = this.props;
-
-    const rest = getUnhandledProps(TextArea, this.props);
 
     const classes = classNames(
       'uk-textarea',
@@ -53,10 +52,11 @@ class TextArea extends React.Component<TextAreaProps> {
         <textarea
           id={id}
           className={classes}
+          disabled={disabled}
           name={name}
           onChange={this.handleChange}
           rows={rows}
-          {...rest}
+          value={value}
         />
         {
           error &&

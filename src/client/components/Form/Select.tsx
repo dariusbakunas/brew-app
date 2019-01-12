@@ -7,17 +7,18 @@ type SelectProps = {
   label?: string,
   name: string,
   onChange: (
-    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+    e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string | number }
   ) => void,
   options: {
     value: string,
     label: string,
   }[],
-  width: 'large' | 'medium' | 'small' | 'xsmall'
+  value: string,
+  width?: 'large' | 'medium' | 'small' | 'xsmall'
 };
 
 class Select extends React.Component<SelectProps> {
-  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+  handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const {
       name, onChange,
     } = this.props;
@@ -30,10 +31,8 @@ class Select extends React.Component<SelectProps> {
 
   render() {
     const {
-      error, label, name, options, width,
+      error, label, name, options, value, width,
     } = this.props;
-
-    const rest = getUnhandledProps(Select, this.props);
 
     const classes = classNames(
       'uk-select',
@@ -44,7 +43,7 @@ class Select extends React.Component<SelectProps> {
     const id = `${name}-input`;
 
     const selectElement = (
-      <select id={id} className={classes} onChange={this.handleChange} {...rest}>
+      <select id={id} className={classes} onChange={this.handleChange} value={value}>
         {
           options.map(option => (
             <option key={option.value} value={option.value}>{option.label}</option>

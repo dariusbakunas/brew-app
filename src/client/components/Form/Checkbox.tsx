@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 
 type CheckboxProps = {
+  checked: boolean,
+  disabled?: boolean,
   label: string,
   name: string,
   onChange: (
@@ -19,7 +21,7 @@ class Checkbox extends React.Component<CheckboxProps> {
   };
 
   render() {
-    const { label, name, ...rest } = this.props;
+    const { label, name, checked, disabled } = this.props;
 
     const classes = classNames(
       'uk-checkbox',
@@ -29,7 +31,7 @@ class Checkbox extends React.Component<CheckboxProps> {
 
     return (
       <label className='uk-form-label' htmlFor={id}>
-        <input id={id} className={classes} name={name} type='checkbox' {...rest} onChange={this.handleChange}/>
+        <input id={id} className={classes} name={name} type='checkbox' checked={checked} disabled={disabled} onChange={this.handleChange}/>
         {' '}{label}
       </label>
     );

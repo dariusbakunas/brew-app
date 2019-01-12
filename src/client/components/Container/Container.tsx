@@ -4,7 +4,7 @@ import classNames from 'classnames';
 type ContainerProps = {
   children: ReactNode,
   className?: string,
-  size: 'xsmall' | 'small' | 'large' | 'expand'
+  size?: 'xsmall' | 'small' | 'large' | 'expand'
 };
 
 function Container(props: ContainerProps) {

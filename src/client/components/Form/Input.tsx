@@ -3,16 +3,25 @@ import classNames from 'classnames';
 import Icon from '../Icon';
 import getUnhandledProps from '../../utils/getUnhandledProps';
 
+export type InputChangeHandlerType = (
+  e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
+  val: { name: string, value: string | number | boolean }
+) => void;
+
 type InputProps = {
+  disabled?: boolean,
   error?: string,
   label?: string,
+  min?: number,
+  max?: number,
   name: string,
   icon?: string,
   iconWidth?: string,
-  onChange: (
-    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }) => void
+  onChange: InputChangeHandlerType,
+  required?: boolean,
   step?: number,
   type: string | number,
+  value: string | number,
   width: 'large' | 'medium' | 'small' | 'xsmall',
 };
 
@@ -57,7 +66,7 @@ class Input extends React.Component<InputProps> {
 
   render() {
     const {
-      error, label, icon, iconWidth, name, step, type, width,
+      disabled, error, label, min, max, icon, iconWidth, name, required, step, type, value, width,
     } = this.props;
 
     const rest = getUnhandledProps(Input, this.props);
@@ -73,10 +82,15 @@ class Input extends React.Component<InputProps> {
     const inputElement = this.withIcon(<input
       id={id}
       className={classes}
+      max={max}
+      min={min}
       name={name}
       onChange={this.handleChange}
       step={type === 'number' ? step : null}
       type={type}
+      value={value}
+      disabled={disabled}
+      required={required}
       {...rest}
     />, icon, iconWidth);
 

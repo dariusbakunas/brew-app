@@ -1,21 +1,21 @@
 import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import getUnhandledProps from '../../utils/getUnhandledProps';
 import Icon from '../Icon';
 
 type ButtonProps = {
   className?: string,
   children: ReactNode | string,
+  disabled?: boolean,
   icon?: string,
   iconPosition?: 'left' | 'right',
-  onClick: (e: React.MouseEvent<HTMLElement>) => void,
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void,
   type?: 'button' | 'submit',
   variation?: 'default' | 'primary' | 'secondary' | 'danger' | 'text' | 'link'
 };
 
 function Button(props: ButtonProps) {
   const {
-    children, className, icon, iconPosition, type, variation,
+    children, className, disabled, icon, iconPosition, onClick, type, variation,
   } = props;
 
   const classes = classNames(
@@ -25,10 +25,8 @@ function Button(props: ButtonProps) {
     className,
   );
 
-  const rest = getUnhandledProps(Button, props);
-
   return (
-    <button className={classes} type={type} {...rest}>
+    <button className={classes} type={type} disabled={disabled} onClick={onClick}>
       {
         icon ?
           <React.Fragment>

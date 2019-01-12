@@ -1,22 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-class Spinner extends React.Component {
-  state = {
+type SpinnerProps = {
+  active: boolean,
+  delay?: number,
+};
+
+class Spinner extends React.Component<SpinnerProps> {
+  readonly state = {
     shouldRender: this.props.active,
   };
 
-  static propTypes = {
-    active: PropTypes.bool,
-    delay: PropTypes.number,
-  };
-
-  static defaultProps = {
+  static defaultProps: Partial<SpinnerProps> = {
     delay: 500,
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: SpinnerProps) {
     if (prevProps.active && !this.props.active) {
       setTimeout(
         () => this.setState({ shouldRender: false }),
