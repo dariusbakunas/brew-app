@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-function Card(props) {
+type CardProps = {
+  children: ReactNode,
+  hover?: boolean,
+  className?: string,
+  title?: string,
+  variation: 'default' | 'primary' | 'secondary'
+};
+
+function Card(props: CardProps) {
   const {
     children, hover, title, variation, className,
   } = props;
@@ -25,13 +32,5 @@ function Card(props) {
     </div>
   );
 }
-
-Card.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  hover: PropTypes.bool,
-  title: PropTypes.string,
-  variation: PropTypes.oneOf(['default', 'primary', 'secondary']),
-};
 
 export default Card;

@@ -1,9 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import Icon from '../Icon';
 
-class SideMenu extends React.Component {
-  constructor(props) {
+type SideMenuProps = {
+  id: string,
+  children: ReactNode,
+  mode?: 'slide' | 'push' | 'reveal' | 'none',
+  onShow?: () => void,
+  onHide?: () => void,
+  overlay?: boolean,
+  visible: boolean,
+};
+
+declare global {
+  interface Window {
+    UIkit: any;
+  }
+}
+
+class SideMenu extends React.Component<SideMenuProps> {
+  private ref: React.RefObject<HTMLDivElement>;
+
+  static defaultProps: Partial<SideMenuProps> = {
+    mode: 'none',
+  };
+
+  constructor(props: SideMenuProps) {
     super(props);
     this.ref = React.createRef();
   }
@@ -30,7 +51,7 @@ class SideMenu extends React.Component {
     this.ref.current.removeEventListener('show', this.handleShow);
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: SideMenuProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.visible !== prevProps.visible) {
       if (this.props.visible) {
@@ -58,19 +79,5 @@ class SideMenu extends React.Component {
     );
   }
 }
-
-SideMenu.defaultProps = {
-  mode: 'none',
-};
-
-SideMenu.propTypes = {
-  id: PropTypes.string,
-  children: PropTypes.node,
-  mode: PropTypes.oneOf(['slide', 'push', 'reveal', 'none']),
-  onShow: PropTypes.func,
-  onHide: PropTypes.func,
-  overlay: PropTypes.bool,
-  visible: PropTypes.bool,
-};
 
 export default SideMenu;

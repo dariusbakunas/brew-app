@@ -11,7 +11,7 @@
     "jest/globals": true,
     "browser": true
   },
-  "plugins": ["jest", "react", "jsx-a11y"],
+  "plugins": ["jest", "react", "jsx-a11y", "typescript"],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
     "operator-linebreak": ["error", "after"],
@@ -29,6 +29,8 @@
         "componentWillUnmount"
       ]
     }],
+    "no-unused-vars": "off",
+    "typescript/no-unused-vars": ["error"],
     "no-underscore-dangle": "off",
     "jsx-a11y/label-has-for": [ 2, {
       "components": [ "Label" ],

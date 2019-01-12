@@ -1,9 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Icon from '../Icon';
 
-function Item(props) {
+type ItemProps = {
+  icon: string,
+  disabled?: boolean,
+  onClick: (e: React.MouseEvent<HTMLElement>) => void,
+};
+
+function Item(props: ItemProps) {
   const { disabled, icon, onClick } = props;
 
   const classes = classNames(
@@ -19,11 +24,5 @@ function Item(props) {
     </li>
   );
 }
-
-Item.propTypes = {
-  icon: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-  disabled: PropTypes.bool,
-};
 
 export default Item;

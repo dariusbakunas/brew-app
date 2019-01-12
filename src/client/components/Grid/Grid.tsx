@@ -1,10 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import Column from './Column';
-import { TEXT_ALIGNMENTS, VERTICAL_ALIGNMENTS } from '../../../contants';
 
-function Grid(props) {
+type GridProps = {
+  children: ReactNode,
+  className?: string,
+  divider?: boolean,
+  gutter?: 'small' | 'medium' | 'large' | 'collapse',
+  textAlign: 'left' | 'center' | 'right' | 'justify'
+};
+
+function Grid(props: GridProps) {
   const {
     children,
     className,
@@ -29,13 +35,5 @@ function Grid(props) {
 }
 
 Grid.Column = Column;
-
-Grid.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  divider: PropTypes.bool,
-  gutter: PropTypes.oneOf(['small', 'medium', 'large', 'collapse']),
-  textAlign: PropTypes.oneOf(TEXT_ALIGNMENTS),
-};
 
 export default Grid;

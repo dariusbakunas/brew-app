@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import Icon from '../Icon';
-import { ICONS } from '../../../contants';
 import getUnhandledProps from '../../utils/getUnhandledProps';
 
-class Input extends React.Component {
-  handleChange = (e) => {
+type InputProps = {
+  error?: string,
+  label?: string,
+  name: string,
+  icon?: string,
+  iconWidth?: string,
+  onChange: (
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }) => void
+  step?: number,
+  type: string | number,
+  width: 'large' | 'medium' | 'small' | 'xsmall',
+};
+
+class Input extends React.Component<InputProps> {
+  public static defaultProps: Partial<InputProps> = {
+    step: 1,
+    type: 'text',
+    iconWidth: '20px',
+  };
+
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const {
       name, onChange, step, type,
     } = this.props;
-    const { value } = e.target;
+    const { value } = e.currentTarget;
 
     if (onChange) {
       if (value !== '' && type === 'number') {
@@ -23,7 +40,7 @@ class Input extends React.Component {
     }
   };
 
-  withIcon = (children, icon, iconWidth) => {
+  withIcon = (children: ReactNode, icon: string, iconWidth: string) => {
     if (icon) {
       return (
         <div className='uk-inline'>
@@ -72,23 +89,5 @@ class Input extends React.Component {
     );
   }
 }
-
-Input.defaultProps = {
-  step: 1,
-  type: 'text',
-  iconWidth: '20px',
-};
-
-Input.propTypes = {
-  error: PropTypes.string,
-  label: PropTypes.string,
-  name: PropTypes.string,
-  icon: PropTypes.oneOf(ICONS),
-  iconWidth: PropTypes.string,
-  onChange: PropTypes.func,
-  step: PropTypes.number,
-  type: PropTypes.oneOf(['text', 'number']),
-  width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-};
 
 export default Input;

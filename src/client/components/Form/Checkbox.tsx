@@ -1,11 +1,18 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-class Checkbox extends React.Component {
-  handleChange = (e) => {
+type CheckboxProps = {
+  label: string,
+  name: string,
+  onChange: (
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: boolean }
+  ) => void,
+};
+
+class Checkbox extends React.Component<CheckboxProps> {
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     if (this.props.onChange) {
-      const value = e.target.checked;
+      const value = e.currentTarget.checked;
       const { name } = this.props;
       this.props.onChange(e, { name, value });
     }
@@ -28,11 +35,5 @@ class Checkbox extends React.Component {
     );
   }
 }
-
-Checkbox.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-};
 
 export default Checkbox;

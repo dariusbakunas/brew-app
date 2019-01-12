@@ -1,8 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 
-function Container(props) {
+type ContainerProps = {
+  children: ReactNode,
+  className?: string,
+  size: 'xsmall' | 'small' | 'large' | 'expand'
+};
+
+function Container(props: ContainerProps) {
   const { children, className, size } = props;
 
   const classes = classNames(
@@ -17,11 +22,5 @@ function Container(props) {
     </div>
   );
 }
-
-Container.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  size: PropTypes.oneOf(['xsmall', 'small', 'large', 'expand']),
-};
 
 export default Container;

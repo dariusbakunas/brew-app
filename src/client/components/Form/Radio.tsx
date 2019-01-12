@@ -1,11 +1,18 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-class Radio extends React.Component {
-  handleChange = (e) => {
+type RadioProps = {
+  label: string,
+  name: string,
+  onChange: (
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+  ) => void
+};
+
+class Radio extends React.Component<RadioProps> {
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     if (this.props.onChange) {
-      const { value } = e.target;
+      const { value } = e.currentTarget;
       const { name } = this.props;
       this.props.onChange(e, { name, value });
     }
@@ -28,11 +35,5 @@ class Radio extends React.Component {
     );
   }
 }
-
-Radio.propTypes = {
-  label: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-};
 
 export default Radio;

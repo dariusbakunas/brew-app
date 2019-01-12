@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import HeaderCell from './HeaderCell';
@@ -7,15 +6,15 @@ import Row from './Row';
 import Cell from './Cell';
 import Body from './Body';
 
-class Table extends React.Component {
-  static propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string,
-    divider: PropTypes.bool,
-    size: PropTypes.oneOf(['small', 'large']),
-    stripped: PropTypes.bool,
-  };
+type TableProps = {
+  children: ReactNode,
+  className?: string,
+  divider?: boolean,
+  size: 'small' | 'large',
+  stripped?: boolean,
+};
 
+class Table extends React.Component<TableProps> {
   static Header = Header;
 
   static HeaderCell = HeaderCell;

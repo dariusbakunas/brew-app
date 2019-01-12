@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-function Tabs(props) {
+type TabsProps = {
+  align?: 'left' | 'center' | 'right',
+  children: ReactNode,
+  className?: string,
+};
+
+function Tabs(props: TabsProps) {
   const { align, className, children } = props;
 
   const classes = classNames(
@@ -17,11 +22,5 @@ function Tabs(props) {
     </ul>
   );
 }
-
-Tabs.propTypes = {
-  align: PropTypes.oneOf(['left', 'center', 'right']),
-  children: PropTypes.node,
-  className: PropTypes.string,
-};
 
 export default Tabs;

@@ -1,14 +1,27 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import getUnhandledProps from '../../utils/getUnhandledProps';
 
-class Select extends React.Component {
-  handleChange = (e) => {
+type SelectProps = {
+  error?: string,
+  label?: string,
+  name: string,
+  onChange: (
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+  ) => void,
+  options: {
+    value: string,
+    label: string,
+  }[],
+  width: 'large' | 'medium' | 'small' | 'xsmall'
+};
+
+class Select extends React.Component<SelectProps> {
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const {
       name, onChange,
     } = this.props;
-    const { value } = e.target;
+    const { value } = e.currentTarget;
 
     if (onChange) {
       onChange(e, { name, value });
@@ -49,16 +62,5 @@ class Select extends React.Component {
     );
   }
 }
-
-Select.propTypes = {
-  label: PropTypes.string,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.string,
-    label: PropTypes.string,
-  })).isRequired,
-  width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-};
 
 export default Select;

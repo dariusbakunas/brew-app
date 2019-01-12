@@ -1,12 +1,28 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import getUnhandledProps from '../../utils/getUnhandledProps';
 
-class TextArea extends React.Component {
-  handleChange = (e) => {
+type TextAreaProps = {
+  error?: string,
+  label?: string,
+  name: string,
+  onChange: (
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+  ) => void,
+  resize?: boolean,
+  rows: number,
+  width: 'large' | 'medium' | 'small' | 'xsmall'
+};
+
+class TextArea extends React.Component<TextAreaProps> {
+  static defaultProps: Partial<TextAreaProps> = {
+    resize: false,
+    rows: 5,
+  };
+
+  handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     if (this.props.onChange) {
-      const { value } = e.target;
+      const { value } = e.currentTarget;
       const { name } = this.props;
       this.props.onChange(e, { name, value });
     }
@@ -50,20 +66,5 @@ class TextArea extends React.Component {
     );
   }
 }
-
-TextArea.defaultProps = {
-  resize: false,
-  rows: 5,
-};
-
-TextArea.propTypes = {
-  error: PropTypes.string,
-  label: PropTypes.string,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-  resize: PropTypes.bool,
-  rows: PropTypes.number,
-  width: PropTypes.oneOf(['large', 'medium', 'small', 'xsmall']),
-};
 
 export default TextArea;

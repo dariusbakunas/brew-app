@@ -1,9 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Button from '../Button';
 
-class Pager extends React.Component {
-  handleKeyDown = (e) => {
+type PagerProps = {
+  hasNextPage: boolean,
+  hasPrevPage: boolean,
+  onNextPage: () => void,
+  onPrevPage: () => void,
+};
+
+class Pager extends React.Component<PagerProps> {
+  handleKeyDown = (e: KeyboardEvent) => {
     const {
       hasPrevPage, hasNextPage, onNextPage, onPrevPage,
     } = this.props;
@@ -61,12 +67,5 @@ class Pager extends React.Component {
     );
   }
 }
-
-Pager.propTypes = {
-  hasPrevPage: PropTypes.bool,
-  hasNextPage: PropTypes.bool,
-  onNextPage: PropTypes.func.isRequired,
-  onPrevPage: PropTypes.func.isRequired,
-};
 
 export default Pager;

@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-function Fieldset(props) {
+type FieldsetProps = {
+  children: ReactNode,
+  legend?: string,
+  layout?: 'stacked' | 'horizontal',
+};
+
+function Fieldset(props: FieldsetProps) {
   const { children, layout, legend } = props;
 
   const classes = classNames(
@@ -20,11 +25,5 @@ function Fieldset(props) {
     </fieldset>
   );
 }
-
-Fieldset.propTypes = {
-  children: PropTypes.node,
-  legend: PropTypes.string,
-  layout: PropTypes.oneOf(['stacked', 'horizontal']),
-};
 
 export default Fieldset;

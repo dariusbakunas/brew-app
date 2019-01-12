@@ -1,8 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 
-function Cell(props) {
+type CellProps = {
+  children: ReactNode,
+  className?: string,
+  nowrap?: boolean,
+  shrink?: boolean,
+};
+
+function Cell(props: CellProps) {
   const {
     children, className, nowrap, shrink,
   } = props;
@@ -19,12 +25,5 @@ function Cell(props) {
     </td>
   );
 }
-
-Cell.propTypes = {
-  children: PropTypes.node,
-  className: PropTypes.string,
-  nowrap: PropTypes.bool,
-  shrink: PropTypes.bool,
-};
 
 export default Cell;

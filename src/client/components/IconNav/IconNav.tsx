@@ -1,15 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 import Item from './Item';
 
+type IconNavProps = {
+  children: ReactNode,
+  className?: string,
+};
 
-class IconNav extends React.Component {
-  static propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string,
-  };
-
+class IconNav extends React.Component<IconNavProps> {
   static Item = Item;
 
   render() {

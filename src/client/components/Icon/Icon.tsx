@@ -1,8 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { ICONS } from '../../../contants';
 
-const icons = {
+const icons: { [index: string]: { viewBox: string, contents: JSX.Element }} = {
   check: {
     viewBox: '0 0 20 20',
     contents: (
@@ -85,12 +83,22 @@ const icons = {
   },
 };
 
-function Icon(props) {
+type IconProps = {
+  className?: string,
+  width?: string | number,
+  height?: string | number,
+  icon: string,
+};
+
+function Icon(props: IconProps) {
   const {
     icon, className, width, height,
   } = props;
 
-  const svg = icons[icon];
+  const svg: {
+    viewBox: string,
+    contents: JSX.Element,
+  } = icons[icon];
 
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} className={className} viewBox={svg.viewBox}>
@@ -98,12 +106,5 @@ function Icon(props) {
     </svg>
   );
 }
-
-Icon.propTypes = {
-  className: PropTypes.string,
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  height: PropTypes.string,
-  icon: PropTypes.oneOf(ICONS),
-};
 
 export default Icon;

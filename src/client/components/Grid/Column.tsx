@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-function Column(props) {
+type ColumnType = {
+  children: ReactNode,
+};
+
+function Column(props: ColumnType) {
   const { children, ...rest } = props;
 
   const classes = classNames(
@@ -15,9 +18,5 @@ function Column(props) {
     </div>
   );
 }
-
-Column.propTypes = {
-  children: PropTypes.node,
-};
 
 export default Column;

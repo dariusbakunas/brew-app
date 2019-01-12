@@ -1,22 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 
-class LoadingBar extends React.Component {
+type LoadingBarProps = {
+  active: boolean,
+  delay?: number,
+};
+
+class LoadingBar extends React.Component<LoadingBarProps> {
   state = {
     shouldRender: this.props.active,
   };
 
-  static propTypes = {
-    active: PropTypes.bool,
-    delay: PropTypes.number,
-  };
-
-  static defaultProps = {
+  static defaultProps: Partial<LoadingBarProps> = {
     delay: 500,
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: LoadingBarProps) {
     if (prevProps.active && !this.props.active) {
       setTimeout(
         () => this.setState({ shouldRender: false }),

@@ -1,9 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
-import PropTypes from 'prop-types';
 import Icon from '../Icon';
 
-function Navbar(props) {
+type NavbarProps = {
+  toggleTarget: string,
+  transparent?: boolean,
+};
+
+const Navbar: React.FunctionComponent<NavbarProps> = (props: NavbarProps) => {
   const { toggleTarget, transparent } = props;
 
   const classes = classNames(
@@ -24,11 +28,6 @@ function Navbar(props) {
       </div>
     </nav>
   );
-}
-
-Navbar.propTypes = {
-  toggleTarget: PropTypes.string,
-  transparent: PropTypes.bool,
 };
 
 export default Navbar;

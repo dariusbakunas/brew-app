@@ -1,9 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { RouteComponentProps } from 'react-router';
 import { Link, matchPath, withRouter } from 'react-router-dom';
 
-function Item(props) {
+type ItemProps = RouteComponentProps<any> & {
+  as?: 'a' | 'link',
+  className?: string,
+  label: string,
+  location: {
+    pathname: string,
+  },
+  onClick: (e: React.MouseEvent<HTMLElement>) => void,
+  url: string,
+};
+
+const Item: React.FunctionComponent<ItemProps> = (props: ItemProps) => {
   const {
     as, className, label, location, url,
   } = props;
@@ -23,21 +34,10 @@ function Item(props) {
   return (
       <li className={classes}><Link to={url} onClick={props.onClick}>{label}</Link></li>
   );
-}
+};
 
 Item.defaultProps = {
   as: 'link',
-};
-
-Item.propTypes = {
-  as: PropTypes.oneOf(['a', 'link']),
-  className: PropTypes.string,
-  label: PropTypes.string.isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string,
-  }),
-  onClick: PropTypes.func,
-  url: PropTypes.string,
 };
 
 export default withRouter(Item);
