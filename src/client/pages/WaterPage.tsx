@@ -1,7 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import withPagedQuery from '../HOC/withPagedQuery';
+import { ApolloError } from 'apollo-client';
+import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
 import { GET_WATER, REMOVE_WATER } from '../queries';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import {
@@ -9,32 +9,30 @@ import {
 } from '../components';
 import WaterModal from '../modals/WaterModal';
 import confirm from '../utils/confirm';
+import { Water } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-class Water extends React.Component {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      description: PropTypes.string,
-    })),
-    getNextPage: PropTypes.func,
-    getPreviousPage: PropTypes.func,
-    getRefetchQuery: PropTypes.func,
-    hasNextPage: PropTypes.bool,
-    hasPreviousPage: PropTypes.bool,
-    loading: PropTypes.bool,
-    removeWater: PropTypes.func.isRequired,
-  };
+type WaterPageProps = PagedQueryProps & {
+  data: Array<Water & { id: string }>,
+  loading: boolean,
+  removeWater: (args: { variables: { id: string } }) => Promise<void>,
+};
 
-  state = {
+type WaterPageState = {
+  loading: boolean,
+  waterModalOpen: false,
+  currentWater: Water,
+};
+
+class WaterPage extends React.Component<WaterPageProps> {
+  readonly state: Readonly<WaterPageState> = {
     loading: false,
     waterModalOpen: false,
     currentWater: null,
   };
 
-  handleError(error) {
+  private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
@@ -52,14 +50,14 @@ class Water extends React.Component {
     });
   };
 
-  handleEditWater = (water) => {
+  handleEditWater = (water: Water) => {
     this.setState({
       currentWater: water,
       waterModalOpen: true,
     });
   };
 
-  handleRemoveWater = ({ id, name }) => {
+  handleRemoveWater = ({ id, name }: Partial<Water> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name}?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeWater({ variables: { id } })
@@ -68,7 +66,7 @@ class Water extends React.Component {
           })
           .catch((err) => {
             this.setState({ loading: false }, () => {
-              this.handleError(err);
+              WaterPage.handleError(err);
             });
           });
       });
@@ -110,7 +108,7 @@ class Water extends React.Component {
                 </Table.Header>
                 <Table.Body>
                   {
-                    waterProfiles.map(water => (
+                    waterProfiles.map((water: Water & { id: string }) => (
                       <Table.Row key={water.id}>
                         <Table.Cell>{water.name}</Table.Cell>
                         <Table.Cell>{water.pH}</Table.Cell>
@@ -153,11 +151,11 @@ export default compose(
   withPagedQuery(GET_WATER, 'water', DEFAULT_PAGE_SIZE),
   graphql(REMOVE_WATER, {
     name: 'removeWater',
-    options: props => ({
+    options: (props: WaterPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.getRefetchQuery('NAME'),
       ],
     }),
   }),
-)(Water);
+)(WaterPage);
