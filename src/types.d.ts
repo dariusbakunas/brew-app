@@ -65,6 +65,11 @@ export type InvitationInput = {
   sendEmail: boolean,
 };
 
+export type UserRole = {
+  name: string,
+  code: string,
+};
+
 export type YeastLab = {
   id: string,
   name: string,

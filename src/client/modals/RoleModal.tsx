@@ -1,23 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { CREATE_ROLE, GET_ROLES } from '../queries';
 import Modal from './Modal';
+import { UserRole } from '../../types';
+import { InputChangeHandlerType } from '../components/Form/Input';
 
-class RoleModal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    mutate: PropTypes.func.isRequired,
-  };
+type RoleModalProps = {
+  id: string,
+  mutate: (args: { variables: UserRole }) => Promise<any>,
+};
 
-  state = {
+type RoleModalState = UserRole & {
+  error: string,
+  loading: boolean,
+  validationErrors: {
+    [key: string]: string,
+  }
+};
+
+class RoleModal extends React.Component<RoleModalProps> {
+  readonly state: Readonly<RoleModalState> = {
     name: '',
     code: '',
     error: null,
     loading: false,
-    send: true,
     validationErrors: null,
   };
 
@@ -31,9 +39,9 @@ class RoleModal extends React.Component {
     });
   };
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
-  handleSubmit = (e, closeModal) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
     e.preventDefault();
 
     const { mutate } = this.props;
@@ -87,11 +95,11 @@ class RoleModal extends React.Component {
                 />
               </div>
               <div className="uk-margin">
-                <Form.Checkbox
+                <Form.Input
                   disabled={loading}
                   label='Code'
                   name='code'
-                  checked={code}
+                  value={code}
                   onChange={this.handleChange}
                 />
               </div>
