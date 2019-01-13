@@ -1,35 +1,32 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
-import withPagedQuery from '../HOC/withPagedQuery';
+import { ApolloError } from 'apollo-client';
+import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
 import { GET_YEAST, REMOVE_YEAST } from '../queries';
 import YeastModal from '../modals/YeastModal';
 import {
   Button, Pager, Spinner, Table, IconNav,
 } from '../components';
 import confirm from '../utils/confirm';
+import { Yeast } from '../../types';
+import handleGraphQLError from '../errors/handleGraphQLError';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-class Yeast extends React.Component {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      form: PropTypes.string,
-      description: PropTypes.string,
-      type: PropTypes.string,
-    })),
-    getNextPage: PropTypes.func,
-    getPreviousPage: PropTypes.func,
-    getRefetchQuery: PropTypes.func,
-    hasNextPage: PropTypes.bool,
-    hasPreviousPage: PropTypes.bool,
-    loading: PropTypes.bool,
-    removeYeast: PropTypes.func.isRequired,
-  };
+type YeastPageProps = PagedQueryProps & {
+  data: Array<Yeast & { id: string }>,
+  loading: boolean,
+  removeYeast: (args: { variables: { id: string } }) => Promise<void>,
+};
 
-  state = {
+type YeastPageState = {
+  loading: boolean,
+  yeastModalOpen: boolean,
+  currentYeast: Yeast,
+};
+
+class YeastPage extends React.Component<YeastPageProps> {
+  readonly state: YeastPageState = {
     loading: false,
     currentYeast: null,
     yeastModalOpen: false,
@@ -42,14 +39,25 @@ class Yeast extends React.Component {
     });
   };
 
-  handleEditYeast = (yeast) => {
+  handleEditYeast = (yeast: Yeast) => {
     this.setState({
       currentYeast: yeast,
       yeastModalOpen: true,
     });
   };
 
-  handleRemoveYeast = ({ id, name, lab }) => {
+  private static handleError(error: ApolloError) {
+    const { errorMessage } = handleGraphQLError(error, false);
+
+    window.UIkit.notification({
+      message: errorMessage,
+      status: 'danger',
+      pos: 'top-right',
+      timeout: 5000,
+    });
+  }
+
+  handleRemoveYeast = ({ id, name, lab }: Partial<Yeast> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${lab.name})?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeYeast({ variables: { id } })
@@ -58,7 +66,7 @@ class Yeast extends React.Component {
           })
           .catch((err) => {
             this.setState({ loading: false }, () => {
-              this.handleError(err);
+              YeastPage.handleError(err);
             });
           });
       });
@@ -95,7 +103,7 @@ class Yeast extends React.Component {
                 </Table.Header>
                 <Table.Body>
                   {
-                    yeastList.map(yeast => (
+                    yeastList.map((yeast: Yeast & { id: string }) => (
                       <Table.Row key={yeast.id}>
                         <Table.Cell>{yeast.name}</Table.Cell>
                         <Table.Cell>{yeast.lab.name}</Table.Cell>
@@ -133,11 +141,11 @@ export default compose(
   withPagedQuery(GET_YEAST, 'yeast', DEFAULT_PAGE_SIZE),
   graphql(REMOVE_YEAST, {
     name: 'removeYeast',
-    options: props => ({
+    options: (props: YeastPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.getRefetchQuery('NAME'),
       ],
     }),
   }),
-)(Yeast);
+)(YeastPage);
