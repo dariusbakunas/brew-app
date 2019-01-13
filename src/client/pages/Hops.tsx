@@ -9,26 +9,12 @@ import confirm from '../utils/confirm';
 import HopModal from '../modals/HopModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import { Hop } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type Hop = {
-  id: string,
-  aaLow?: number,
-  aaHigh?: number,
-  aroma: boolean,
-  bittering: boolean,
-  betaLow?: number,
-  betaHigh?: number,
-  description: string,
-  name: string,
-  origin: {
-    name: string,
-  }
-};
-
 type HopsProps = PagedQueryProps & {
-  data: Hop[],
+  data: Array<Hop & { id: string }>,
   loading: boolean,
   removeHop: (args: { variables: { id: string } }) => Promise<void>,
 };
@@ -85,7 +71,7 @@ class Hops extends React.Component<HopsProps> {
     });
   }
 
-  handleRemoveHop = ({ id, name, origin }: Partial<Hop>) => {
+  handleRemoveHop = ({ id, name, origin }: Partial<Hop> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeHop({ variables: { id } })
@@ -128,7 +114,7 @@ class Hops extends React.Component<HopsProps> {
                 </Table.Header>
                 <Table.Body>
                   {
-                    hops.map((hop: Hop) => (
+                    hops.map((hop: Hop & { id: string }) => (
                       <Table.Row key={hop.id}>
                         <Table.Cell>{hop.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>

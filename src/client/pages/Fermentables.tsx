@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
+import { ApolloError } from 'apollo-client';
 import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from '../queries';
 import confirm from '../utils/confirm';
 import {
@@ -8,35 +8,31 @@ import {
 } from '../components';
 import FermentableModal from '../modals/FermentableModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
+import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import { Fermentable } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-class Fermentables extends React.Component {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      category: PropTypes.string,
-      description: PropTypes.string,
-      type: PropTypes.string,
-    })),
-    getNextPage: PropTypes.func,
-    getPreviousPage: PropTypes.func,
-    getRefetchQuery: PropTypes.func,
-    hasNextPage: PropTypes.bool,
-    hasPreviousPage: PropTypes.bool,
-    loading: PropTypes.bool,
-    removeFermentable: PropTypes.func.isRequired,
-  };
+type FermentablesProps = PagedQueryProps & {
+  data: Array<Fermentable & { id: string }>,
+  loading: boolean,
+  removeFermentable: (args: { variables: { id: string } }) => Promise<void>,
+};
 
-  state = {
+type FermentablesState = {
+  loading: boolean,
+  fermentableModalOpen: boolean,
+  currentFermentable: null,
+};
+
+class Fermentables extends React.Component<FermentablesProps> {
+  readonly state: Readonly<FermentablesState> = {
     loading: false,
     fermentableModalOpen: false,
     currentFermentable: null,
   };
 
-  handleError(error) {
+  private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
@@ -54,14 +50,14 @@ class Fermentables extends React.Component {
     });
   };
 
-  handleEditFermentable = (fermentable) => {
+  handleEditFermentable = (fermentable: Fermentable) => {
     this.setState({
       currentFermentable: fermentable,
       fermentableModalOpen: true,
     });
   };
 
-  handleRemoveFermentable = ({ id, name, origin }) => {
+  handleRemoveFermentable = ({ id, name, origin }: Partial<Fermentable> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeFermentable({ variables: { id } })
@@ -70,7 +66,7 @@ class Fermentables extends React.Component {
           })
           .catch((err) => {
             this.setState({ loading: false }, () => {
-              this.handleError(err);
+              Fermentables.handleError(err);
             });
           });
       });
@@ -109,7 +105,7 @@ class Fermentables extends React.Component {
                 </Table.Header>
                 <Table.Body>
                   {
-                    fermentables.map(fermentable => (
+                    fermentables.map((fermentable: Fermentable & { id: string }) => (
                       <Table.Row key={fermentable.id}>
                         <Table.Cell>{fermentable.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{fermentable.origin.name}</Table.Cell>
@@ -150,7 +146,7 @@ export default compose(
   withPagedQuery(GET_FERMENTABLES, 'fermentables', DEFAULT_PAGE_SIZE),
   graphql(REMOVE_FERMENTABLE, {
     name: 'removeFermentable',
-    options: props => ({
+    options: (props: FermentablesProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.getRefetchQuery('NAME'),
