@@ -46,6 +46,37 @@ export type InvitationInput = {
   sendEmail: boolean,
 };
 
+export type YeastLab = {
+  id: string,
+  name: string,
+};
+
+export enum YeastForm {
+  DRY = 'DRY',
+  LIQUID = 'LIQUID',
+}
+
+export enum YeastType {
+  ALE = 'ALE',
+  CHAMPAGNE = 'CHAMPAGNE',
+  LAGER = 'LAGER',
+  WHEAT = 'WHEAT',
+  WINE = 'WINE',
+}
+
+export type Yeast = {
+  description?: string,
+  name: string,
+  form: YeastForm,
+  lab?: YeastLab,
+  type: YeastType,
+};
+
+export type YeastInput = {
+  id?: string,
+  input: Yeast & { labId: string },
+};
+
 export type Water = {
   name: string,
   pH: number,

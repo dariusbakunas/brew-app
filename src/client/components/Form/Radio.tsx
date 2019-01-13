@@ -2,11 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 
 type RadioProps = {
+  checked: boolean,
   label: string,
   name: string,
   onChange: (
     e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
-  ) => void
+  ) => void,
+  value: string,
 };
 
 class Radio extends React.Component<RadioProps> {
@@ -19,7 +21,9 @@ class Radio extends React.Component<RadioProps> {
   };
 
   render() {
-    const { label, name, ...rest } = this.props;
+    const {
+      checked, label, name, value,
+    } = this.props;
 
     const classes = classNames(
       'uk-radio',
@@ -29,7 +33,7 @@ class Radio extends React.Component<RadioProps> {
 
     return (
       <label className='uk-form-label' htmlFor={id}>
-        <input id={id} className={classes} name={name} type='radio' {...rest} onChange={this.handleChange}/>
+        <input id={id} checked={checked} className={classes} name={name} type='radio' value={value} onChange={this.handleChange}/>
         {' '}{label}
       </label>
     );

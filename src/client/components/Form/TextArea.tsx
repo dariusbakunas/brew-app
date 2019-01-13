@@ -10,9 +10,9 @@ type TextAreaProps = {
     e: React.ChangeEvent<HTMLTextAreaElement>, val: { name: string, value: string | number }
   ) => void,
   resize?: boolean,
-  rows: number,
+  rows?: number,
   value: string,
-  width: 'large' | 'medium' | 'small' | 'xsmall'
+  width?: 'large' | 'medium' | 'small' | 'xsmall'
 };
 
 class TextArea extends React.Component<TextAreaProps> {
