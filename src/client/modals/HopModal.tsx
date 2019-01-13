@@ -27,6 +27,7 @@ type Hop = BaseHop & {
   id?: string,
   origin: {
     id: string,
+    name: string,
   }
 };
 

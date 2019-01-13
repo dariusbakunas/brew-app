@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
+import { ApolloError } from 'apollo-client';
 import {
   Button, Icon, IconNav, Pager, Spinner, Table,
 } from '../components';
@@ -8,41 +8,45 @@ import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 import HopModal from '../modals/HopModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
+import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-class Hops extends React.Component {
-  static propTypes = {
-    data: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      aaHigh: PropTypes.number,
-      aaLow: PropTypes.number,
-      betaHigh: PropTypes.number,
-      betaLow: PropTypes.number,
-      aroma: PropTypes.bool,
-      bittering: PropTypes.bool,
-      origin: PropTypes.shape({
-        name: PropTypes.string,
-      }),
-    })),
-    getNextPage: PropTypes.func,
-    getPreviousPage: PropTypes.func,
-    getRefetchQuery: PropTypes.func,
-    hasNextPage: PropTypes.bool,
-    hasPreviousPage: PropTypes.bool,
-    loading: PropTypes.bool,
-    removeHop: PropTypes.func.isRequired,
-  };
+type Hop = {
+  id: string,
+  aaLow?: number,
+  aaHigh?: number,
+  aroma: boolean,
+  bittering: boolean,
+  betaLow?: number,
+  betaHigh?: number,
+  description: string,
+  name: string,
+  origin: {
+    name: string,
+  }
+};
 
-  state = {
+type HopsProps = PagedQueryProps & {
+  data: Hop[],
+  loading: boolean,
+  removeHop: (args: { variables: { id: string } }) => Promise<void>,
+};
+
+type HopState = {
+  loading: boolean,
+  hopModalOpen: boolean,
+  currentHop: Hop,
+};
+
+class Hops extends React.Component<HopsProps> {
+  readonly state: Readonly<HopState> = {
     loading: false,
     hopModalOpen: false,
     currentHop: null,
   };
 
-  static formatAcidValue(low, high) {
+  static formatAcidValue(low: number, high: number) {
     if (low && high) {
       return `${low.toFixed(1)} - ${high.toFixed(1)}%`;
     }
@@ -63,14 +67,14 @@ class Hops extends React.Component {
     });
   };
 
-  handleEditHop = (hop) => {
+  handleEditHop = (hop: Hop) => {
     this.setState({
       currentHop: hop,
       hopModalOpen: true,
     });
   };
 
-  handleError(error) {
+  private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
@@ -81,16 +85,16 @@ class Hops extends React.Component {
     });
   }
 
-  handleRemoveHop = ({ id, name, origin }) => {
+  handleRemoveHop = ({ id, name, origin }: Partial<Hop>) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeHop({ variables: { id } })
           .then(() => {
             this.setState({ loading: false });
           })
-          .catch((err) => {
+          .catch((err: ApolloError) => {
             this.setState({ loading: false }, () => {
-              this.handleError(err);
+              Hops.handleError(err);
             });
           });
       });
@@ -124,7 +128,7 @@ class Hops extends React.Component {
                 </Table.Header>
                 <Table.Body>
                   {
-                    hops.map(hop => (
+                    hops.map((hop: Hop) => (
                       <Table.Row key={hop.id}>
                         <Table.Cell>{hop.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
@@ -176,7 +180,7 @@ export default compose(
   withPagedQuery(GET_HOPS, 'hops', DEFAULT_PAGE_SIZE),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
-    options: props => ({
+    options: (props: HopsProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.getRefetchQuery('name'),
