@@ -7,7 +7,7 @@ import Yeast from './YeastPage';
 import Water from './WaterPage';
 import PagingProvider from '../context/PagingProvider';
 
-class Ingredients extends React.Component {
+class IngredientsPage extends React.Component {
   render() {
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
@@ -32,4 +32,4 @@ class Ingredients extends React.Component {
   }
 }
 
-export default Ingredients;
+export default IngredientsPage;

@@ -11,7 +11,7 @@ import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../queries';
 
 // TODO: handle errors for getAllInvitations call
 
-class Invitations extends React.Component {
+class InvitationsPage extends React.Component {
   static propTypes = {
     deleteInvitation: PropTypes.func,
     getAllInvitations: PropTypes.shape({
@@ -116,4 +116,4 @@ export default compose(
       },
     },
   }),
-)(Invitations);
+)(InvitationsPage);

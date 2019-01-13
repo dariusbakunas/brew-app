@@ -25,7 +25,7 @@ type FermentablesState = {
   currentFermentable: null,
 };
 
-class Fermentables extends React.Component<FermentablesProps> {
+class FermentablesPage extends React.Component<FermentablesProps> {
   readonly state: Readonly<FermentablesState> = {
     loading: false,
     fermentableModalOpen: false,
@@ -66,7 +66,7 @@ class Fermentables extends React.Component<FermentablesProps> {
           })
           .catch((err) => {
             this.setState({ loading: false }, () => {
-              Fermentables.handleError(err);
+              FermentablesPage.handleError(err);
             });
           });
       });
@@ -153,4 +153,4 @@ export default compose(
       ],
     }),
   }),
-)(Fermentables);
+)(FermentablesPage);

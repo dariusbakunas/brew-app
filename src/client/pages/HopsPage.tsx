@@ -25,7 +25,7 @@ type HopState = {
   currentHop: Hop,
 };
 
-class Hops extends React.Component<HopsProps> {
+class HopsPage extends React.Component<HopsProps> {
   readonly state: Readonly<HopState> = {
     loading: false,
     hopModalOpen: false,
@@ -80,7 +80,7 @@ class Hops extends React.Component<HopsProps> {
           })
           .catch((err: ApolloError) => {
             this.setState({ loading: false }, () => {
-              Hops.handleError(err);
+              HopsPage.handleError(err);
             });
           });
       });
@@ -118,8 +118,8 @@ class Hops extends React.Component<HopsProps> {
                       <Table.Row key={hop.id}>
                         <Table.Cell>{hop.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
-                        <Table.Cell className='uk-visible@s uk-text-nowrap'>{Hops.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
-                        <Table.Cell className='uk-visible@m uk-text-nowrap'>{Hops.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                        <Table.Cell className='uk-visible@s uk-text-nowrap'>{HopsPage.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
+                        <Table.Cell className='uk-visible@m uk-text-nowrap'>{HopsPage.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
                         <Table.Cell className='uk-visible@s'>
                           {
                             hop.aroma ?
@@ -173,4 +173,4 @@ export default compose(
       ],
     }),
   }),
-)(Hops);
+)(HopsPage);
