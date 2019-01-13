@@ -1,39 +1,47 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { ApolloError } from 'apollo-client';
 import { compose, graphql } from 'react-apollo';
 import Modal from './Modal';
 import { Button, Form } from '../components';
-import { GET_ALL_COUNTRIES, CREATE_FERMENTABLE, UPDATE_FERMENTABLE } from '../queries';
+import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from '../queries';
 import handleGrpahQLError from '../errors/handleGraphQLError';
+import {
+  Country, Fermentable, FermentableCategory, FermentableInput, GrainType,
+} from '../../types';
+import { InputChangeHandlerType } from '../components/Form/Input';
 
-const UNITED_STATES_ID = 236;
+const UNITED_STATES_ID = '236';
 
-class FermentableModal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    createFermentable: PropTypes.func.isRequired,
-    fermentable: PropTypes.shape({
-      name: PropTypes.string,
-      origin: PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-      }),
-    }),
-    getAllCountries: PropTypes.shape({
-      loading: PropTypes.bool,
-      countries: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-      })),
-    }),
-    onHide: PropTypes.func,
-    open: PropTypes.bool,
-    refetchQuery: PropTypes.object,
-    updateFermentable: PropTypes.func.isRequired,
-  };
+type FermentableModalProps = {
+  id: string,
+  category: FermentableCategory,
+  createFermentable: (args: { variables: FermentableInput }) => Promise<void>,
+  fermentable: Fermentable & { id: string },
+  getAllCountries: {
+    loading: boolean,
+    countries: Country[],
+  },
+  onHide: () => void,
+  open: boolean,
+  refetchQuery: any,
+  updateFermentable: (args: { variables: FermentableInput }) => Promise<void>,
+};
 
-  static getDefaultState = () => ({
-    category: 'GRAIN',
+type FermentbaleModalState = Fermentable & {
+  category: FermentableCategory,
+  error?: string,
+  loading: boolean,
+  originId: string,
+  validationErrors: {
+    [key: string]: string,
+  }
+};
+
+class FermentableModal extends React.Component<FermentableModalProps> {
+  readonly state: FermentbaleModalState;
+
+  static getDefaultState: () => FermentbaleModalState = () => ({
+    category: FermentableCategory.GRAIN,
     color: null,
     description: null,
     error: null,
@@ -41,12 +49,12 @@ class FermentableModal extends React.Component {
     name: null,
     originId: UNITED_STATES_ID,
     potential: null,
-    type: 'BASE',
+    type: GrainType.BASE,
     yield: null,
     validationErrors: null,
   });
 
-  constructor(props) {
+  constructor(props: FermentableModalProps) {
     super(props);
     if (props.fermentable) {
       this.state = {
@@ -61,7 +69,7 @@ class FermentableModal extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: FermentableModalProps) {
     if (!prevProps.fermentable && this.props.fermentable) {
       this.setState({
         ...this.props.fermentable,
@@ -81,16 +89,19 @@ class FermentableModal extends React.Component {
     this.setState(FermentableModal.getDefaultState());
   };
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
-  handleCategoryChange = (e, { value }) => {
+  handleCategoryChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    { value }: { name: string, value: FermentableCategory },
+  ) => {
     this.setState({
       category: value,
-      type: value === 'GRAIN' ? 'BASE' : null,
+      type: value === FermentableCategory.GRAIN ? GrainType.BASE : null,
     });
   };
 
-  handleSubmit = (e, closeModal) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
     e.preventDefault();
 
     const { createFermentable, fermentable, updateFermentable } = this.props;
@@ -100,14 +111,14 @@ class FermentableModal extends React.Component {
         category, color, description, name, originId, potential, type,
       } = this.state;
 
-      const variables = {
+      const variables: FermentableInput = {
         input: {
           category,
-          color: color !== '' ? color : null,
+          color,
           description,
           name,
           originId: originId !== '' ? originId : null,
-          potential: potential !== '' ? potential : null,
+          potential,
           yield: this.state.yield,
           type,
         },
@@ -124,7 +135,7 @@ class FermentableModal extends React.Component {
         this.setState({ loading: false }, () => {
           closeModal();
         });
-      }).catch((err) => {
+      }).catch((err: ApolloError) => {
         const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
         this.setState({
           error: errorMessage,
@@ -291,14 +302,14 @@ export default compose(
   graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
   graphql(CREATE_FERMENTABLE, {
     name: 'createFermentable',
-    options: props => ({
+    options: (props: FermentableModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_FERMENTABLE, {
     name: 'updateFermentable',
-    options: props => ({
+    options: (props: FermentableModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),

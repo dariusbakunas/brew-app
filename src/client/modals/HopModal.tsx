@@ -5,6 +5,7 @@ import Modal from './Modal';
 import { Button, Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { InputChangeHandlerType } from '../components/Form/Input';
+import { Country } from '../../types';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
 } from '../queries';
@@ -29,11 +30,6 @@ type Hop = BaseHop & {
     id: string,
     name: string,
   }
-};
-
-type Country = {
-  id: string,
-  name: string,
 };
 
 type HopInput = { input: BaseHop } & { id?: string, input: { originId: string } };
