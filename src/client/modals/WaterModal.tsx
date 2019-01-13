@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { compose, graphql } from 'react-apollo';
 import Modal from './Modal';
 import { Button, Form } from '../components';
@@ -7,21 +6,31 @@ import handleGrpahQLError from '../errors/handleGraphQLError';
 import {
   CREATE_WATER, UPDATE_WATER,
 } from '../queries';
+import { Water, WaterInput } from '../../types';
+import { InputChangeHandlerType } from '../components/Form/Input';
 
-class WaterModal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    createWater: PropTypes.func.isRequired,
-    water: PropTypes.shape({
-      name: PropTypes.string,
-    }),
-    onHide: PropTypes.func,
-    open: PropTypes.bool,
-    refetchQuery: PropTypes.object,
-    updateWater: PropTypes.func.isRequired,
-  };
+type WaterModalProps = {
+  id: string,
+  createWater: (args: { variables: WaterInput }) => Promise<void>,
+  water: Water & { id: string },
+  onHide: () => void,
+  open: boolean,
+  refetchQuery: any,
+  updateWater: (args: { variables: WaterInput }) => Promise<void>,
+};
 
-  static getDefaultState = () => ({
+type WaterModalState = Water & {
+  error?: string,
+  loading: boolean,
+  validationErrors: {
+    [key: string]: string,
+  }
+};
+
+class WaterModal extends React.Component<WaterModalProps> {
+  readonly state: Readonly<WaterModalState>;
+
+  static getDefaultState: () => WaterModalState = () => ({
     name: null,
     pH: null,
     alkalinity: null,
@@ -37,7 +46,7 @@ class WaterModal extends React.Component {
     validationErrors: null,
   });
 
-  constructor(props) {
+  constructor(props: WaterModalProps) {
     super(props);
     if (props.water) {
       this.state = {
@@ -51,7 +60,7 @@ class WaterModal extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: WaterModalProps) {
     if (!prevProps.water && this.props.water) {
       this.setState({
         ...this.props.water,
@@ -62,7 +71,7 @@ class WaterModal extends React.Component {
     }
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
   handleHide = () => {
     if (this.props.onHide) {
@@ -72,7 +81,7 @@ class WaterModal extends React.Component {
     this.setState(WaterModal.getDefaultState());
   };
 
-  handleSubmit = (e, closeModal) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
     e.preventDefault();
 
     const { createWater, updateWater, water } = this.props;
@@ -83,7 +92,7 @@ class WaterModal extends React.Component {
         sodium, sulfate, chloride, bicarbonate,
       } = this.state;
 
-      const variables = {
+      const variables: WaterInput = {
         input: {
           name,
           pH,
@@ -300,14 +309,14 @@ class WaterModal extends React.Component {
 export default compose(
   graphql(CREATE_WATER, {
     name: 'createWater',
-    options: props => ({
+    options: (props: WaterModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_WATER, {
     name: 'updateWater',
-    options: props => ({
+    options: (props: WaterModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),

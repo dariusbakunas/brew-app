@@ -17,19 +17,6 @@ export type Country = {
   name: string,
 };
 
-/**
- * input FermentableInput {
-  name: String!
-  category: FermentableCategory!
-  color: Float
-  description: String
-  originId: ID!
-  type: FermentableType
-  potential: Float
-  yield: Float!
-}
- */
-
 export type Fermentable = {
   category: FermentableCategory,
   color: number,
@@ -57,4 +44,22 @@ export type Invitation = {
 export type InvitationInput = {
   email: string,
   sendEmail: boolean,
+};
+
+export type Water = {
+  name: string,
+  pH: number,
+  alkalinity: number,
+  calcium: number,
+  magnesium: number,
+  sodium: number,
+  sulfate: number,
+  chloride: number,
+  bicarbonate: number,
+  description: string,
+};
+
+export type WaterInput = {
+  id?: string,
+  input: Water,
 };

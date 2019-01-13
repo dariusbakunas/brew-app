@@ -27,7 +27,6 @@ type FermentableModalProps = {
 };
 
 type FermentbaleModalState = Fermentable & {
-  category: FermentableCategory,
   error?: string,
   loading: boolean,
   originId: string,
