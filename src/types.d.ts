@@ -35,6 +35,25 @@ export type FermentableInput = {
   }
 };
 
+export type Hop = {
+  aaLow?: number,
+  aaHigh?: number,
+  aroma: boolean,
+  bittering: boolean,
+  betaLow?: number,
+  betaHigh?: number,
+  description: string,
+  name: string,
+  origin?: Country,
+};
+
+export type HopInput = {
+  id?: string,
+  input: Hop & {
+    originId: string,
+  },
+};
+
 export type Invitation = {
   id?: string,
   code: string,

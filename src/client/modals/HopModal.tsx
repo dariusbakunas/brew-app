@@ -5,34 +5,13 @@ import Modal from './Modal';
 import { Button, Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { InputChangeHandlerType } from '../components/Form/Input';
-import { Country } from '../../types';
+import { Country, Hop, HopInput } from '../../types';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
 } from '../queries';
 
 // TODO: find a better way to do this
 const UNITED_STATES_ID = '236';
-
-type BaseHop = {
-  aaLow?: number,
-  aaHigh?: number,
-  aroma: boolean,
-  bittering: boolean,
-  betaLow?: number,
-  betaHigh?: number,
-  description: string,
-  name: string,
-};
-
-type Hop = BaseHop & {
-  id?: string,
-  origin: {
-    id: string,
-    name: string,
-  }
-};
-
-type HopInput = { input: BaseHop } & { id?: string, input: { originId: string } };
 
 type HopModalProps = {
   id: string,
@@ -41,14 +20,14 @@ type HopModalProps = {
     loading: boolean,
     countries: Country[],
   },
-  hop: Hop,
+  hop: Hop & { id: string },
   onHide: () => void,
   open: boolean,
   refetchQuery: any,
   updateHop: (args: { variables: HopInput }) => Promise<void>,
 };
 
-type HopModalState = BaseHop & {
+type HopModalState = Hop & {
   error?: string,
   loading: boolean,
   originId: string,
