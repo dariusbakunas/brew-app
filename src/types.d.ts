@@ -47,3 +47,14 @@ export type FermentableInput = {
     originId: string,
   }
 };
+
+export type Invitation = {
+  id?: string,
+  code: string,
+  email: string,
+};
+
+export type InvitationInput = {
+  email: string,
+  sendEmail: boolean,
+};

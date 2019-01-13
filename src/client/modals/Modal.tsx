@@ -8,7 +8,7 @@ type ModalProps = {
   header: string,
   loading: boolean,
   onHide: () => void,
-  open: boolean,
+  open?: boolean,
   render: (callback: () => void) => ReactNode,
 };
 

@@ -14,7 +14,6 @@ const UNITED_STATES_ID = '236';
 
 type FermentableModalProps = {
   id: string,
-  category: FermentableCategory,
   createFermentable: (args: { variables: FermentableInput }) => Promise<void>,
   fermentable: Fermentable & { id: string },
   getAllCountries: {
@@ -38,7 +37,7 @@ type FermentbaleModalState = Fermentable & {
 };
 
 class FermentableModal extends React.Component<FermentableModalProps> {
-  readonly state: FermentbaleModalState;
+  readonly state: Readonly<FermentbaleModalState>;
 
   static getDefaultState: () => FermentbaleModalState = () => ({
     category: FermentableCategory.GRAIN,

@@ -1,18 +1,29 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { graphql } from 'react-apollo';
 import { Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
 import Modal from './Modal';
+import { InvitationInput } from '../../types';
+import { InputChangeHandlerType } from '../components/Form/Input';
 
-class InvitationModal extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    mutate: PropTypes.func.isRequired,
-  };
+type InvitationModalProps = {
+  id: string,
+  mutate: (args: { variables: InvitationInput }) => Promise<any>,
+};
 
-  state = {
+type InvitationModalState = {
+  email: string,
+  error?: string,
+  loading: boolean,
+  send: boolean,
+  validationErrors: {
+    [key: string]: string,
+  }
+};
+
+class InvitationModal extends React.Component<InvitationModalProps> {
+  readonly state: Readonly<InvitationModalState> = {
     email: '',
     error: null,
     loading: false,
@@ -29,9 +40,9 @@ class InvitationModal extends React.Component {
     });
   };
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
-  handleSubmit = (e, closeModal) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
     e.preventDefault();
 
     const { mutate } = this.props;
