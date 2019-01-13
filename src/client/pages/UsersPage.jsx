@@ -9,7 +9,7 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 import withServerContext from '../HOC/withServerContext';
 import { GET_ALL_USERS, REMOVE_USER } from '../queries';
 
-class Users extends React.Component {
+class UsersPage extends React.Component {
   static propTypes = {
     user: PropTypes.shape({
       id: PropTypes.string,
@@ -69,7 +69,7 @@ class Users extends React.Component {
     const { loading, users = [] } = this.props.data;
 
     return (
-      <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
+      <React.Fragment>
         <Container>
           <Mutation mutation={REMOVE_USER} update={this.updateUsers} onError={this.handleError}>
             {
@@ -111,9 +111,9 @@ class Users extends React.Component {
           </Mutation>
         </Container>
         <Spinner active={loading}/>
-      </div>
+      </React.Fragment>
     );
   }
 }
 
-export default withServerContext(graphql(GET_ALL_USERS)(Users));
+export default withServerContext(graphql(GET_ALL_USERS)(UsersPage));
