@@ -3,8 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 import { Container, Tabs, Nav } from '../components';
 import Hops from './Hops';
 import Fermentables from './Fermentables';
-import Yeast from './Yeast';
-import Water from './Water';
+import Yeast from './YeastPage';
+import Water from './WaterPage';
 import PagingProvider from '../context/PagingProvider';
 
 class Ingredients extends React.Component {
