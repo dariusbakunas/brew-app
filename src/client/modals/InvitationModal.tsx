@@ -9,7 +9,7 @@ import { InputChangeHandlerType } from '../components/Form/Input';
 
 type InvitationModalProps = {
   id: string,
-  mutate: (args: { variables: InvitationInput }) => Promise<any>,
+  mutate?: (args: { variables: InvitationInput }) => Promise<any>,
 };
 
 type InvitationModalState = {
@@ -116,7 +116,7 @@ class InvitationModal extends React.Component<InvitationModalProps> {
   }
 }
 
-export default graphql(CREATE_INVITATION, {
+export default graphql<InvitationModalProps>(CREATE_INVITATION, {
   options: {
     update: (cache, { data: { createInvitation } }) => {
       const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });

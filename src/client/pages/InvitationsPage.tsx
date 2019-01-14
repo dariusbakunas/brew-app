@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { ApolloError } from 'apollo-client';
 import { compose, graphql } from 'react-apollo';
 import {
   Container, Table, IconNav, Spinner, Button,
@@ -8,27 +8,27 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 import confirm from '../utils/confirm';
 import InvitationModal from '../modals/InvitationModal';
 import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../queries';
+import { Invitation } from '../../types';
 
-// TODO: handle errors for getAllInvitations call
+type InvitationsPageProps = {
+  getAllInvitations: {
+    loading: boolean,
+    invitations: Array<Invitation & { id: string }>,
+  },
+  deleteInvitation: (args: { variables: { email: string } }) => Promise<void>,
+};
 
-class InvitationsPage extends React.Component {
-  static propTypes = {
-    deleteInvitation: PropTypes.func,
-    getAllInvitations: PropTypes.shape({
-      loading: PropTypes.bool,
-      invitations: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        email: PropTypes.string,
-        code: PropTypes.string,
-      })),
-    }),
-  };
+type InvitationsPageState = {
+  loading: boolean,
+};
 
-  state = {
+
+class InvitationsPage extends React.Component<InvitationsPageProps> {
+  readonly state: InvitationsPageState = {
     loading: false,
   };
 
-  handleError(error) {
+  private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     if (errorMessage) {
@@ -41,7 +41,7 @@ class InvitationsPage extends React.Component {
     }
   }
 
-  handleRemoveInvitation(email) {
+  handleRemoveInvitation(email: string) {
     confirm(`Are you sure you want to remove invitation for '${email}'?`, () => {
       this.setState({ loading: true }, () => {
         this.props.deleteInvitation({ variables: { email } })
@@ -50,7 +50,7 @@ class InvitationsPage extends React.Component {
           })
           .catch((err) => {
             this.setState({ loading: false }, () => {
-              this.handleError(err);
+              InvitationsPage.handleError(err);
             });
           });
       });
@@ -111,7 +111,9 @@ export default compose(
         const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
         cache.writeQuery({
           query: GET_ALL_INVITATIONS,
-          data: { invitations: invitations.filter(invitation => invitation.id !== id) },
+          data: {
+            invitations: invitations.filter((invitation: Invitation) => invitation.id !== id),
+          },
         });
       },
     },
