@@ -65,6 +65,23 @@ export type InvitationInput = {
   sendEmail: boolean,
 };
 
+export enum UserStatus {
+  GUEST = 'GUEST',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  NEW = 'NEW',
+}
+
+export type User = {
+  id: string,
+  firstName: string,
+  isAdmin: boolean,
+  lastName: string,
+  username: string,
+  email: string,
+  status: UserStatus,
+};
+
 export type UserRole = {
   name: string,
   code: string,

@@ -1,23 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
-import { USER_STATUS } from '../../contants';
 import { Nav, Navbar, SideMenu } from '../components';
 import Account from './Account';
 import Dashboard from './Dashboard';
 import Users from './UsersPage';
 import Invitations from './InvitationsPage';
-import IngredientsPage from './Ingredients';
-import Roles from './Roles';
+import IngredientsPage from './IngredientsPage';
+import Roles from './RolesPage';
+import { User } from '../../types';
 
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showSideBar: false,
-    };
-  }
+type MainPageProps = {
+  user: User,
+};
+
+type MainPageState = {
+  showSideBar: boolean,
+};
+
+class MainPage extends React.Component<MainPageProps> {
+  readonly state: Readonly<MainPageState> = {
+    showSideBar: false,
+  };
 
   showSideBar = () => {
     this.setState({ showSideBar: true });
@@ -25,16 +29,6 @@ class Main extends React.Component {
 
   hideSideBar = () => {
     this.setState({ showSideBar: false });
-  };
-
-  static propTypes = {
-    user: PropTypes.shape({
-      email: PropTypes.string,
-      firstName: PropTypes.string,
-      isAdmin: PropTypes.bool,
-      lastName: PropTypes.string,
-      status: PropTypes.oneOf(Object.values(USER_STATUS)),
-    }),
   };
 
   render() {
@@ -92,4 +86,4 @@ class Main extends React.Component {
   }
 }
 
-export default withServerContext(Main);
+export default withServerContext(MainPage);

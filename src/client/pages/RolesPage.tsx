@@ -1,25 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { graphql, Mutation } from 'react-apollo';
+import { compose, graphql } from 'react-apollo';
 import {
-  Container, Table, Spinner, IconNav,
+  Container, Table, Spinner,
 } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withServerContext from '../HOC/withServerContext';
 import { GET_ROLES } from '../queries';
+import { UserRole } from '../../types';
 
-class RolesPage extends React.Component {
-  static propTypes = {
-    data: PropTypes.shape({
-      loading: PropTypes.bool,
-      roles: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string,
-        code: PropTypes.string,
-      })),
-    }),
-  };
+type RolesPageProps = {
+  data: {
+    loading: boolean,
+    roles: Array<UserRole & { id: string }>,
+  }
+};
 
+class RolesPage extends React.Component<RolesPageProps> {
   render() {
     const { loading, roles = [] } = this.props.data;
 
@@ -53,4 +47,6 @@ class RolesPage extends React.Component {
   }
 }
 
-export default graphql(GET_ROLES)(RolesPage);
+export default compose(
+  graphql<RolesPage>(GET_ROLES),
+)(RolesPage);
