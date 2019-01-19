@@ -5,24 +5,24 @@ export enum FermentableCategory {
   GRAIN = 'GRAIN',
   JUICE = 'JUICE',
   LIQUID_EXTRACT = 'LIQUID_EXTRACT',
-  SUGAR = 'SUGAR'
+  SUGAR = 'SUGAR',
 }
 
 export enum GrainType {
-  BASE = 'BASE'
+  BASE = 'BASE',
 }
 
-export type Country = {
-  id: string,
-  name: string,
-};
+export interface ICountry {
+  id: string;
+  name: string;
+}
 
 export type Fermentable = {
   category: FermentableCategory,
   color: number,
   description: string,
   name: string,
-  origin?: Country,
+  origin?: ICountry,
   potential?: number,
   type?: GrainType,
   yield: number,
@@ -44,7 +44,7 @@ export type Hop = {
   betaHigh?: number,
   description: string,
   name: string,
-  origin?: Country,
+  origin?: ICountry,
 };
 
 export type HopInput = {

@@ -1,4 +1,4 @@
-const confirm = (message, callback) => {
+const confirm = (message: string, callback: () => void) => {
   const options = {
     labels: { ok: 'Yes', cancel: 'No' },
   };

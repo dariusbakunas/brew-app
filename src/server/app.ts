@@ -1,21 +1,26 @@
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import logger from 'morgan';
-import session from 'express-session';
-import passport from 'passport';
-import helmet from 'helmet';
-import uuidv4 from 'uuid/v4';
-import jwt from 'jsonwebtoken';
-import proxy from 'http-proxy-middleware';
 import compression from 'compression';
-import serverRenderer from './middleware/renderer';
-import authRoutes from './routes/auth';
-import secured from './middleware/secured';
+import memcached from 'connect-memcached';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import session, { SessionOptions } from 'express-session';
+import helmet, { IHelmetConfiguration } from 'helmet';
+import { IncomingMessage } from 'http';
+import proxy, { Config } from 'http-proxy-middleware';
+import jwt from 'jsonwebtoken';
+import logger from 'morgan';
+import passport from 'passport';
+import path from 'path';
+import uuidv4 from 'uuid/v4';
+import { User } from '../types';
 import auth0Strategy from './middleware/auth0';
 import authApiToken from './middleware/authApiToken';
+import serverRenderer from './middleware/renderer';
+import secured from './middleware/secured';
+import authRoutes from './routes/auth';
 
-if (!process.env.SESSION_SECRET) throw new Error('`env.SESSION_SECRET` is required for sessions');
+if (!process.env.SESSION_SECRET) {
+  throw new Error('`env.SESSION_SECRET` is required for sessions');
+}
 
 if (!process.env.AUTH0_CLIENT_ID || !process.env.AUTH0_CLIENT_SECRET || !process.env.AUTH0_DOMAIN) {
   throw new Error('Make sure all AUTH0 environment variables are specified');
@@ -42,14 +47,8 @@ app.use((req, res, next) => {
   next();
 });
 
-const apiProxyConfig = {
-  target: process.env.BREW_API_HOST,
+const apiProxyConfig: Config = {
   changeOrigin: true,
-  onProxyReq: (proxyReq, req, res, options) => {
-    const token = jwt.sign({ user: req.user || {} }, process.env.JWT_SECRET);
-    proxyReq.setHeader('auth-token', token);
-    proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
-  },
   onError: (err, req, res) => {
     res.writeHead(500, {
       'Content-Type': 'application/json',
@@ -57,30 +56,36 @@ const apiProxyConfig = {
 
     res.end(JSON.stringify({ message: err.message }));
   },
+  onProxyReq: (proxyReq, req: IncomingMessage & { accessToken: string, user: User }) => {
+    const token = jwt.sign({ user: req.user || {} }, process.env.JWT_SECRET);
+    proxyReq.setHeader('auth-token', token);
+    proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
+  },
+  target: process.env.BREW_API_HOST,
 };
 
-const helmetConfig = {
-  frameguard: { action: 'deny' },
-  referrerPolicy: { policy: 'no-referrer' },
+const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
     directives: {
       scriptSrc: [
-        "'self'",
+        '\'self\'',
         (req, res) => `'nonce-${res.locals.nonce}'`,
       ],
     },
   },
+  frameguard: { action: 'deny' },
+  referrerPolicy: { policy: 'no-referrer' },
 };
 
-const sessionConfig = {
-  secret: process.env.SESSION_SECRET,
+const sessionConfig: SessionOptions = {
   cookie: {},
   resave: false,
   saveUninitialized: true,
+  secret: process.env.SESSION_SECRET,
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  const MemcachedStore = require('connect-memcached')(session);
+  const MemcachedStore = memcached(session);
   sessionConfig.store = new MemcachedStore({
     hosts: [`${process.env.MEMCACHED_HOST}:${process.env.MEMCACHED_PORT || 11211}`],
   });
@@ -129,6 +134,7 @@ router.use('/ingredients/*', secured(), serverRenderer);
 
 // Admin routes
 router.use('/users', secured(), serverRenderer);
+router.use('/roles', secured(), serverRenderer);
 router.use('/invitations', secured(), serverRenderer);
 
 router.use('/register', secured(), serverRenderer);

@@ -2,28 +2,28 @@
  * Module dependencies.
  */
 
+import debugFn from 'debug';
 import http from 'http';
 import Loadable from 'react-loadable';
-
 import app from '../app';
 
-const debug = require('debug')('server:server');
+const debug = debugFn('server:server');
 
 /**
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
-  const port = parseInt(val, 10);
+function normalizePort(val: string) {
+  const p = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(p)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (p >= 0) {
     // port number
-    return port;
+    return p;
   }
 
   return false;
@@ -45,7 +45,7 @@ const server = http.createServer(app);
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError(error: NodeJS.ErrnoException) {
   if (error.syscall !== 'listen') {
     throw error;
   }

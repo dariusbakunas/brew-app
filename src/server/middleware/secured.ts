@@ -1,4 +1,6 @@
-export default () => (req, res, next) => {
+import express from 'express';
+
+export default () => (req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (req.user) {
     if (req.user.status === 'GUEST' && req.originalUrl !== '/register') {
       return res.redirect('/register');
@@ -11,6 +13,5 @@ export default () => (req, res, next) => {
     return next();
   }
 
-  req.session.returnTo = req.originalUrl;
-  res.redirect('/login');
+  return res.redirect('/login');
 };

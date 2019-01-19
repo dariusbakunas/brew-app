@@ -1,23 +1,36 @@
+import { NextFunction, Request, Response } from 'express';
 import React from 'react';
-import xss from 'xss';
-import ReactDOMServer from 'react-dom/server';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
+import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
+import xss from 'xss';
 import App from '../../client/App';
-import getApolloClient from '../apolloClient';
-import { ServerContextProvider } from '../../client/ServerContext';
 import formatClientError from '../../client/errors/formatClientError';
-import { USER_STATUS } from '../../contants';
+import { ServerContextProvider } from '../../client/ServerContext';
+import { UserStatus } from '../../types';
+import getApolloClient from '../apolloClient';
 
-export default (req, res, next) => {
-  const apolloClient = getApolloClient(req.user || { status: USER_STATUS.GUEST });
-  const serverContext = {
+interface IServerContext {
+  error?: { message: string };
+  user: {
+    id: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    isAdmin: boolean,
+    status: string,
+  };
+}
+
+export default (req: Request, res: Response, next: NextFunction) => {
+  const apolloClient = getApolloClient(req.user || { status: UserStatus.GUEST });
+  const serverContext: IServerContext = {
     user: req.user ? {
-      id: req.user.id,
       email: req.user.email,
       firstName: req.user.firstName,
-      lastName: req.user.lastName,
+      id: req.user.id,
       isAdmin: req.user.isAdmin,
+      lastName: req.user.lastName,
       status: req.user.status,
     } : null,
   };
@@ -40,8 +53,8 @@ export default (req, res, next) => {
       apolloState: initialApolloState ? xss(JSON.stringify(initialApolloState)) : {},
       html,
       nonce: res.locals.nonce,
-      title: 'Brew',
       serverContext: xss(JSON.stringify(serverContext)),
+      title: 'Brew',
     });
   }).catch((error) => {
     // TODO: error handling
