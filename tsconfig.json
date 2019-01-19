@@ -6,8 +6,11 @@
     "lib": ["es6", "dom", "esnext"],
     "baseUrl": ".",
     "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
     "types": ["UIkit"],
+    "typeRoots": [ "./types", "./node_modules/@types"]
   }
 }
