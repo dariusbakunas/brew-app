@@ -1,30 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Route, withRouter, Switch } from 'react-router-dom';
-import Main from './pages/Main';
+import {
+  Route, RouteComponentProps, Switch, withRouter,
+} from 'react-router-dom';
+import Main from './pages/MainPage';
 import withServerContext from './HOC/withServerContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import { USER_STATUS } from '../contants';
 import ErrorBoundary from './errors/ErrorBoundary';
-import Privacy from './pages/Privacy';
+import Privacy from './pages/PrivacyPage';
 import Terms from './pages/Terms';
 import Activate from './pages/Activate';
 import Footer from './components/Footer';
+import { UserStatus } from '../types';
 
-class App extends React.Component {
-  static propTypes = {
-    location: PropTypes.shape({
-      pathname: PropTypes.string,
-    }).isRequired,
-    user: PropTypes.shape({
-      email: PropTypes.string,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      status: PropTypes.oneOf(Object.values(USER_STATUS)),
-    }),
-  };
+type AppProps = RouteComponentProps<any> & {
+  location: {
+    pathname: string,
+  },
+  user: {
+    email: string,
+    firstName: string,
+    lastName: string,
+    status: UserStatus,
+  },
+};
 
+class App extends React.Component<AppProps> {
   render() {
     return (
       <ErrorBoundary>
@@ -42,4 +43,4 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(withServerContext(App));
+export default withServerContext(withRouter(App));
