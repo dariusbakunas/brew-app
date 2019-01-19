@@ -11,6 +11,14 @@ import 'uikit';
 import { ServerContextProvider } from './ServerContext';
 import App from './App';
 
+declare global {
+  interface Window {
+    UIkit: any;
+    __APOLLO_STATE__: any;
+    __SERVER_CONTEXT__: any;
+  }
+}
+
 const errLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach((err) => {

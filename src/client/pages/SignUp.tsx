@@ -1,14 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
+import { ApolloError } from 'apollo-client';
 import {
   Button, Container, Form, Header,
 } from '../components';
 import withServerContext from '../HOC/withServerContext';
-import { USER_STATUS } from '../../contants';
-import { ServerError } from '../errors/errors';
+import { User } from '../../types';
+import { InputChangeHandlerType } from '../components/Form/Input';
+import handleGraphQLError from '../errors/handleGraphQLError';
 
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {
@@ -19,20 +20,22 @@ const REGISTER = gql`
   }
 `;
 
-class SignUp extends React.Component {
-  static propTypes = {
-    history: PropTypes.shape({
-      push: PropTypes.func,
-    }).isRequired,
-    user: PropTypes.shape({
-      email: PropTypes.string.isRequired,
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-      status: PropTypes.oneOf(Object.values(USER_STATUS)),
-    }).isRequired,
-  };
+type SignUpPageProps = RouteComponentProps<any> & {
+  user: Partial<User>,
+};
 
-  constructor(props) {
+type SignUpPageState = Partial<User> & {
+  error: string,
+  code: string,
+  validationErrors?: {
+    [key: string]: string,
+  }
+};
+
+class SignUp extends React.Component<SignUpPageProps> {
+  readonly state: Readonly<SignUpPageState>;
+
+  constructor(props: SignUpPageProps) {
     super(props);
 
     const { email, firstName, lastName } = props.user;
@@ -47,61 +50,22 @@ class SignUp extends React.Component {
     };
   }
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value });
+  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
   handleSuccess = () => {
     this.props.history.push('/activate');
   };
 
-  handleError = (error) => {
-    const { graphQLErrors, networkError } = error;
+  private static handleError(error: ApolloError) {
+    const { errorMessage } = handleGraphQLError(error, false);
 
-    if (networkError) {
-      throw new ServerError(networkError);
-    }
-
-    let validationErrors = {};
-    const errorMessages = [];
-
-    if (graphQLErrors) {
-      graphQLErrors.forEach((err) => {
-        const { extensions } = err;
-
-        if (extensions.code === 'INTERNAL_SERVER_ERROR') {
-          throw new ServerError(err.message);
-        }
-
-        errorMessages.push(err.message);
-
-        if (extensions.code === 'BAD_USER_INPUT') {
-          // merge validation errors for now
-          validationErrors = {
-            ...validationErrors,
-            ...extensions.exception.validationErrors,
-          };
-        }
-      });
-    }
-
-    if (errorMessages.length) {
-      errorMessages.forEach((message) => {
-        window.UIkit.notification({
-          message,
-          status: 'danger',
-          pos: 'top-center',
-          timeout: 5000,
-        });
-      });
-    }
-
-    if (Object.keys(validationErrors).length) {
-      this.setState({
-        error: {
-          validationErrors,
-        },
-      });
-    }
-  };
+    window.UIkit.notification({
+      message: errorMessage,
+      status: 'danger',
+      pos: 'top-right',
+      timeout: 5000,
+    });
+  }
 
   render() {
     if (this.props.user.status !== 'GUEST') {
@@ -111,11 +75,11 @@ class SignUp extends React.Component {
     }
 
     return (
-      <Mutation mutation={REGISTER} onCompleted={this.handleSuccess} onError={this.handleError}>
+      <Mutation mutation={REGISTER} onCompleted={this.handleSuccess} onError={SignUp.handleError}>
         {
           (register, { data, loading }) => {
             const {
-              username, error, email, firstName, lastName, code,
+              username, error, email, firstName, lastName, code, validationErrors,
             } = this.state;
 
             return (
@@ -141,7 +105,7 @@ class SignUp extends React.Component {
                       <Form.Fieldset layout='stacked'>
                         <div className="uk-margin">
                           <Form.Input
-                            error={ error ? error.validationErrors.username : null }
+                            error={ validationErrors.username }
                             label='USERNAME'
                             name='username'
                             onChange={this.handleChange}
@@ -150,7 +114,7 @@ class SignUp extends React.Component {
                         </div>
                         <div className="uk-margin">
                           <Form.Input
-                            error={ error ? error.validationErrors.email : null }
+                            error={ validationErrors.email }
                             label='EMAIL'
                             name='email'
                             onChange={this.handleChange}
@@ -175,7 +139,7 @@ class SignUp extends React.Component {
                         <div className="uk-margin">
                           <Form.Input
                             label='INVITATION CODE'
-                            error={ error ? error.validationErrors.code : null }
+                            error={ validationErrors.code }
                             name='code'
                             onChange={this.handleChange}
                             required
@@ -195,4 +159,4 @@ class SignUp extends React.Component {
   }
 }
 
-export default withRouter(withServerContext(SignUp));
+export default withServerContext(withRouter(SignUp));

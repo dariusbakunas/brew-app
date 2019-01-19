@@ -13,10 +13,18 @@ const GET_LOGIN_QUOTE = gql`
   }
 `;
 
-class Login extends React.Component {
-  render() {
+type LoginProps = {
+  data: {
+    randomQuote: {
+      author: string,
+      test:string,
+    }
+  }
+};
 
-    //TODO: convert query to HOC
+class Login extends React.Component<LoginProps> {
+  render() {
+    // TODO: convert query to HOC
 
     return (
       <Query query={GET_LOGIN_QUOTE}>
@@ -51,14 +59,5 @@ class Login extends React.Component {
     );
   }
 }
-
-Login.propTypes = {
-  data: PropTypes.shape({
-    randomQuote: PropTypes.shape({
-      author: PropTypes.string,
-      text: PropTypes.string,
-    }),
-  }),
-};
 
 export default Login;

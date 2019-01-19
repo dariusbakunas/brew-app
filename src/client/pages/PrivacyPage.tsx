@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header, Container } from '../components';
 
-function Privacy() {
+function PrivacyPage() {
   return (
     <div className='uk-section'>
       <Container>
@@ -82,4 +82,4 @@ function Privacy() {
   );
 }
 
-export default Privacy;
+export default PrivacyPage;
