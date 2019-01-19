@@ -35,18 +35,17 @@ module.exports = (env, argv) => {
     name: 'clientConfig',
     mode: dev ? 'development' : 'production',
     entry: {
-      client: './src/client/index.js',
+      client: './src/client/index.tsx',
     },
     devtool: 'source-map',
     module: {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader'
-        },
-        {
-          test: /\.jsx?$/,
-          loader: 'babel-loader',
+          loader: 'awesome-typescript-loader',
+          options: {
+            useBabel: true,
+          }
         },
         // need to bundle css separately to avoid un-styled server side pages
         {
@@ -100,7 +99,7 @@ module.exports = (env, argv) => {
     mode: dev ? 'development' : 'production',
     devtool: 'inline-source-map',
     entry: {
-      server: './src/server/bin/www.js',
+      server: './src/server/bin/www.ts',
     },
     externals: [
       nodeExternals(),
@@ -110,23 +109,10 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.tsx?$/,
-          loader: 'awesome-typescript-loader'
-        },
-        {
-          test: /\.jsx?$/,
-          loader: 'babel-loader',
+          loader: 'awesome-typescript-loader',
           options: {
-            presets: [['@babel/preset-env', { targets: { node: 'current' } }], '@babel/preset-react'],
-            plugins: [
-              [
-                '@babel/plugin-proposal-class-properties',
-                {
-                  loose: true,
-                },
-              ],
-              '@babel/plugin-proposal-export-default-from',
-            ],
-          },
+            useBabel: true,
+          }
         },
         {
           test: /\.html$/,
