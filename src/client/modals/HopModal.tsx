@@ -5,7 +5,7 @@ import Modal from './Modal';
 import { Button, Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import { InputChangeHandlerType } from '../components/Form/Input';
-import { Country, Hop, HopInput } from '../../types';
+import { ICountry, Hop, HopInput } from '../../types';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
 } from '../queries';
@@ -18,7 +18,7 @@ type HopModalProps = {
   createHop: (args: { variables: HopInput }) => Promise<void>,
   getAllCountries: {
     loading: boolean,
-    countries: Country[],
+    countries: ICountry[],
   },
   hop: Hop & { id: string },
   onHide: () => void,

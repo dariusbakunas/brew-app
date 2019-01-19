@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import classNames from 'classnames';
 
 type HeaderCellProps = {
-  children: ReactNode,
+  children?: ReactNode,
   className?: string,
   nowrap?: boolean,
   shrink?: boolean,

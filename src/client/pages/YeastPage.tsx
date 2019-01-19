@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
 import { GET_YEAST, REMOVE_YEAST } from '../queries';
 import YeastModal from '../modals/YeastModal';
 import {
@@ -13,7 +13,7 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type YeastPageProps = PagedQueryProps & {
+type YeastPageProps = IPagedQueryProps & {
   data: Array<Yeast & { id: string }>,
   loading: boolean,
   removeYeast: (args: { variables: { id: string } }) => Promise<void>,

@@ -1,9 +1,9 @@
-import * as fetch from 'node-fetch';
+import fetch from 'node-fetch';
 import { ApolloClient } from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import getAuth0Token from './auth0token';
 
 type User = {

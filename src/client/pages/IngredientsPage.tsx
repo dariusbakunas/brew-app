@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Container, Tabs, Nav } from '../components';
-import Hops from './Hops';
-import Fermentables from './Fermentables';
-import Yeast from './YeastPage';
-import Water from './WaterPage';
+import { Container, Nav, Tabs } from '../components';
 import PagingProvider from '../context/PagingProvider';
+import Fermentables from './FermentablesPage';
+import Hops from './HopsPage';
+import Water from './WaterPage';
+import Yeast from './YeastPage';
 
 class IngredientsPage extends React.Component {
-  render() {
+  public render() {
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
         <Container>

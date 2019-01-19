@@ -1,59 +1,57 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import Modal from './Modal';
-import { Button, Form } from '../components';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_YEAST, GET_YEAST_LABS, UPDATE_YEAST } from '../queries';
 import {
   Yeast, YeastForm, YeastInput, YeastLab, YeastType,
 } from '../../types';
+import { Button, Form } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
+import handleGrpahQLError from '../errors/handleGraphQLError';
+import { CREATE_YEAST, GET_YEAST_LABS, UPDATE_YEAST } from '../queries';
+import Modal from './Modal';
 
-type YeastModalProps = {
-  id: string,
-  createYeast: (args: { variables: YeastInput }) => Promise<void>,
+interface IYeastModalProps {
+  id: string;
+  createYeast: (args: { variables: YeastInput }) => Promise<void>;
   getYeastLabs: {
     loading: boolean,
     yeastLabs: YeastLab[],
-  },
-  yeast: Yeast & { id: string },
-  onHide: () => void,
-  open: boolean,
-  refetchQuery: any,
-  updateYeast: (args: { variables: YeastInput }) => Promise<void>,
-};
+  };
+  yeast: Yeast & { id: string };
+  onHide: () => void;
+  open: boolean;
+  refetchQuery: any;
+  updateYeast: (args: { variables: YeastInput }) => Promise<void>;
+}
 
-type YeastModalState = Yeast & {
-  error?: string,
-  labId: string,
-  loading: boolean,
-  validationErrors: {
+interface IYeastModalState {
+  error?: string;
+  labId?: string;
+  loading?: boolean;
+  validationErrors?: {
     [key: string]: string,
-  }
-};
+  };
+}
 
-class YeastModal extends React.Component<YeastModalProps> {
-  readonly state: Readonly<YeastModalState>;
-
-  static getDefaultState: (labId?: string) => YeastModalState = labId => ({
-    name: null,
-    form: YeastForm.DRY,
-    type: YeastType.ALE,
-    labId,
+class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Partial<Yeast>> {
+  private static getDefaultState: (labId?: string) => IYeastModalState & Yeast = (labId) => ({
     description: null,
     error: null,
+    form: YeastForm.DRY,
+    labId,
     loading: false,
+    name: null,
+    type: YeastType.ALE,
     validationErrors: null,
-  });
+  })
 
-  constructor(props: YeastModalProps) {
+  constructor(props: IYeastModalProps) {
     super(props);
     if (props.yeast) {
       this.state = {
         ...props.yeast,
+        error: null,
         labId: props.yeast.lab.id,
         loading: false,
-        error: null,
         validationErrors: null,
       };
     } else {
@@ -62,13 +60,13 @@ class YeastModal extends React.Component<YeastModalProps> {
     }
   }
 
-  componentDidUpdate(prevProps: YeastModalProps) {
+  public componentDidUpdate(prevProps: IYeastModalProps) {
     if (!prevProps.yeast && this.props.yeast) {
       this.setState({
         ...this.props.yeast,
+        error: null,
         labId: this.props.yeast.lab.id,
         loading: false,
-        error: null,
         validationErrors: null,
       });
     }
@@ -80,59 +78,7 @@ class YeastModal extends React.Component<YeastModalProps> {
     }
   }
 
-  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
-
-  handleHide = () => {
-    if (this.props.onHide) {
-      this.props.onHide();
-    }
-
-    this.setState(YeastModal.getDefaultState());
-  };
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
-    e.preventDefault();
-
-    const { createYeast, updateYeast, yeast } = this.props;
-
-    this.setState({ loading: true }, () => {
-      const {
-        name, form, type, labId, description,
-      } = this.state;
-
-      const variables: YeastInput = {
-        input: {
-          name,
-          form,
-          type,
-          labId,
-          description,
-        },
-      };
-
-      let fn = createYeast;
-
-      if (yeast) {
-        variables.id = yeast.id;
-        fn = updateYeast;
-      }
-
-      fn({ variables }).then(() => {
-        this.setState({ loading: false }, () => {
-          closeModal();
-        });
-      }).catch((err) => {
-        const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
-        this.setState({
-          error: errorMessage,
-          loading: false,
-          validationErrors,
-        });
-      });
-    });
-  };
-
-  render() {
+  public render() {
     const {
       yeast, id, open, getYeastLabs,
     } = this.props;
@@ -157,8 +103,8 @@ class YeastModal extends React.Component<YeastModalProps> {
         loading={loading}
         onHide={this.handleHide}
         open={open}
-        render={close => (
-          <Form onSubmit={e => this.handleSubmit(e, close)}>
+        render={(close) => (
+          <Form onSubmit={(e) => this.handleSubmit(e, close)}>
             <Form.Fieldset layout='stacked'>
               <div className='uk-margin'>
                 <Form.Input
@@ -168,7 +114,7 @@ class YeastModal extends React.Component<YeastModalProps> {
                   name='name'
                   onChange={this.handleChange}
                   value={name || ''}
-                  required
+                  required={true}
                 />
               </div>
               <div className='uk-margin uk-grid-small uk-child-width-auto uk-grid'>
@@ -187,7 +133,7 @@ class YeastModal extends React.Component<YeastModalProps> {
                   checked={form === 'LIQUID'}
                 />
               </div>
-              <div className="uk-margin">
+              <div className='uk-margin'>
                 <Form.Select
                   label='Type'
                   error={validationErrors ? validationErrors.type : null}
@@ -197,17 +143,17 @@ class YeastModal extends React.Component<YeastModalProps> {
                   options={types}
                 />
               </div>
-              <div className="uk-margin">
+              <div className='uk-margin'>
                 <Form.Select
                   label='Lab'
                   name='labId'
                   onChange={this.handleChange}
                   options={
                     getYeastLabs.yeastLabs ? getYeastLabs.yeastLabs.map(
-                      lab => ({ value: lab.id, label: lab.name }),
+                      (lab) => ({ value: lab.id, label: lab.name }),
                     ) : []}
                   value={labId}
-                  />
+                />
               </div>
               <Form.TextArea
                 disabled={loading}
@@ -226,20 +172,75 @@ class YeastModal extends React.Component<YeastModalProps> {
       />
     );
   }
+
+  private handleChange: InputChangeHandlerType =
+    (e, { name, value }) => {
+      return this.setState({[name]: value});
+    }
+
+  private handleHide = () => {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+
+    this.setState(YeastModal.getDefaultState());
+  }
+
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
+    e.preventDefault();
+
+    const { createYeast, updateYeast, yeast } = this.props;
+
+    this.setState({ loading: true }, () => {
+      const {
+        name, form, type, labId, description,
+      } = this.state;
+
+      const variables: YeastInput = {
+        input: {
+          description,
+          form,
+          labId,
+          name,
+          type,
+        },
+      };
+
+      let fn = createYeast;
+
+      if (yeast) {
+        variables.id = yeast.id;
+        fn = updateYeast;
+      }
+
+      fn({ variables }).then(() => {
+        this.setState({ loading: false }, () => {
+          closeModal();
+        });
+      }).catch((err) => {
+        const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
+        this.setState({
+          error: errorMessage,
+          loading: false,
+          validationErrors,
+        });
+      });
+    });
+  }
 }
 
 export default compose(
   graphql(GET_YEAST_LABS, { name: 'getYeastLabs' }),
   graphql(CREATE_YEAST, {
     name: 'createYeast',
-    options: (props: YeastModalProps) => ({
+    options: (props: IYeastModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_YEAST, {
     name: 'updateYeast',
-    options: (props: YeastModalProps) => ({
+    options: (props: IYeastModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),

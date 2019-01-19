@@ -8,12 +8,12 @@ import {
 } from '../components';
 import FermentableModal from '../modals/FermentableModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
 import { Fermentable } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type FermentablesProps = PagedQueryProps & {
+type FermentablesProps = IPagedQueryProps & {
   data: Array<Fermentable & { id: string }>,
   loading: boolean,
   removeFermentable: (args: { variables: { id: string } }) => Promise<void>,

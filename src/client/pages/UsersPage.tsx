@@ -62,13 +62,13 @@ class UsersPage extends React.Component<UsersPageProps> {
 
   // TODO: replace Mutation with HOC for easier testing
 
-  render() {
+  public render() {
     const { loading, users = [] } = this.props.data;
 
     return (
       <React.Fragment>
         <Container>
-            <Table className='uk-margin-large' size='small' stripped>
+            <Table className='uk-margin-large' size='small' stripped={true}>
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell>Username</Table.HeaderCell>
@@ -84,12 +84,13 @@ class UsersPage extends React.Component<UsersPageProps> {
                       <Table.Cell>{user.username}</Table.Cell>
                       <Table.Cell>{user.email}</Table.Cell>
                       <Table.Cell>{UsersPage.getStatusString(user.status)}</Table.Cell>
-                      <Table.Cell nowrap>
+                      <Table.Cell nowrap={true}>
                         <IconNav>
                           <IconNav.Item
                             disabled={this.props.user.id === user.id}
                             icon='trash'
-                            onClick={() => this.handleRemove(user)}/>
+                            onClick={() => this.handleRemove(user)}
+                          />
                         </IconNav>
                       </Table.Cell>
                     </Table.Row>
@@ -113,13 +114,13 @@ export default withServerContext(
         update: (cache, { data: { removeUser: id } }) => {
           const { users } = cache.readQuery({ query: GET_ALL_USERS });
           cache.writeQuery({
-            query: GET_ALL_USERS,
             data: {
               invitations: users.filter((user: User) => user.id !== id),
             },
+            query: GET_ALL_USERS,
           });
         },
       },
     }),
-  )(UserStatus),
+  )(UsersPage),
 );

@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import PropTypes from 'prop-types';
 import Item from './Item';
 import Header from './Header';
 import Divider from './Divider';
@@ -9,10 +8,6 @@ type NavProps = {
 };
 
 class Nav extends React.Component<NavProps> {
-  static propTypes = {
-    children: PropTypes.node,
-  };
-
   static Header = Header;
 
   static Item = Item;

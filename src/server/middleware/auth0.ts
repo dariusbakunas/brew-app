@@ -1,22 +1,18 @@
-import * as passport from 'passport';
-import * as Auth0Strategy from 'passport-auth0';
 import gql from 'graphql-tag';
+import passport from 'passport';
+import Auth0Strategy from 'passport-auth0';
+import { User, UserStatus } from '../../types';
 import getApolloClient from '../apolloClient';
-import { USER_STATUS } from '../../contants';
 
-type User = {
-  email: string,
-};
-
-type UserResponse = {
-  userByEmail: User,
-};
+interface IUserResponse {
+  userByEmail: User;
+}
 
 const getUserByEmail =
 (
   apolloClient: ReturnType<typeof getApolloClient>,
   email: string,
-) => apolloClient.query<UserResponse>({
+) => apolloClient.query<IUserResponse>({
   query: gql`
       query GetUserByEmail($email: String!) {
         userByEmail(email: $email) {
@@ -59,9 +55,9 @@ export const verify: Auth0Strategy.VerifyFunction = (
   const requestUser = {
     email: profile.emails[0].value,
     firstName: profile.name.givenName,
+    initialAuth: true,
     lastName: profile.name.familyName,
     username: profile.id,
-    initialAuth: true,
   };
 
   const apolloClient = getApolloClient(requestUser);
@@ -73,7 +69,7 @@ export const verify: Auth0Strategy.VerifyFunction = (
       } else {
         const newUser = {
           ...requestUser,
-          status: USER_STATUS.GUEST,
+          status: UserStatus.GUEST,
         };
 
         done(null, newUser);
@@ -86,11 +82,11 @@ export const verify: Auth0Strategy.VerifyFunction = (
 // @ts-ignore
 export default new Auth0Strategy(
   {
-    domain: process.env.AUTH0_DOMAIN,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
     callbackURL:
       process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+    clientID: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    domain: process.env.AUTH0_DOMAIN,
   },
   verify,
 );

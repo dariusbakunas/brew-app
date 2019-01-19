@@ -1,16 +1,16 @@
-import React, { ReactNode } from 'react';
 import classNames from 'classnames';
+import React, { ReactNode } from 'react';
 import Column from './Column';
 
-type GridProps = {
-  children: ReactNode,
-  className?: string,
-  divider?: boolean,
-  gutter?: 'small' | 'medium' | 'large' | 'collapse',
-  textAlign: 'left' | 'center' | 'right' | 'justify'
-};
+interface IGridProps {
+  children: ReactNode;
+  className?: string;
+  divider?: boolean;
+  gutter?: 'small' | 'medium' | 'large' | 'collapse';
+  textAlign?: 'left' | 'center' | 'right' | 'justify';
+}
 
-function Grid(props: GridProps) {
+function Grid(props: IGridProps) {
   const {
     children,
     className,
@@ -28,7 +28,7 @@ function Grid(props: GridProps) {
   );
 
   return (
-    <div className={classes} {...rest} data-uk-grid>
+    <div className={classes} {...rest} data-uk-grid={true}>
       {children}
     </div>
   );

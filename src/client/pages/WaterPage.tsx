@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
 import { GET_WATER, REMOVE_WATER } from '../queries';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import {
@@ -13,7 +13,7 @@ import { Water } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type WaterPageProps = PagedQueryProps & {
+type WaterPageProps = IPagedQueryProps & {
   data: Array<Water & { id: string }>,
   loading: boolean,
   removeWater: (args: { variables: { id: string } }) => Promise<void>,

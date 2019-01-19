@@ -8,12 +8,12 @@ import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 import HopModal from '../modals/HopModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { PagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
 import { Hop } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type HopsProps = PagedQueryProps & {
+type HopsProps = IPagedQueryProps & {
   data: Array<Hop & { id: string }>,
   loading: boolean,
   removeHop: (args: { variables: { id: string } }) => Promise<void>,
@@ -25,11 +25,11 @@ type HopState = {
   currentHop: Hop,
 };
 
-class HopsPage extends React.Component<HopsProps> {
-  readonly state: Readonly<HopState> = {
-    loading: false,
-    hopModalOpen: false,
+class HopsPage extends React.Component<HopsProps, HopState> {
+  public readonly state: Readonly<HopState> = {
     currentHop: null,
+    hopModalOpen: false,
+    loading: false,
   };
 
   static formatAcidValue(low: number, high: number) {
@@ -99,7 +99,8 @@ class HopsPage extends React.Component<HopsProps> {
                 hasNextPage={this.props.hasNextPage}
                 hasPrevPage={this.props.hasPreviousPage}
                 onNextPage={this.props.getNextPage}
-                onPrevPage={this.props.getPreviousPage}/>
+                onPrevPage={this.props.getPreviousPage}
+              />
               <Table size='small' stripped>
                 <Table.Header>
                   <Table.Row>

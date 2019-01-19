@@ -6,7 +6,7 @@ import { Button, Form } from '../components';
 import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from '../queries';
 import handleGrpahQLError from '../errors/handleGraphQLError';
 import {
-  Country, Fermentable, FermentableCategory, FermentableInput, GrainType,
+  ICountry, Fermentable, FermentableCategory, FermentableInput, GrainType,
 } from '../../types';
 import { InputChangeHandlerType } from '../components/Form/Input';
 
@@ -18,7 +18,7 @@ type FermentableModalProps = {
   fermentable: Fermentable & { id: string },
   getAllCountries: {
     loading: boolean,
-    countries: Country[],
+    countries: ICountry[],
   },
   onHide: () => void,
   open: boolean,

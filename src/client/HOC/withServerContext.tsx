@@ -13,7 +13,7 @@ function withServerContext(WrappedComponent: ComponentType) {
       return (
         <ServerContext.Consumer>
           {
-            context => <WrappedComponent {...this.props} {...context}/>
+            (context) => <WrappedComponent {...this.props} {...context}/>
           }
         </ServerContext.Consumer>
       );

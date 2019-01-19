@@ -11,12 +11,6 @@ type SideMenuProps = {
   visible: boolean,
 };
 
-declare global {
-  interface Window {
-    UIkit: any;
-  }
-}
-
 class SideMenu extends React.Component<SideMenuProps> {
   private ref: React.RefObject<HTMLDivElement>;
 
