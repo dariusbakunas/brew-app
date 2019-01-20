@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import passport from 'passport';
-import Auth0Strategy from 'passport-auth0';
+import * as passport from 'passport';
+import * as Auth0Strategy from 'passport-auth0';
 import { User, UserStatus } from '../../types';
 import getApolloClient from '../apolloClient';
 

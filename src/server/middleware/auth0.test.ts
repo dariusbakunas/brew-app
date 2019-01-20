@@ -23,11 +23,17 @@ describe('auth0 Strategy', () => {
     (getApolloClient as jest.Mock).mockReturnValue(mockClient);
 
     const profile = {
+      _json: '',
+      _raw: '',
+      birthday: '1974',
+      displayName: 'test user',
       emails: [{ value: 'test@gmail.com' }],
+      id: 'test',
       name: {
         familyName: 'Family Name',
         givenName: 'Given Name',
       },
+      provider: '',
       user_id: 'Test User ID',
     };
 
