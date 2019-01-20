@@ -3,7 +3,7 @@ module.exports = {
     '<rootDir>/src',
   ],
   transform: {
-    '^.+\\.(js|jsx)?$': 'babel-jest',
+    "^.+\\.tsx?$": "ts-jest"
   },
   collectCoverageFrom: [
     '**/*.{js,jsx}',
@@ -11,7 +11,16 @@ module.exports = {
     '!**/vendor/**',
   ],
   setupFiles: [
-    '<rootDir>/tests/setupTests.js',
+    '<rootDir>/tests/setupTests.ts',
+  ],
+  testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+  moduleFileExtensions: [
+    "ts",
+    "tsx",
+    "js",
+    "jsx",
+    "json",
+    "node"
   ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
 };

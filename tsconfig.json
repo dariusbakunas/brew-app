@@ -10,7 +10,9 @@
     "experimentalDecorators": true,
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
-    "types": ["UIkit"],
+    "outDir": "build",
+    "sourceMap": true,
+    "types": ["UIkit", "jest"],
     "typeRoots": [ "./types", "./node_modules/@types"]
   }
 }
