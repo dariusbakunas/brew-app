@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { shallow } from 'enzyme';
 
 import { Form } from '../index';
@@ -12,7 +12,7 @@ describe('Input', () => {
   it('should call onChange handler on user input', () => {
     const handler = jest.fn();
     const wrapper = shallow(<Form.Input label='test' name='test' onChange={handler}/>);
-    const event = { target: { value: '123456789abcde' } };
+    const event = { currentTarget: { value: '123456789abcde' } };
     wrapper.find('input').simulate('change', event);
     expect(handler).toHaveBeenCalledWith(event, { name: 'test', value: '123456789abcde' });
   });
@@ -25,7 +25,7 @@ describe('Input', () => {
   it('should convert input to number if type is number', () => {
     const handler = jest.fn();
     const wrapper = shallow(<Form.Input label='test' name='test' type='number' step={0.1} onChange={handler}/>);
-    const event = { target: { value: '325.6' } };
+    const event = { currentTarget: { value: '325.6' } };
     wrapper.find('input').simulate('change', event);
     expect(handler).toHaveBeenCalledWith(event, { name: 'test', value: 325.6 });
   });
