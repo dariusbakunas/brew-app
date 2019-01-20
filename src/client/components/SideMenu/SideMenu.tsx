@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import Icon from '../Icon';
 
 type SideMenuProps = {
@@ -11,7 +11,7 @@ type SideMenuProps = {
   visible: boolean,
 };
 
-class SideMenu extends React.Component<SideMenuProps> {
+class SideMenu extends Component<SideMenuProps> {
   private ref: React.RefObject<HTMLDivElement>;
 
   static defaultProps: Partial<SideMenuProps> = {

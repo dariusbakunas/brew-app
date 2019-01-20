@@ -1,32 +1,32 @@
-import React, { ReactNode } from 'react';
-import Input from './Input';
+import React, { Component, ReactNode } from 'react';
+import Spinner from '../Spinner';
 import Checkbox from './Checkbox';
 import Fieldset from './Fieldset';
-import Spinner from '../Spinner';
-import TextArea from './TextArea';
-import Select from './Select';
+import Input from './Input';
 import Radio from './Radio';
+import Select from './Select';
+import TextArea from './TextArea';
 
-type FormProps = {
-  children: ReactNode,
-  loading?: boolean,
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void,
-};
+interface IFormProps {
+  children: ReactNode;
+  loading?: boolean;
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+}
 
-class Form extends React.Component<FormProps> {
-  static Fieldset = Fieldset;
+class Form extends Component<IFormProps> {
+  public static Fieldset = Fieldset;
 
-  static Input = Input;
+  public static Input = Input;
 
-  static Checkbox = Checkbox;
+  public static Checkbox = Checkbox;
 
-  static Radio = Radio;
+  public static Radio = Radio;
 
-  static TextArea = TextArea;
+  public static TextArea = TextArea;
 
-  static Select = Select;
+  public static Select = Select;
 
-  render() {
+  public render() {
     const { children, loading, onSubmit } = this.props;
 
     return (

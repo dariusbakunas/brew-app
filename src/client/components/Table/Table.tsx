@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import classNames from 'classnames';
 import Header from './Header';
 import HeaderCell from './HeaderCell';
@@ -14,7 +14,7 @@ type TableProps = {
   stripped?: boolean,
 };
 
-class Table extends React.Component<TableProps> {
+class Table extends Component<TableProps> {
   static Header = Header;
 
   static HeaderCell = HeaderCell;

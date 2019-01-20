@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ApolloClient, ApolloError } from 'apollo-client';
 import queryString from 'query-string';

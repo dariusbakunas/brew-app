@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import Item from './Item';
 import Header from './Header';
 import Divider from './Divider';
@@ -7,7 +7,7 @@ type NavProps = {
   children: ReactNode
 };
 
-class Nav extends React.Component<NavProps> {
+class Nav extends Component<NavProps> {
   static Header = Header;
 
   static Item = Item;

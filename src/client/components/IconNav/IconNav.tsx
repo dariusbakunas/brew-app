@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { Component, ReactNode } from 'react';
 import classNames from 'classnames';
 import Item from './Item';
 
@@ -7,7 +7,7 @@ type IconNavProps = {
   className?: string,
 };
 
-class IconNav extends React.Component<IconNavProps> {
+class IconNav extends Component<IconNavProps> {
   static Item = Item;
 
   render() {

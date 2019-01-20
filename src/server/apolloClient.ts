@@ -23,8 +23,8 @@ export default function getApolloClient(requestUser: User) {
 
         resolve({
           headers: {
+            'authorization': `Bearer ${accessToken}`,
             ...headers,
-            authorization: `Bearer ${accessToken}`,
             'auth-token': userToken,
           },
         });

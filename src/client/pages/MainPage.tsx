@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Route } from 'react-router-dom';
 import withServerContext from '../HOC/withServerContext';
 import { Nav, Navbar, SideMenu } from '../components';

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import React from 'react';
+import * as React from 'react';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
