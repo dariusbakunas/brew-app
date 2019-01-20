@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import * as React from 'react';
 import classNames from 'classnames';
 import Icon from '../Icon';
 
 type ButtonProps = {
   className?: string,
-  children: ReactNode | string,
+  children?: React.ReactNode | string,
   disabled?: boolean,
   icon?: string,
   iconPosition?: 'left' | 'right',

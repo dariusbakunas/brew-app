@@ -1,5 +1,5 @@
-import { verify } from './auth0';
 import getApolloClient from '../apolloClient';
+import { verify } from './auth0';
 
 jest.mock('../apolloClient');
 jest.mock('passport-auth0');
@@ -14,13 +14,13 @@ describe('auth0 Strategy', () => {
     const testUser = {
       email: 'test@gmail.com',
       firstName: 'Family Name',
-      lastName: 'Given Name',
       id: 'TEST_ID',
+      lastName: 'Given Name',
       username: 'testusername',
     };
 
     mockClient.query.mockReturnValue(Promise.resolve({ data: { userByEmail: testUser } }));
-    getApolloClient.mockReturnValue(mockClient);
+    (getApolloClient as jest.Mock).mockReturnValue(mockClient);
 
     const profile = {
       emails: [{ value: 'test@gmail.com' }],
