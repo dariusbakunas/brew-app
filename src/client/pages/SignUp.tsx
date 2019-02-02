@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { ApolloError } from 'apollo-client';
 import gql from 'graphql-tag';
+import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
-import { ApolloError } from 'apollo-client';
+import { User } from '../../types';
 import {
   Button, Container, Form, Header,
 } from '../components';
-import withServerContext from '../HOC/withServerContext';
-import { User } from '../../types';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGraphQLError from '../errors/handleGraphQLError';
+import withServerContext from '../HOC/withServerContext';
 
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {
@@ -29,11 +29,22 @@ type SignUpPageState = Partial<User> & {
   code: string,
   validationErrors?: {
     [key: string]: string,
-  }
+  },
 };
 
 class SignUp extends React.Component<SignUpPageProps> {
-  readonly state: Readonly<SignUpPageState>;
+  private static handleError(error: ApolloError) {
+    const { errorMessage } = handleGraphQLError(error, false);
+
+    window.UIkit.notification({
+      message: errorMessage,
+      pos: 'top-right',
+      status: 'danger',
+      timeout: 5000,
+    });
+  }
+
+  public readonly state: Readonly<SignUpPageState>;
 
   constructor(props: SignUpPageProps) {
     super(props);
@@ -50,24 +61,7 @@ class SignUp extends React.Component<SignUpPageProps> {
     };
   }
 
-  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
-
-  handleSuccess = () => {
-    this.props.history.push('/activate');
-  };
-
-  private static handleError(error: ApolloError) {
-    const { errorMessage } = handleGraphQLError(error, false);
-
-    window.UIkit.notification({
-      message: errorMessage,
-      status: 'danger',
-      pos: 'top-right',
-      timeout: 5000,
-    });
-  }
-
-  render() {
+  public render() {
     if (this.props.user.status !== 'GUEST') {
       return (
         <Redirect to='/'/>
@@ -87,63 +81,71 @@ class SignUp extends React.Component<SignUpPageProps> {
                 <div className='signup-container'>
                   <Container className='uk-width-large'>
                     <Header as='h2' textAlign='center'>NEW ACCOUNT</Header>
-                    <Form loading={loading || !!data} onSubmit={(e) => {
+                    <Form
+                      loading={loading || !!data}
+                      onSubmit={(e) => {
                       e.preventDefault();
 
                       register({
                         variables: {
                           input: {
-                            username,
+                            code,
                             email,
                             firstName,
                             lastName,
-                            code,
+                            username,
                           },
                         },
                       });
-                    }}>
+                    }}
+                    >
                       <Form.Fieldset layout='stacked'>
-                        <div className="uk-margin">
+                        <div className='uk-margin'>
                           <Form.Input
-                            error={ validationErrors.username }
+                            error={validationErrors ? validationErrors.username : null}
                             label='USERNAME'
                             name='username'
                             onChange={this.handleChange}
-                            required
-                            value={username}/>
+                            required={true}
+                            value={username}
+                          />
                         </div>
-                        <div className="uk-margin">
+                        <div className='uk-margin'>
                           <Form.Input
-                            error={ validationErrors.email }
+                            disabled={true}
+                            error={validationErrors ? validationErrors.email : null}
                             label='EMAIL'
                             name='email'
                             onChange={this.handleChange}
-                            required
-                            disabled
-                            value={email}/>
+                            required={true}
+                            value={email}
+                          />
                         </div>
-                        <div className="uk-margin">
+                        <div className='uk-margin'>
                           <Form.Input
                             label='FIRST NAME'
                             name='firstName'
                             onChange={this.handleChange}
-                            value={firstName}/>
+                            value={firstName}
+                          />
                         </div>
-                        <div className="uk-margin">
+                        <div className='uk-margin'>
                           <Form.Input
                             label='LAST NAME'
                             name='lastName'
                             onChange={this.handleChange}
-                            value={lastName}/>
+                            value={lastName}
+                          />
                         </div>
-                        <div className="uk-margin">
+                        <div className='uk-margin'>
                           <Form.Input
+                            error={validationErrors ? validationErrors.code : null}
                             label='INVITATION CODE'
-                            error={ validationErrors.code }
                             name='code'
                             onChange={this.handleChange}
-                            required
-                            value={code}/>
+                            required={true}
+                            value={code}
+                          />
                         </div>
                       </Form.Fieldset>
                       <Button className='uk-width-1-1' variation='primary' type='submit'>Submit</Button>
@@ -152,10 +154,15 @@ class SignUp extends React.Component<SignUpPageProps> {
                 </div>
               </React.Fragment>
             );
-          }
-        }
+          }}
       </Mutation>
     );
+  }
+
+  private handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
+
+  private handleSuccess = () => {
+    this.props.history.push('/activate');
   }
 }
 
