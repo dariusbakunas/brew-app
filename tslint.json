@@ -7,6 +7,7 @@
   "rules": {
     "quotemark": [true, "single"],
     "jsx-no-lambda": false,
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "no-var-requires": false
   }
 }

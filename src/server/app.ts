@@ -1,5 +1,4 @@
 import compression from 'compression';
-import memcached from 'connect-memcached';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import session, { SessionOptions } from 'express-session';
@@ -85,6 +84,7 @@ const sessionConfig: SessionOptions = {
 };
 
 if (process.env.NODE_ENV !== 'production') {
+  const memcached = require('connect-memcached');
   const MemcachedStore = memcached(session);
   sessionConfig.store = new MemcachedStore({
     hosts: [`${process.env.MEMCACHED_HOST}:${process.env.MEMCACHED_PORT || 11211}`],
