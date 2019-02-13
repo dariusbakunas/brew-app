@@ -16,7 +16,7 @@ const UNITED_STATES_ID = '236';
 interface IHopModalProps {
   id: string;
   createHop?: (args: { variables: HopInput }) => Promise<void>;
-  getAllCountries?: {
+  getAllCountries: {
     loading: boolean,
     countries: ICountry[],
   };
