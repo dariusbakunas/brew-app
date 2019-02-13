@@ -13,19 +13,19 @@ import {
 // TODO: find a better way to do this
 const UNITED_STATES_ID = '236';
 
-type HopModalProps = {
-  id: string,
-  createHop: (args: { variables: HopInput }) => Promise<void>,
-  getAllCountries: {
+interface IHopModalProps {
+  id: string;
+  createHop?: (args: { variables: HopInput }) => Promise<void>;
+  getAllCountries?: {
     loading: boolean,
     countries: ICountry[],
-  },
-  hop: Hop & { id: string },
-  onHide: () => void,
-  open: boolean,
-  refetchQuery: any,
-  updateHop: (args: { variables: HopInput }) => Promise<void>,
-};
+  };
+  hop?: Hop & { id: string };
+  onHide?: () => void;
+  open?: boolean;
+  refetchQuery?: any;
+  updateHop?: (args: { variables: HopInput }) => Promise<void>;
+}
 
 type HopModalState = Hop & {
   error?: string,
@@ -36,7 +36,7 @@ type HopModalState = Hop & {
   }
 };
 
-class HopModal extends React.Component<HopModalProps> {
+export class HopModal extends React.Component<IHopModalProps> {
   readonly state: HopModalState;
 
   static getDefaultState: () => HopModalState = () => ({
@@ -54,7 +54,7 @@ class HopModal extends React.Component<HopModalProps> {
     validationErrors: null,
   });
 
-  constructor(props: HopModalProps) {
+  constructor(props: IHopModalProps) {
     super(props);
 
     if (props.hop) {
@@ -70,7 +70,7 @@ class HopModal extends React.Component<HopModalProps> {
     }
   }
 
-  componentDidUpdate(prevProps: HopModalProps) {
+  componentDidUpdate(prevProps: IHopModalProps) {
     if (!prevProps.hop && this.props.hop) {
       this.setState({
         ...this.props.hop,
@@ -294,14 +294,14 @@ export default compose(
   graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
   graphql(CREATE_HOP, {
     name: 'createHop',
-    options: (props: HopModalProps) => ({
+    options: (props: IHopModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_HOP, {
     name: 'updateHop',
-    options: (props: HopModalProps) => ({
+    options: (props: IHopModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),

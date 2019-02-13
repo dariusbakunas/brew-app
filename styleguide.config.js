@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 
-const rootDir = 'src/client/components';
+const rootDir = 'src/client';
 
 const getExampleFilename = componentpath => componentpath.replace(/\.tsx$/, '.md');
 
@@ -18,7 +18,7 @@ module.exports = {
   }),
   skipComponentsWithoutExample: true,
   require: [
-    'uikit/dist/js/uikit.min',
+    'uikit/dist/js/uikit',
     path.join(__dirname, 'src/client/styles/main.scss'),
     path.join(__dirname, 'src/client/styles/styleguidist.scss'),
   ],
