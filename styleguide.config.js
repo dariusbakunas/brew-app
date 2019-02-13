@@ -2,20 +2,29 @@ const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
 
-const rootDir = 'src/client';
+const componentFilter = (rootDir) => glob.sync(`${rootDir}/**/*.tsx`).filter((module) => {
+  const mdFile = getExampleFilename(module);
+  try {
+    const mdFileWithSameNameExists = fs.statSync(mdFile);
+    return mdFileWithSameNameExists && mdFileWithSameNameExists.isFile();
+  } catch (err) {
+    return !(err && err.code === 'ENOENT');
+  }
+});
 
 const getExampleFilename = componentpath => componentpath.replace(/\.tsx$/, '.md');
 
 module.exports = {
-  components: () => glob.sync(`${rootDir}/**/*.tsx`).filter((module) => {
-    const mdFile = getExampleFilename(module);
-    try {
-      const mdFileWithSameNameExists = fs.statSync(mdFile);
-      return mdFileWithSameNameExists && mdFileWithSameNameExists.isFile();
-    } catch (err) {
-      return !(err && err.code === 'ENOENT');
+  sections: [
+    {
+      name: 'Components',
+      components: componentFilter('src/client/components'),
+    },
+    {
+      name: 'Modals',
+      components: componentFilter('src/client/modals'),
     }
-  }),
+  ],
   skipComponentsWithoutExample: true,
   require: [
     'uikit/dist/js/uikit',

@@ -11,7 +11,12 @@ initialState = { open: false }
     open={state.open}
     onHide={() => setState({ open: false })}
     getAllCountries={{
-      countries: [],
+      countries: [
+        { id: 1, name: 'Country A' },
+        { id: 2, name: 'Country B' },
+        { id: 3, name: 'Country C' },
+        { id: 4, name: 'Country D' },
+      ],
       loading: false,
     }}
   />
