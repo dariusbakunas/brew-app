@@ -4,10 +4,10 @@ const glob = require('glob');
 
 const rootDir = 'src/client/components';
 
-const getExampleFilename = componentpath => componentpath.replace(/\.jsx?$/, '.md');
+const getExampleFilename = componentpath => componentpath.replace(/\.tsx$/, '.md');
 
 module.exports = {
-  components: () => glob.sync(`${rootDir}/**/*.jsx`).filter((module) => {
+  components: () => glob.sync(`${rootDir}/**/*.tsx`).filter((module) => {
     const mdFile = getExampleFilename(module);
     try {
       const mdFileWithSameNameExists = fs.statSync(mdFile);
@@ -22,26 +22,6 @@ module.exports = {
     path.join(__dirname, 'src/client/styles/main.scss'),
     path.join(__dirname, 'src/client/styles/styleguidist.scss'),
   ],
-  webpackConfig: {
-    module: {
-      rules: [
-        // Babel loader, will use your project’s .babelrc
-        {
-          test: /\.jsx?$/,
-          exclude: /node_modules/,
-          loader: 'babel-loader',
-        },
-        // Other loaders that are needed for your components
-        {
-          test: /\.css$/,
-          loader: 'style-loader!css-loader!sass-loader?modules',
-        },
-        {
-          test: /\.scss$/,
-          exclude: /node_modules/,
-          loader: 'style-loader!css-loader!postcss-loader!sass-loader',
-        },
-      ],
-    },
-  },
+  propsParser: require('react-docgen-typescript').parse,
+  webpackConfig: require('./webpack.config')(null, { mode: 'dev'})[0],
 };
