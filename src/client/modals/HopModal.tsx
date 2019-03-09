@@ -1,14 +1,14 @@
+import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { ApolloError } from 'apollo-client';
-import Modal from './Modal';
+import { Hop, HopInput, ICountry } from '../../types';
 import { Button, Form } from '../components';
-import handleGrpahQLError from '../errors/handleGraphQLError';
 import { InputChangeHandlerType } from '../components/Form/Input';
-import { ICountry, Hop, HopInput } from '../../types';
+import handleGrpahQLError from '../errors/handleGraphQLError';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
 } from '../queries';
+import Modal from './Modal';
 
 // TODO: find a better way to do this
 const UNITED_STATES_ID = '236';
@@ -33,26 +33,26 @@ type HopModalState = Hop & {
   originId: string,
   validationErrors: {
     [key: string]: string,
-  }
+  },
 };
 
 export class HopModal extends React.Component<IHopModalProps> {
-  readonly state: HopModalState;
-
-  static getDefaultState: () => HopModalState = () => ({
-    aaLow: null,
+  private static getDefaultState: () => HopModalState = () => ({
     aaHigh: null,
+    aaLow: null,
     aroma: false,
-    bittering: false,
-    betaLow: null,
     betaHigh: null,
+    betaLow: null,
+    bittering: false,
     description: null,
-    name: null,
     error: null,
     loading: false,
+    name: null,
     originId: UNITED_STATES_ID,
     validationErrors: null,
-  });
+  })
+
+  public readonly state: HopModalState;
 
   constructor(props: IHopModalProps) {
     super(props);
@@ -60,9 +60,9 @@ export class HopModal extends React.Component<IHopModalProps> {
     if (props.hop) {
       this.state = {
         ...props.hop,
-        originId: props.hop.origin.id,
-        loading: false,
         error: null,
+        loading: false,
+        originId: props.hop.origin.id,
         validationErrors: null,
       };
     } else {
@@ -70,75 +70,19 @@ export class HopModal extends React.Component<IHopModalProps> {
     }
   }
 
-  componentDidUpdate(prevProps: IHopModalProps) {
+  public componentDidUpdate(prevProps: IHopModalProps) {
     if (!prevProps.hop && this.props.hop) {
       this.setState({
         ...this.props.hop,
-        originId: this.props.hop.origin.id,
-        loading: false,
         error: null,
+        loading: false,
+        originId: this.props.hop.origin.id,
         validationErrors: null,
       });
     }
   }
 
-  handleHide = () => {
-    if (this.props.onHide) {
-      this.props.onHide();
-    }
-
-    this.setState(HopModal.getDefaultState());
-  };
-
-  handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
-    e.preventDefault();
-
-    const { createHop, hop, updateHop } = this.props;
-
-    this.setState({ loading: true }, () => {
-      const {
-        aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
-      } = this.state;
-
-      const variables: HopInput = {
-        input: {
-          aaLow,
-          aaHigh,
-          aroma,
-          betaLow,
-          betaHigh,
-          bittering,
-          description,
-          name,
-          originId: originId !== '' ? originId : null,
-        },
-      };
-
-      let fn = createHop;
-
-      if (hop) {
-        variables.id = hop.id;
-        fn = updateHop;
-      }
-
-      fn({ variables }).then(() => {
-        this.setState({ loading: false }, () => {
-          closeModal();
-        });
-      }).catch((err: ApolloError) => {
-        const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
-        this.setState({
-          error: errorMessage,
-          loading: false,
-          validationErrors,
-        });
-      });
-    });
-  };
-
-  render() {
+  public render() {
     const {
       hop, id, getAllCountries, open,
     } = this.props;
@@ -156,10 +100,10 @@ export class HopModal extends React.Component<IHopModalProps> {
         header={hop ? hop.name : 'New Hop'}
         onHide={this.handleHide}
         open={open}
-        render={close => (
-          <Form onSubmit={e => this.handleSubmit(e, close)}>
+        render={(close) => (
+          <Form onSubmit={(e) => this.handleSubmit(e, close)}>
             <Form.Fieldset layout='stacked'>
-              <div className="uk-margin">
+              <div className='uk-margin'>
                 <Form.Input
                   disabled={loading}
                   error={validationErrors ? validationErrors.name : null}
@@ -167,10 +111,10 @@ export class HopModal extends React.Component<IHopModalProps> {
                   name='name'
                   onChange={this.handleChange}
                   value={name || ''}
-                  required
+                  required={true}
                 />
               </div>
-              <div className="uk-margin">
+              <div className='uk-margin'>
                 <Form.Select
                   error={validationErrors ? validationErrors.originId : null}
                   label='Origin'
@@ -179,11 +123,11 @@ export class HopModal extends React.Component<IHopModalProps> {
                   onChange={this.handleChange}
                   options={
                     getAllCountries.countries ? getAllCountries.countries.map(
-                      country => ({ value: country.id, label: country.name }),
+                      (country) => ({ value: country.id, label: country.name }),
                     ) : []}
                 />
               </div>
-              <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+              <div className='uk-margin uk-grid-small uk-child-width-auto uk-grid'>
                 <Form.Checkbox
                   checked={!!aroma}
                   disabled={loading}
@@ -199,7 +143,7 @@ export class HopModal extends React.Component<IHopModalProps> {
                   onChange={this.handleChange}
                 />
               </div>
-              <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+              <div className='uk-margin uk-grid-small uk-child-width-auto uk-grid'>
                 <div>
                   <Form.Input
                     disabled={loading}
@@ -235,7 +179,7 @@ export class HopModal extends React.Component<IHopModalProps> {
                   />
                 </div>
               </div>
-              <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+              <div className='uk-margin uk-grid-small uk-child-width-auto uk-grid'>
                 <div>
                   <Form.Input
                     disabled={loading}
@@ -287,6 +231,62 @@ export class HopModal extends React.Component<IHopModalProps> {
         )}
       />
     );
+  }
+
+  private handleHide = () => {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+
+    this.setState(HopModal.getDefaultState());
+  }
+
+  private handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
+
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
+    e.preventDefault();
+
+    const { createHop, hop, updateHop } = this.props;
+
+    this.setState({ loading: true }, () => {
+      const {
+        aaLow, aaHigh, betaLow, betaHigh, aroma, bittering, description, name, originId,
+      } = this.state;
+
+      const variables: HopInput = {
+        input: {
+          aaHigh,
+          aaLow,
+          aroma,
+          betaHigh,
+          betaLow,
+          bittering,
+          description,
+          name,
+          originId: originId !== '' ? originId : null,
+        },
+      };
+
+      let fn = createHop;
+
+      if (hop) {
+        variables.id = hop.id;
+        fn = updateHop;
+      }
+
+      fn({ variables }).then(() => {
+        this.setState({ loading: false }, () => {
+          closeModal();
+        });
+      }).catch((err: ApolloError) => {
+        const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
+        this.setState({
+          error: errorMessage,
+          loading: false,
+          validationErrors,
+        });
+      });
+    });
   }
 }
 

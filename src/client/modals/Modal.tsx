@@ -23,21 +23,15 @@ class Modal extends React.Component<IModalProps> {
     };
   }
 
-  handleHide = () => {
-    if (this.props.onHide) {
-      this.props.onHide();
-    }
-  };
-
-  componentDidMount() {
+  public componentDidMount() {
     this.ref.current.addEventListener('hidden', this.handleHide);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.ref.current.removeEventListener('hidden', this.handleHide);
   }
 
-  componentDidUpdate(prevProps: IModalProps) {
+  public componentDidUpdate(prevProps: IModalProps) {
     if (prevProps.open && !this.props.open) {
       this.hide();
     } else if (!prevProps.open && this.props.open) {
@@ -45,15 +39,7 @@ class Modal extends React.Component<IModalProps> {
     }
   }
 
-  hide = () => {
-    window.UIkit.modal(this.ref.current).hide();
-  };
-
-  show = () => {
-    window.UIkit.modal(this.ref.current).show();
-  };
-
-  render() {
+  public render() {
     const {
       id, error, header, loading,
     } = this.props;
@@ -78,6 +64,20 @@ class Modal extends React.Component<IModalProps> {
 
     // no need to render modals server-side
     return null;
+  }
+
+  private handleHide = () => {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
+  }
+
+  private hide = () => {
+    window.UIkit.modal(this.ref.current).hide();
+  }
+
+  private show = () => {
+    window.UIkit.modal(this.ref.current).show();
   }
 }
 
