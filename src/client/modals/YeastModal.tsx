@@ -1,8 +1,6 @@
-import React from 'react';
+import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import {
-  Yeast, YeastForm, YeastInput, YeastLab, YeastType,
-} from '../../types';
+import { IYeast, YeastFlocculation, YeastForm, YeastInput, YeastLab, YeastType } from '../../types';
 import { Button, Form } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGrpahQLError from '../errors/handleGraphQLError';
@@ -16,7 +14,7 @@ interface IYeastModalProps {
     loading: boolean,
     yeastLabs: YeastLab[],
   };
-  yeast: Yeast & { id: string };
+  yeast: IYeast & { id: string };
   onHide: () => void;
   open: boolean;
   refetchQuery: any;
@@ -32,10 +30,11 @@ interface IYeastModalState {
   };
 }
 
-class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Partial<Yeast>> {
-  private static getDefaultState: (labId?: string) => IYeastModalState & Yeast = (labId) => ({
+export class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Partial<IYeast>> {
+  private static getDefaultState: (labId?: string) => IYeastModalState & IYeast = (labId) => ({
     description: null,
     error: null,
+    flocculation: YeastFlocculation.MEDIUM,
     form: YeastForm.DRY,
     labId,
     loading: false,
@@ -84,7 +83,7 @@ class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Pa
     } = this.props;
 
     const {
-      error, validationErrors, name, type, form, loading, description, labId,
+      error, validationErrors, name, type, form, loading, description, labId, flocculation,
     } = this.state;
 
     const types = [
@@ -94,6 +93,12 @@ class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Pa
       { value: 'WHEAT', label: 'Wheat' },
       { value: 'WINE', label: 'Wine' },
     ];
+
+    // const floculation = [
+    //   { value: YeastFlocculation.LOW, label: 'Low' },
+    //   { value: YeastFlocculation.MEDIUM, label: 'Medium' },
+    //   { value: YeastFlocculation.HIGH, label: 'High' },
+    // ];
 
     return (
       <Modal
@@ -155,6 +160,32 @@ class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Pa
                   value={labId}
                 />
               </div>
+              <div className='uk-margin'>
+                <div className='uk-form-label'>Flocculation</div>
+                <div className='uk-form-controls'>
+                  <Form.Radio
+                    label='Low'
+                    name='flocculation'
+                    value='LOW'
+                    onChange={this.handleChange}
+                    checked={flocculation === 'LOW'}
+                  />
+                  <Form.Radio
+                    label='Medium'
+                    name='flocculation'
+                    value='MEDIUM'
+                    onChange={this.handleChange}
+                    checked={flocculation === 'MEDIUM'}
+                  />
+                  <Form.Radio
+                    label='High'
+                    name='flocculation'
+                    value='HIGH'
+                    onChange={this.handleChange}
+                    checked={flocculation === 'HIGH'}
+                  />
+                </div>
+              </div>
               <Form.TextArea
                 disabled={loading}
                 name='description'
@@ -193,12 +224,13 @@ class YeastModal extends React.Component<IYeastModalProps, IYeastModalState & Pa
 
     this.setState({ loading: true }, () => {
       const {
-        name, form, type, labId, description,
+        name, form, type, labId, description, flocculation,
       } = this.state;
 
       const variables: YeastInput = {
         input: {
           description,
+          flocculation,
           form,
           labId,
           name,

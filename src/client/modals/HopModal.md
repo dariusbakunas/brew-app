@@ -1,5 +1,3 @@
-Hop Modal
-
 ```jsx
 const {HopModal} = require('./HopModal');
 const Button = require('../components/Button').default;

@@ -1,21 +1,21 @@
 import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
-import { LoadingBar, Header } from '../components';
+import { Header, LoadingBar } from '../components';
 
-type ModalProps = {
-  id: string,
-  error?: string,
-  header: string,
-  loading: boolean,
-  onHide: () => void,
-  open?: boolean,
-  render: (callback: () => void) => ReactNode,
-};
+interface IModalProps {
+  id: string;
+  error?: string;
+  header: string;
+  loading: boolean;
+  onHide: () => void;
+  open?: boolean;
+  render: (callback: () => void) => ReactNode;
+}
 
-class Modal extends React.Component<ModalProps> {
+class Modal extends React.Component<IModalProps> {
   private ref: React.RefObject<HTMLDivElement>;
 
-  constructor(props: ModalProps) {
+  constructor(props: IModalProps) {
     super(props);
     this.ref = React.createRef();
     this.state = {
@@ -37,7 +37,7 @@ class Modal extends React.Component<ModalProps> {
     this.ref.current.removeEventListener('hidden', this.handleHide);
   }
 
-  componentDidUpdate(prevProps: ModalProps) {
+  componentDidUpdate(prevProps: IModalProps) {
     if (prevProps.open && !this.props.open) {
       this.hide();
     } else if (!prevProps.open && this.props.open) {
@@ -60,9 +60,9 @@ class Modal extends React.Component<ModalProps> {
 
     if (typeof document !== 'undefined') {
       return ReactDOM.createPortal(
-        <div id={id} ref={this.ref} data-uk-modal>
+        <div id={id} ref={this.ref} data-uk-modal={true}>
           <div className='uk-modal-dialog uk-modal-body'>
-            <button className='uk-modal-close-default' type='button' data-uk-close/>
+            <button className='uk-modal-close-default' type='button' data-uk-close={true}/>
             <Header as='h2' className='uk-modal-title'>{header}</Header>
             <LoadingBar active={loading}/>
             {

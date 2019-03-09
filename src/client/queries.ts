@@ -72,6 +72,11 @@ export const GET_YEAST = gql`
           id
           name
         }
+        maxTemp
+        minTemp
+        minAttenuation
+        maxAttenuation
+        flocculation
       }
       pageInfo {
         nextCursor

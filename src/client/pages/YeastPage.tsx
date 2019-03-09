@@ -8,13 +8,13 @@ import {
   Button, Pager, Spinner, Table, IconNav,
 } from '../components';
 import confirm from '../utils/confirm';
-import { Yeast } from '../../types';
+import { IYeast } from '../../types';
 import handleGraphQLError from '../errors/handleGraphQLError';
 
 const DEFAULT_PAGE_SIZE = 8;
 
 type YeastPageProps = IPagedQueryProps & {
-  data: Array<Yeast & { id: string }>,
+  data: Array<IYeast & { id: string }>,
   loading: boolean,
   removeYeast: (args: { variables: { id: string } }) => Promise<void>,
 };
@@ -22,7 +22,7 @@ type YeastPageProps = IPagedQueryProps & {
 type YeastPageState = {
   loading: boolean,
   yeastModalOpen: boolean,
-  currentYeast: Yeast,
+  currentYeast: IYeast,
 };
 
 class YeastPage extends React.Component<YeastPageProps> {
@@ -39,7 +39,7 @@ class YeastPage extends React.Component<YeastPageProps> {
     });
   };
 
-  handleEditYeast = (yeast: Yeast) => {
+  handleEditYeast = (yeast: IYeast) => {
     this.setState({
       currentYeast: yeast,
       yeastModalOpen: true,
@@ -57,7 +57,7 @@ class YeastPage extends React.Component<YeastPageProps> {
     });
   }
 
-  handleRemoveYeast = ({ id, name, lab }: Partial<Yeast> & { id: string }) => {
+  handleRemoveYeast = ({ id, name, lab }: Partial<IYeast> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${lab.name})?`, () => {
       this.setState({ loading: true }, () => {
         this.props.removeYeast({ variables: { id } })
@@ -103,7 +103,7 @@ class YeastPage extends React.Component<YeastPageProps> {
                 </Table.Header>
                 <Table.Body>
                   {
-                    yeastList.map((yeast: Yeast & { id: string }) => (
+                    yeastList.map((yeast: IYeast & { id: string }) => (
                       <Table.Row key={yeast.id}>
                         <Table.Cell>{yeast.name}</Table.Cell>
                         <Table.Cell>{yeast.lab.name}</Table.Cell>
