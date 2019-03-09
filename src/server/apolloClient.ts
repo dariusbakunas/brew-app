@@ -1,9 +1,9 @@
-import fetch from 'node-fetch';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { setContext } from 'apollo-link-context';
 import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { setContext } from 'apollo-link-context';
+import { createHttpLink } from 'apollo-link-http';
 import jwt from 'jsonwebtoken';
+import fetch from 'node-fetch';
 import getAuth0Token from './auth0token';
 
 type User = {
@@ -11,7 +11,7 @@ type User = {
   firstName: string,
   initialAuth: boolean,
   lastName: string,
-  username: string
+  username: string,
 };
 
 export default function getApolloClient(requestUser: User) {
@@ -21,12 +21,18 @@ export default function getApolloClient(requestUser: User) {
       .then(({ accessToken }) => {
         const userToken = jwt.sign({ user: requestUser }, process.env.JWT_SECRET);
 
+        const requestHeaders = {
+          'authorization': `Bearer ${accessToken}`,
+          ...headers,
+          'auth-token': userToken,
+        };
+
+        if (process.env.STAGING === 'true') {
+          requestHeaders['X-SERVER-SELECT'] = 'brew_api_staging_upstream';
+        }
+
         resolve({
-          headers: {
-            'authorization': `Bearer ${accessToken}`,
-            ...headers,
-            'auth-token': userToken,
-          },
+          headers: requestHeaders,
         });
       })
       .catch((err) => {

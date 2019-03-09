@@ -59,6 +59,10 @@ const apiProxyConfig: Config = {
     const token = jwt.sign({ user: req.user || {} }, process.env.JWT_SECRET);
     proxyReq.setHeader('auth-token', token);
     proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
+
+    if (process.env.STAGING === 'true') {
+      proxyReq.setHeader('X-SERVER-SELECT', 'brew_api_staging_upstream');
+    }
   },
   target: process.env.BREW_API_HOST,
 };
@@ -122,7 +126,7 @@ router.use('/api', proxy(apiProxyConfig));
 app.use(express.static(path.resolve(__dirname, '.')));
 
 router.use('^/$', secured(), serverRenderer);
-router.use('/account', secured(), serverRenderer);
+router.use('/profile', secured(), serverRenderer);
 router.use('/inventory', secured(), serverRenderer);
 router.use('/recipes', secured(), serverRenderer);
 router.use('/sessions', secured(), serverRenderer);
