@@ -20,11 +20,12 @@ type InvitationsPageProps = {
 
 type InvitationsPageState = {
   loading: boolean,
+  invitationModalOpen: boolean,
 };
-
 
 class InvitationsPage extends React.Component<InvitationsPageProps> {
   readonly state: InvitationsPageState = {
+    invitationModalOpen: false,
     loading: false,
   };
 
@@ -40,6 +41,12 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
       });
     }
   }
+
+  handleCreateInvitation = () => {
+    this.setState({
+      invitationModalOpen: true,
+    });
+  };
 
   handleRemoveInvitation(email: string) {
     confirm(`Are you sure you want to remove invitation for '${email}'?`, () => {
@@ -59,6 +66,8 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
 
   render() {
     const { invitations, loading } = this.props.getAllInvitations;
+    const { invitationModalOpen } = this.state;
+
 
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
@@ -66,7 +75,7 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
           <React.Fragment>
             {
               invitations && invitations.length ?
-                <Table className='uk-margin-large' size='small' stripped>
+                <Table className='uk-margin-large' size='small' stripped={true}>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell>Email</Table.HeaderCell>
@@ -76,7 +85,7 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
                   </Table.Header>
                   <Table.Body>
                     {
-                      invitations.map(invitation => (
+                      invitations.map((invitation) => (
                         <Table.Row key={invitation.id}>
                           <Table.Cell>{invitation.email}</Table.Cell>
                           <Table.Cell>{invitation.code}</Table.Cell>
@@ -93,10 +102,14 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
                 <div className='uk-margin-bottom'>No invitations</div>
             }
             <Spinner active={loading || this.state.loading}/>
-            <Button variation='primary' data-uk-toggle="target: #new-invitation-modal">Create</Button>
+            <Button variation='primary' onClick={this.handleCreateInvitation}>Create</Button>
           </React.Fragment>
         </Container>
-        <InvitationModal id='new-invitation-modal'/>
+        <InvitationModal
+          id='new-invitation-modal'
+          open={invitationModalOpen}
+          onHide={() => this.setState({ invitationModalOpen: false })}
+        />
       </div>
     );
   }
