@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-client';
-import React from 'react';
+import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
 import {
   Fermentable, FermentableCategory, FermentableInput, GrainType, ICountry,
@@ -35,7 +35,7 @@ type FermentbaleModalState = Fermentable & {
   },
 };
 
-class FermentableModal extends React.Component<IFermentableModalProps> {
+export class FermentableModal extends React.Component<IFermentableModalProps> {
   private static getDefaultState: () => FermentbaleModalState = () => ({
     category: FermentableCategory.GRAIN,
     color: null,
