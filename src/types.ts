@@ -12,6 +12,12 @@ export enum GrainType {
   BASE = 'BASE',
 }
 
+export enum YeastFlocculation {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+}
+
 export interface ICountry {
   id: string;
   name: string;
@@ -105,17 +111,22 @@ export enum YeastType {
   WINE = 'WINE',
 }
 
-export type Yeast = {
-  description?: string,
-  name: string,
-  form: YeastForm,
-  lab?: YeastLab,
-  type: YeastType,
-};
+export interface IYeast {
+  form: YeastForm;
+  description?: string;
+  flocculation: YeastFlocculation;
+  minTemp?: number;
+  maxTemp?: number;
+  minAttenuation?: number;
+  maxAttenuation?: number;
+  name: string;
+  lab?: YeastLab;
+  type: YeastType;
+}
 
 export type YeastInput = {
   id?: string,
-  input: Yeast & { labId: string },
+  input: IYeast & { labId: string },
 };
 
 export type Water = {
