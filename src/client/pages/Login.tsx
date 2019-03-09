@@ -1,8 +1,7 @@
+import gql from 'graphql-tag';
 import React from 'react';
 import { Query } from 'react-apollo';
-import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
-import { Header, Container, Icon } from '../components';
+import { Container, Header, Icon } from '../components';
 
 const GET_LOGIN_QUOTE = gql`
   query GetRandomQuote {
@@ -13,17 +12,17 @@ const GET_LOGIN_QUOTE = gql`
   }
 `;
 
-type LoginProps = {
+interface ILoginPageProps {
   data: {
     randomQuote: {
       author: string,
-      test:string,
-    }
-  }
-};
+      test: string,
+    },
+  };
+}
 
-class Login extends React.Component<LoginProps> {
-  render() {
+class Login extends React.Component<ILoginPageProps> {
+  public render() {
     // TODO: convert query to HOC
 
     return (
@@ -45,7 +44,9 @@ class Login extends React.Component<LoginProps> {
                     </a>
                   </div>
                   <blockquote className='login-quote'>
-                    <p className="uk-margin-small-bottom"><q>{data && data.randomQuote ? data.randomQuote.text : ''}</q></p>
+                    <p className='uk-margin-small-bottom'>
+                      <q>{data && data.randomQuote ? data.randomQuote.text : ''}</q>
+                    </p>
                     <footer>
                       <cite>{data && data.randomQuote ? data.randomQuote.author : ''}</cite>
                     </footer>
@@ -53,8 +54,7 @@ class Login extends React.Component<LoginProps> {
                 </Container>
               </div>
             );
-          }
-        }
+          }}
       </Query>
     );
   }

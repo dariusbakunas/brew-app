@@ -1,73 +1,50 @@
-import * as React from 'react';
 import { ApolloError } from 'apollo-client';
+import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
+import { Invitation } from '../../types';
 import {
-  Container, Table, IconNav, Spinner, Button,
+  Button, Container, IconNav, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import confirm from '../utils/confirm';
 import InvitationModal from '../modals/InvitationModal';
-import { GET_ALL_INVITATIONS, DELETE_INVITATION } from '../queries';
-import { Invitation } from '../../types';
+import { DELETE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
+import confirm from '../utils/confirm';
 
-type InvitationsPageProps = {
+interface IInvitationsPageProps {
   getAllInvitations: {
     loading: boolean,
     invitations: Array<Invitation & { id: string }>,
-  },
-  deleteInvitation: (args: { variables: { email: string } }) => Promise<void>,
-};
-
-type InvitationsPageState = {
-  loading: boolean,
-  invitationModalOpen: boolean,
-};
-
-class InvitationsPage extends React.Component<InvitationsPageProps> {
-  readonly state: InvitationsPageState = {
-    invitationModalOpen: false,
-    loading: false,
   };
+  deleteInvitation: (args: { variables: { email: string } }) => Promise<void>;
+}
 
+interface IInvitationsPageState {
+  loading: boolean;
+  invitationModalOpen: boolean;
+}
+
+class InvitationsPage extends React.Component<IInvitationsPageProps> {
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     if (errorMessage) {
       window.UIkit.notification({
         errorMessage,
-        status: 'danger',
         pos: 'top-right',
+        status: 'danger',
         timeout: 5000,
       });
     }
   }
 
-  handleCreateInvitation = () => {
-    this.setState({
-      invitationModalOpen: true,
-    });
+  public readonly state: IInvitationsPageState = {
+    invitationModalOpen: false,
+    loading: false,
   };
 
-  handleRemoveInvitation(email: string) {
-    confirm(`Are you sure you want to remove invitation for '${email}'?`, () => {
-      this.setState({ loading: true }, () => {
-        this.props.deleteInvitation({ variables: { email } })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch((err) => {
-            this.setState({ loading: false }, () => {
-              InvitationsPage.handleError(err);
-            });
-          });
-      });
-    });
-  }
-
-  render() {
+  public render() {
     const { invitations, loading } = this.props.getAllInvitations;
     const { invitationModalOpen } = this.state;
-
 
     return (
       <div className='uk-section uk-section-small' style={{ flexGrow: 1 }}>
@@ -113,6 +90,28 @@ class InvitationsPage extends React.Component<InvitationsPageProps> {
       </div>
     );
   }
+
+  private handleCreateInvitation = () => {
+    this.setState({
+      invitationModalOpen: true,
+    });
+  }
+
+  private handleRemoveInvitation(email: string) {
+    confirm(`Are you sure you want to remove invitation for '${email}'?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.deleteInvitation({ variables: { email } })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch((err) => {
+            this.setState({ loading: false }, () => {
+              InvitationsPage.handleError(err);
+            });
+          });
+      });
+    });
+  }
 }
 
 export default compose(
@@ -123,10 +122,10 @@ export default compose(
       update: (cache, { data: { deleteInvitation: id } }) => {
         const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
         cache.writeQuery({
-          query: GET_ALL_INVITATIONS,
           data: {
             invitations: invitations.filter((invitation: Invitation) => invitation.id !== id),
           },
+          query: GET_ALL_INVITATIONS,
         });
       },
     },

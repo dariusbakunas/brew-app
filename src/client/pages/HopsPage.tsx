@@ -1,15 +1,15 @@
+import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { ApolloError } from 'apollo-client';
+import { Hop } from '../../types';
 import {
   Button, Icon, IconNav, Pager, Spinner, Table,
 } from '../components';
-import { GET_HOPS, REMOVE_HOP } from '../queries';
-import confirm from '../utils/confirm';
-import HopModal from '../modals/HopModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
-import { Hop } from '../../types';
+import HopModal from '../modals/HopModal';
+import { GET_HOPS, REMOVE_HOP } from '../queries';
+import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -19,20 +19,14 @@ type HopsProps = IPagedQueryProps & {
   removeHop: (args: { variables: { id: string } }) => Promise<void>,
 };
 
-type HopState = {
-  loading: boolean,
-  hopModalOpen: boolean,
-  currentHop: Hop,
-};
+interface IHopPageState {
+  loading: boolean;
+  hopModalOpen: boolean;
+  currentHop: Hop;
+}
 
-class HopsPage extends React.Component<HopsProps, HopState> {
-  public readonly state: Readonly<HopState> = {
-    currentHop: null,
-    hopModalOpen: false,
-    loading: false,
-  };
-
-  static formatAcidValue(low: number, high: number) {
+class HopsPage extends React.Component<HopsProps, IHopPageState> {
+  private static formatAcidValue(low: number, high: number) {
     if (low && high) {
       return `${low.toFixed(1)} - ${high.toFixed(1)}%`;
     }
@@ -46,48 +40,24 @@ class HopsPage extends React.Component<HopsProps, HopState> {
     return `${num.toFixed(1)}%`;
   }
 
-  handleAddHop = () => {
-    this.setState({
-      currentHop: null,
-      hopModalOpen: true,
-    });
-  };
-
-  handleEditHop = (hop: Hop) => {
-    this.setState({
-      currentHop: hop,
-      hopModalOpen: true,
-    });
-  };
-
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
       message: errorMessage,
-      status: 'danger',
       pos: 'top-right',
+      status: 'danger',
       timeout: 5000,
     });
   }
 
-  handleRemoveHop = ({ id, name, origin }: Partial<Hop> & { id: string }) => {
-    confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
-      this.setState({ loading: true }, () => {
-        this.props.removeHop({ variables: { id } })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch((err: ApolloError) => {
-            this.setState({ loading: false }, () => {
-              HopsPage.handleError(err);
-            });
-          });
-      });
-    });
+  public readonly state: Readonly<IHopPageState> = {
+    currentHop: null,
+    hopModalOpen: false,
+    loading: false,
   };
 
-  render() {
+  public render() {
     const { data: hops, loading } = this.props;
 
     return (
@@ -101,7 +71,7 @@ class HopsPage extends React.Component<HopsProps, HopState> {
                 onNextPage={this.props.getNextPage}
                 onPrevPage={this.props.getPreviousPage}
               />
-              <Table size='small' stripped>
+              <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -119,8 +89,14 @@ class HopsPage extends React.Component<HopsProps, HopState> {
                       <Table.Row key={hop.id}>
                         <Table.Cell>{hop.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
-                        <Table.Cell className='uk-visible@s uk-text-nowrap'>{HopsPage.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
-                        <Table.Cell className='uk-visible@m uk-text-nowrap'>{HopsPage.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                        <Table.Cell
+                          className='uk-visible@s uk-text-nowrap'>
+                          {HopsPage.formatAcidValue(hop.aaLow, hop.aaHigh)}
+                        </Table.Cell>
+                        <Table.Cell
+                          className='uk-visible@m uk-text-nowrap'>
+                          {HopsPage.formatAcidValue(hop.betaLow, hop.betaHigh)}
+                        </Table.Cell>
                         <Table.Cell className='uk-visible@s'>
                           {
                             hop.aroma ?
@@ -142,8 +118,7 @@ class HopsPage extends React.Component<HopsProps, HopState> {
                           </IconNav>
                         </Table.Cell>
                       </Table.Row>
-                    ))
-                  }
+                    ))}
                 </Table.Body>
               </Table>
             </React.Fragment> :
@@ -160,6 +135,36 @@ class HopsPage extends React.Component<HopsProps, HopState> {
         />
       </React.Fragment>
     );
+  }
+
+  private handleAddHop = () => {
+    this.setState({
+      currentHop: null,
+      hopModalOpen: true,
+    });
+  }
+
+  private handleEditHop = (hop: Hop) => {
+    this.setState({
+      currentHop: hop,
+      hopModalOpen: true,
+    });
+  }
+
+  private handleRemoveHop = ({ id, name, origin }: Partial<Hop> & { id: string }) => {
+    confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.removeHop({ variables: { id } })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch((err: ApolloError) => {
+            this.setState({ loading: false }, () => {
+              HopsPage.handleError(err);
+            });
+          });
+      });
+    });
   }
 }
 

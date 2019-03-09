@@ -1,15 +1,15 @@
+import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { ApolloError } from 'apollo-client';
-import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from '../queries';
-import confirm from '../utils/confirm';
+import { Fermentable } from '../../types';
 import {
-  Button, Pager, Spinner, Table, IconNav,
+  Button, IconNav, Pager, Spinner, Table,
 } from '../components';
-import FermentableModal from '../modals/FermentableModal';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
-import { Fermentable } from '../../types';
+import FermentableModal from '../modals/FermentableModal';
+import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from '../queries';
+import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -19,61 +19,31 @@ type FermentablesProps = IPagedQueryProps & {
   removeFermentable: (args: { variables: { id: string } }) => Promise<void>,
 };
 
-type FermentablesState = {
-  loading: boolean,
-  fermentableModalOpen: boolean,
-  currentFermentable: null,
-};
+interface IFermentablesState {
+  loading: boolean;
+  fermentableModalOpen: boolean;
+  currentFermentable: null;
+}
 
 class FermentablesPage extends React.Component<FermentablesProps> {
-  readonly state: Readonly<FermentablesState> = {
-    loading: false,
-    fermentableModalOpen: false,
-    currentFermentable: null,
-  };
-
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
       message: errorMessage,
-      status: 'danger',
       pos: 'top-right',
+      status: 'danger',
       timeout: 5000,
     });
   }
 
-  handleAddFermentable = () => {
-    this.setState({
-      currentFermentable: null,
-      fermentableModalOpen: true,
-    });
+  public readonly state: Readonly<IFermentablesState> = {
+    currentFermentable: null,
+    fermentableModalOpen: false,
+    loading: false,
   };
 
-  handleEditFermentable = (fermentable: Fermentable) => {
-    this.setState({
-      currentFermentable: fermentable,
-      fermentableModalOpen: true,
-    });
-  };
-
-  handleRemoveFermentable = ({ id, name, origin }: Partial<Fermentable> & { id: string }) => {
-    confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
-      this.setState({ loading: true }, () => {
-        this.props.removeFermentable({ variables: { id } })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch((err) => {
-            this.setState({ loading: false }, () => {
-              FermentablesPage.handleError(err);
-            });
-          });
-      });
-    });
-  };
-
-  render() {
+  public render() {
     const {
       data: fermentables, loading, hasNextPage, hasPreviousPage,
       getNextPage, getPreviousPage, getRefetchQuery,
@@ -90,7 +60,7 @@ class FermentablesPage extends React.Component<FermentablesProps> {
                 hasPrevPage={hasPreviousPage}
                 onNextPage={getNextPage}
                 onPrevPage={getPreviousPage}/>
-              <Table size='small' stripped>
+              <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -111,8 +81,14 @@ class FermentablesPage extends React.Component<FermentablesProps> {
                         <Table.Cell className='uk-text-nowrap'>{fermentable.origin.name}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap'>{fermentable.category}</Table.Cell>
                         <Table.Cell className='uk-text-nowrap uk-visible@m'>{fermentable.type}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
+                        <Table.Cell
+                          className='uk-text-nowrap uk-visible@s'>
+                          {fermentable.color ? fermentable.color : 'N/A'}
+                        </Table.Cell>
+                        <Table.Cell
+                          className='uk-text-nowrap uk-visible@s'>
+                          {fermentable.potential ? fermentable.potential : 'N/A'}
+                        </Table.Cell>
                         <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.yield}</Table.Cell>
                         <Table.Cell>
                           <IconNav className='uk-text-nowrap'>
@@ -121,8 +97,7 @@ class FermentablesPage extends React.Component<FermentablesProps> {
                           </IconNav>
                         </Table.Cell>
                       </Table.Row>
-                    ))
-                  }
+                    ))}
                 </Table.Body>
               </Table>
             </React.Fragment> :
@@ -139,6 +114,36 @@ class FermentablesPage extends React.Component<FermentablesProps> {
         />
       </React.Fragment>
     );
+  }
+
+  private handleAddFermentable = () => {
+    this.setState({
+      currentFermentable: null,
+      fermentableModalOpen: true,
+    });
+  }
+
+  private handleEditFermentable = (fermentable: Fermentable) => {
+    this.setState({
+      currentFermentable: fermentable,
+      fermentableModalOpen: true,
+    });
+  }
+
+  private handleRemoveFermentable = ({ id, name, origin }: Partial<Fermentable> & { id: string }) => {
+    confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.removeFermentable({ variables: { id } })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch((err) => {
+            this.setState({ loading: false }, () => {
+              FermentablesPage.handleError(err);
+            });
+          });
+      });
+    });
   }
 }
 

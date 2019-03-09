@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { ApolloClient, ApolloError } from 'apollo-client';
-import queryString from 'query-string';
 import gql from 'graphql-tag';
+import queryString from 'query-string';
+import * as React from 'react';
 import { ExecutionResult, withApollo } from 'react-apollo';
-import { Header, Container, Button } from '../components';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Button, Container, Header } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
 
 const ACTIVATE_USER = gql`
@@ -15,73 +15,52 @@ const ACTIVATE_USER = gql`
   }
 `;
 
-type ActivateProps = {
-  client: ApolloClient<any>,
-};
+interface IActivateProps {
+  client: ApolloClient<any>;
+}
 
-type Result = { activateUser: { success: boolean }};
+interface IResult { activateUser: { success: boolean }; }
 
-class Activate extends React.Component<ActivateProps & RouteComponentProps<any>> {
-  readonly state: { loading: boolean, success: boolean, error: boolean };
-
-  constructor(props: ActivateProps & RouteComponentProps<any>) {
-    super(props);
-    this.state = {
-      loading: true,
-      success: false,
-      error: false,
-    };
-  }
-
-  handleComplete = (result: ExecutionResult<Result>) => {
-    const { success } = result.data.activateUser;
-
-    if (success) {
-      this.setState({
-        loading: false,
-        success: true,
-        error: false,
-      });
-    } else {
-      this.setState({
-        loading: false,
-        error: true,
-      });
-    }
-  };
-
-  handleLogin = () => {
-    window.location.href = '/auth';
-  };
-
+class Activate extends React.Component<IActivateProps & RouteComponentProps<any>> {
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     if (errorMessage) {
       window.UIkit.notification({
         errorMessage,
-        status: 'danger',
         pos: 'top-right',
+        status: 'danger',
         timeout: 5000,
       });
     }
   }
 
-  componentDidMount() {
+  public readonly state: { loading: boolean, success: boolean, error: boolean };
+
+  constructor(props: IActivateProps & RouteComponentProps<any>) {
+    super(props);
+    this.state = {
+      error: false,
+      loading: true,
+      success: false,
+    };
+  }
+
+  public componentDidMount() {
     const { location } = this.props;
     const { token } = queryString.parse(location.search);
 
     if (token) {
-      this.props.client.mutate<Result>({
-        variables: { token },
+      this.props.client.mutate<IResult>({
         mutation: ACTIVATE_USER,
+        variables: { token },
       })
-        .then(response => this.handleComplete(response))
+        .then((response) => this.handleComplete(response))
         .catch(Activate.handleError);
     }
   }
 
-  render() {
+  public render() {
     const { location } = this.props;
     const { token } = queryString.parse(location.search);
 
@@ -101,7 +80,7 @@ class Activate extends React.Component<ActivateProps & RouteComponentProps<any>>
       return (
         <div className='signup-container'>
           <Container className='uk-width-large uk-text-center'>
-            <div data-uk-spinner="ratio: 2"/>
+            <div data-uk-spinner='ratio: 2'/>
           </Container>
         </div>
       );
@@ -129,6 +108,27 @@ class Activate extends React.Component<ActivateProps & RouteComponentProps<any>>
           </Container>
         </div>
     );
+  }
+
+  private handleComplete = (result: ExecutionResult<IResult>) => {
+    const { success } = result.data.activateUser;
+
+    if (success) {
+      this.setState({
+        error: false,
+        loading: false,
+        success: true,
+      });
+    } else {
+      this.setState({
+        error: true,
+        loading: false,
+      });
+    }
+  }
+
+  private handleLogin = () => {
+    window.location.href = '/auth';
   }
 }
 

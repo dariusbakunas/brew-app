@@ -1,37 +1,29 @@
 import * as React from 'react';
 import { Route } from 'react-router-dom';
-import withServerContext from '../HOC/withServerContext';
-import { Nav, Navbar, SideMenu } from '../components';
-import Account from './Account';
-import Dashboard from './Dashboard';
-import Users from './UsersPage';
-import Invitations from './InvitationsPage';
-import IngredientsPage from './IngredientsPage';
-import Roles from './RolesPage';
 import { User } from '../../types';
+import { Nav, Navbar, SideMenu } from '../components';
+import withServerContext from '../HOC/withServerContext';
+import Dashboard from './Dashboard';
+import IngredientsPage from './IngredientsPage';
+import Invitations from './InvitationsPage';
+import Profile from './Profile';
+import Roles from './RolesPage';
+import Users from './UsersPage';
 
-type MainPageProps = {
-  user: User,
-};
+interface IMainPageProps {
+  user: User;
+}
 
-type MainPageState = {
-  showSideBar: boolean,
-};
+interface IMainPageState {
+  showSideBar: boolean;
+}
 
-class MainPage extends React.Component<MainPageProps> {
-  readonly state: Readonly<MainPageState> = {
+class MainPage extends React.Component<IMainPageProps> {
+  public readonly state: Readonly<IMainPageState> = {
     showSideBar: false,
   };
 
-  showSideBar = () => {
-    this.setState({ showSideBar: true });
-  };
-
-  hideSideBar = () => {
-    this.setState({ showSideBar: false });
-  };
-
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <Navbar toggleTarget='side-menu'/>
@@ -65,12 +57,12 @@ class MainPage extends React.Component<MainPageProps> {
                 </React.Fragment>
               }
               <Nav.Header label='Account'/>
-              <Nav.Item label='Settings & Profile' url='/account'/>
+              <Nav.Item label='Settings & Profile' url='/profile'/>
               <Nav.Item as='a' label='Logout' url='/logout'/>
             </Nav>
           </SideMenu>
-          <Route path='/' exact component={Dashboard}/>
-          <Route path='/account' component={Account}/>
+          <Route path='/' exact={true} component={Dashboard}/>
+          <Route path='/profile' component={Profile}/>
           {
             this.props.user.isAdmin &&
             <React.Fragment>
@@ -83,6 +75,14 @@ class MainPage extends React.Component<MainPageProps> {
         </div>
       </React.Fragment>
     );
+  }
+
+  private showSideBar = () => {
+    this.setState({ showSideBar: true });
+  }
+
+  private hideSideBar = () => {
+    this.setState({ showSideBar: false });
   }
 }
 
