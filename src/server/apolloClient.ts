@@ -29,6 +29,9 @@ export default function getApolloClient(requestUser: User) {
 
         if (process.env.STAGING === 'true') {
           requestHeaders['X-SERVER-SELECT'] = 'brew_api_staging_upstream';
+        } else {
+          // do not let client setting to modify this
+          delete requestHeaders['X-SERVER-SELECT'];
         }
 
         resolve({

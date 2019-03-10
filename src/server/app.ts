@@ -62,6 +62,8 @@ const apiProxyConfig: Config = {
 
     if (process.env.STAGING === 'true') {
       proxyReq.setHeader('X-SERVER-SELECT', 'brew_api_staging_upstream');
+    } else {
+      proxyReq.removeHeader('X-SERVER-SELECT');
     }
   },
   target: process.env.BREW_API_HOST,
