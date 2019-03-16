@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { graphql } from 'react-apollo';
 import { Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';
@@ -17,10 +17,10 @@ type RoleModalState = UserRole & {
   loading: boolean,
   validationErrors: {
     [key: string]: string,
-  }
+  },
 };
 
-class RoleModal extends React.Component<RoleModalProps> {
+export class RoleModal extends React.Component<RoleModalProps> {
   readonly state: Readonly<RoleModalState> = {
     name: '',
     code: '',
