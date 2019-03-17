@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input should render with icon 1`] = `
+<Fragment>
+  <label
+    className="uk-form-label"
+    htmlFor="test-input"
+  >
+    test
+  </label>
+  <div
+    className="uk-inline"
+  >
+    <span
+      className="uk-form-icon uk-form-icon-flip uk-icon"
+    >
+      <Icon
+        icon="percent"
+        width="20px"
+      />
+    </span>
+    <input
+      className="uk-input"
+      id="test-input"
+      name="test"
+      onChange={[Function]}
+      step={null}
+      type="text"
+    />
+  </div>
+</Fragment>
+`;
+
+exports[`Input should render without throwing an error 1`] = `
+<Fragment>
+  <label
+    className="uk-form-label"
+    htmlFor="test-input"
+  >
+    test
+  </label>
+  <input
+    className="uk-input"
+    id="test-input"
+    name="test"
+    onChange={[Function]}
+    step={null}
+    type="text"
+  />
+</Fragment>
+`;
