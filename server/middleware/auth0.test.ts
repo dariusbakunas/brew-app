@@ -1,4 +1,4 @@
-import getApolloClient from '../apolloClient';
+import getApolloClient from '../src/server/apolloClient';
 import { verify } from './auth0';
 
 jest.mock('../apolloClient');

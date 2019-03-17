@@ -1,6 +1,4 @@
-import express from 'express';
-
-export default () => (req: express.Request, res: express.Response, next: express.NextFunction) => {
+export default (req, res, next) => {
   if (req.user) {
     if (req.user.status === 'GUEST' && req.originalUrl !== '/register') {
       return res.redirect('/register');

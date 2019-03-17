@@ -1,8 +1,55 @@
 import gql from 'graphql-tag';
-import * as passport from 'passport';
-import * as Auth0Strategy from 'passport-auth0';
-import { User, UserStatus } from '../../types';
-import getApolloClient from '../apolloClient';
+import passport from 'passport';
+import Auth0Strategy from 'passport-auth0';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { setContext } from 'apollo-link-context';
+import jwt from 'jsonwebtoken';
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { User, UserStatus } from '../../src/types';
+import getAuth0Token from './auth0token';
+
+function getApolloClient(requestUser: User) {
+  const authLink = setContext((_, { headers }) => new Promise((resolve, reject) => {
+    // do some async lookup here
+    getAuth0Token()
+      .then(({ accessToken }) => {
+        const userToken = jwt.sign({ user: requestUser }, process.env.JWT_SECRET);
+
+        const requestHeaders = {
+          'authorization': `Bearer ${accessToken}`,
+          ...headers,
+          'auth-token': userToken,
+        };
+
+        if (process.env.STAGING === 'true') {
+          requestHeaders['X-SERVER-SELECT'] = 'brew_api_staging_upstream';
+        } else {
+          // do not let client setting to modify this
+          delete requestHeaders['X-SERVER-SELECT'];
+        }
+
+        resolve({
+          headers: requestHeaders,
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  }));
+
+  const httpLink = createHttpLink({
+    // @ts-ignore
+    fetch,
+    uri: process.env.BREW_API_HOST,
+  });
+
+  return new ApolloClient({
+    ssrMode: true,
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache(),
+  });
+}
 
 interface IUserResponse {
   userByEmail: User;
@@ -43,9 +90,9 @@ passport.deserializeUser((user, done) => {
 });
 
 export const verify: Auth0Strategy.VerifyFunction = (
-  accessToken,
-  refreshToken,
-  extraParams,
+  _accessToken,
+  _refreshToken,
+  _extraParams,
   profile,
   done,
 ) => {
@@ -87,6 +134,7 @@ export default new Auth0Strategy(
     clientID: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
     domain: process.env.AUTH0_DOMAIN,
+    state: true,
   },
   verify,
 );
