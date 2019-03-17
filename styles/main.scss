@@ -1,10 +1,10 @@
 @import 'abstracts/variables';
 @import 'abstracts/functions';
 
-@import '~uikit/src/scss/variables-theme.scss';
-@import '~uikit/src/scss/mixins-theme.scss';
+@import '../node_modules/uikit/src/scss/variables-theme';
+@import '../node_modules/uikit/src/scss/mixins-theme';
 
-@import '~uikit/src/scss/uikit-theme.scss';
+@import '../node_modules/uikit/src/scss/uikit-theme';
 
 @import 'base/reset';
 @import 'base/base';
