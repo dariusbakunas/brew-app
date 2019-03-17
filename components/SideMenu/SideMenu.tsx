@@ -1,51 +1,40 @@
 import React, { Component, ReactNode } from 'react';
 import Icon from '../Icon';
+import Portal from '../Portal';
 
-type SideMenuProps = {
-  id: string,
-  children: ReactNode,
-  mode?: 'slide' | 'push' | 'reveal' | 'none',
-  onShow?: () => void,
-  onHide?: () => void,
-  overlay?: boolean,
-  visible: boolean,
-};
+interface ISideMenuProps {
+  id: string;
+  children: ReactNode;
+  mode?: 'slide' | 'push' | 'reveal' | 'none';
+  onShow?: () => void;
+  onHide?: () => void;
+  overlay?: boolean;
+  visible: boolean;
+}
 
-class SideMenu extends Component<SideMenuProps> {
-  private ref: React.RefObject<HTMLDivElement>;
-
-  static defaultProps: Partial<SideMenuProps> = {
+class SideMenu extends Component<ISideMenuProps> {
+  public static defaultProps: Partial<ISideMenuProps> = {
     mode: 'none',
   };
 
-  constructor(props: SideMenuProps) {
+  private ref: React.RefObject<HTMLDivElement>;
+
+  constructor(props: ISideMenuProps) {
     super(props);
     this.ref = React.createRef();
   }
 
-  handleShow = () => {
-    if (this.props.onShow) {
-      this.props.onShow();
-    }
-  };
-
-  handleHide = () => {
-    if (this.props.onHide) {
-      this.props.onHide();
-    }
-  };
-
-  componentDidMount() {
+  public componentDidMount() {
     this.ref.current.addEventListener('show', this.handleShow);
     this.ref.current.addEventListener('hide', this.handleHide);
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount() {
     this.ref.current.removeEventListener('hide', this.handleHide);
     this.ref.current.removeEventListener('show', this.handleShow);
   }
 
-  componentDidUpdate(prevProps: SideMenuProps) {
+  public componentDidUpdate(prevProps: ISideMenuProps) {
     // Typical usage (don't forget to compare props):
     if (this.props.visible !== prevProps.visible) {
       if (this.props.visible) {
@@ -56,21 +45,35 @@ class SideMenu extends Component<SideMenuProps> {
     }
   }
 
-  render() {
+  public render() {
     const {
       children, id, mode, overlay,
     } = this.props;
 
     return (
-      <div id={id} data-uk-offcanvas={`mode: ${mode}; overlay: ${overlay}`} ref={this.ref}>
-        <div className='uk-offcanvas-bar'>
-          <button className='uk-offcanvas-close uk-close uk-icon' type='button'>
-            <Icon icon='close' width='14' height='14'/>
-          </button>
-          {children}
+      <Portal selector='body'>
+        <div id={id} data-uk-offcanvas={`mode: ${mode}; overlay: ${overlay}`} ref={this.ref}>
+          <div className='uk-offcanvas-bar'>
+            <button className='uk-offcanvas-close uk-close uk-icon' type='button'>
+              <Icon icon='close' width='14' height='14'/>
+            </button>
+            {children}
+          </div>
         </div>
-      </div>
+      </Portal>
     );
+  }
+
+  private handleShow = () => {
+    if (this.props.onShow) {
+      this.props.onShow();
+    }
+  }
+
+  private handleHide = () => {
+    if (this.props.onHide) {
+      this.props.onHide();
+    }
   }
 }
 
