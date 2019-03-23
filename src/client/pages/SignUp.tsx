@@ -3,13 +3,13 @@ import gql from 'graphql-tag';
 import * as React from 'react';
 import { Mutation } from 'react-apollo';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
-import { User } from '../../types';
+import { User } from '../../../types';
 import {
   Button, Container, Form, Header,
-} from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withServerContext from '../HOC/withServerContext';
+} from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
+import withServerContext from '../../../HOC/withServerContext';
 
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {

@@ -12,7 +12,7 @@ import passport from 'passport';
 import uuidv4 from 'uuid/v4';
 import auth0Strategy from './middleware/auth0';
 import authApiToken from './middleware/authApiToken';
-import { UserStatus } from '../src/types';
+import { UserStatus } from '../types';
 import errorHandler from './errorHandler';
 import router from './router';
 
@@ -66,8 +66,12 @@ const apiProxyConfig: Config = {
     res.end(JSON.stringify({ message: err.message }));
   },
   onProxyReq: (proxyReq, req: IGetUserAuthInfoRequest) => {
-    const token = jwt.sign({ user: req.user || { status: UserStatus.GUEST } }, process.env.JWT_SECRET);
-    proxyReq.setHeader('auth-token', token);
+    if (!req.headers['auth-token']) {
+      console.log(process.env.JWT_SECRET);
+      const token = jwt.sign({ user: req.user || { status: UserStatus.GUEST } }, process.env.JWT_SECRET);
+      proxyReq.setHeader('auth-token', token);
+    }
+
     proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
 
     if (process.env.STAGING === 'true') {
@@ -128,6 +132,7 @@ export default (getRoutes) => {
         passport.use(auth0Strategy);
         server.use(passport.initialize());
         server.use(passport.session());
+        //server.use(logger('dev'));
 
         server.nextConfig = app.nextConfig;
         return server;

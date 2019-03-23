@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { Water, WaterInput } from '../../types';
-import { Button, Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
+import { Water, WaterInput } from '../../../types';
+import { Button, Form } from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
 import {
   CREATE_WATER, UPDATE_WATER,
-} from '../queries';
+} from '../../../queries';
 import Modal from './Modal';
 
 interface IWaterModalProps {

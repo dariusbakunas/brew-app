@@ -1,12 +1,12 @@
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { setContext } from 'apollo-link-context';
+import { createHttpLink } from 'apollo-link-http';
 import gql from 'graphql-tag';
+import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import Auth0Strategy from 'passport-auth0';
-import { InMemoryCache } from 'apollo-cache-inmemory';
-import { setContext } from 'apollo-link-context';
-import jwt from 'jsonwebtoken';
-import { ApolloClient } from 'apollo-client';
-import { createHttpLink } from 'apollo-link-http';
-import { User, UserStatus } from '../../src/types';
+import { User, UserStatus } from '../../types';
 import getAuth0Token from './auth0token';
 
 function getApolloClient(requestUser: User) {
@@ -14,6 +14,7 @@ function getApolloClient(requestUser: User) {
     // do some async lookup here
     getAuth0Token()
       .then(({ accessToken }) => {
+        console.log(process.env.JWT_SECRET);
         const userToken = jwt.sign({ user: requestUser }, process.env.JWT_SECRET);
 
         const requestHeaders = {
@@ -116,7 +117,7 @@ export const verify: Auth0Strategy.VerifyFunction = (
       } else {
         const newUser = {
           ...requestUser,
-          status: UserStatus.GUEST,
+          status: UserStatus.GUEST, // new users get GUEST status
         };
 
         done(null, newUser);

@@ -27,6 +27,12 @@ class SideMenu extends Component<ISideMenuProps> {
   public componentDidMount() {
     this.ref.current.addEventListener('show', this.handleShow);
     this.ref.current.addEventListener('hide', this.handleHide);
+
+    if (!window.UIkit) {
+      window.UIkit = require('uikit');
+    }
+
+    window.UIkit.offcanvas(this.ref.current, { mode: this.props.mode, overlay: this.props.overlay });
   }
 
   public componentWillUnmount() {
@@ -47,12 +53,12 @@ class SideMenu extends Component<ISideMenuProps> {
 
   public render() {
     const {
-      children, id, mode, overlay,
+      children, id
     } = this.props;
 
     return (
       <Portal selector='body'>
-        <div id={id} data-uk-offcanvas={`mode: ${mode}; overlay: ${overlay}`} ref={this.ref}>
+        <div id={id} ref={this.ref}>
           <div className='uk-offcanvas-bar'>
             <button className='uk-offcanvas-close uk-close uk-icon' type='button'>
               <Icon icon='close' width='14' height='14'/>

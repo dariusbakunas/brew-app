@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { graphql } from 'react-apollo';
-import { Form } from '../components';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_ROLE, GET_ROLES } from '../queries';
+import { Form } from '../../../components';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
+import { CREATE_ROLE, GET_ROLES } from '../../../queries';
 import Modal from './Modal';
-import { UserRole } from '../../types';
-import { InputChangeHandlerType } from '../components/Form/Input';
+import { UserRole } from '../../../types';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
 
 type RoleModalProps = {
   id: string,

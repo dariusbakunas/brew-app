@@ -79,13 +79,13 @@ export enum UserStatus {
 }
 
 export type User = {
-  id: string,
+  id?: string,
   firstName: string,
-  isAdmin: boolean,
+  isAdmin?: boolean,
   lastName: string,
   username: string,
   email: string,
-  status: UserStatus,
+  status?: UserStatus,
 };
 
 export type UserRole = {

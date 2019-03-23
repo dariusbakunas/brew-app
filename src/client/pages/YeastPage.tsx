@@ -1,15 +1,15 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
-import { GET_YEAST, REMOVE_YEAST } from '../queries';
+import withPagedQuery, { IPagedQueryProps } from '../../../HOC/withPagedQuery';
+import { GET_YEAST, REMOVE_YEAST } from '../../../queries';
 import YeastModal from '../modals/YeastModal';
 import {
   Button, Pager, Spinner, Table, IconNav,
-} from '../components';
+} from '../../../components';
 import confirm from '../utils/confirm';
-import { IYeast } from '../../types';
-import handleGraphQLError from '../errors/handleGraphQLError';
+import { IYeast } from '../../../types';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
 
 const DEFAULT_PAGE_SIZE = 8;
 

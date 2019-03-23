@@ -1,14 +1,14 @@
 import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { Hop } from '../../types';
+import { Hop } from '../../../types';
 import {
   Button, Icon, IconNav, Pager, Spinner, Table,
-} from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+} from '../../../components';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
+import withPagedQuery, { IPagedQueryProps } from '../../../HOC/withPagedQuery';
 import HopModal from '../modals/HopModal';
-import { GET_HOPS, REMOVE_HOP } from '../queries';
+import { GET_HOPS, REMOVE_HOP } from '../../../queries';
 import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;

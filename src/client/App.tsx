@@ -3,15 +3,15 @@ import {
   Route, RouteComponentProps, Switch, withRouter,
 } from 'react-router-dom';
 import Main from './pages/MainPage';
-import withServerContext from './HOC/withServerContext';
+import withServerContext from '../../HOC/withServerContext';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
-import ErrorBoundary from './errors/ErrorBoundary';
+import ErrorBoundary from '../../errors/ErrorBoundary';
 import Privacy from './pages/PrivacyPage';
 import Terms from './pages/Terms';
 import Activate from './pages/Activate';
-import Footer from './components/Footer';
-import { UserStatus } from '../types';
+import Footer from '../../components/Footer';
+import { UserStatus } from '../../types';
 
 type AppProps = RouteComponentProps<any> & {
   location: {

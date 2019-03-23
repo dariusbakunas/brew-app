@@ -1,5 +1,5 @@
 import React from 'react';
-import { Header, Container } from '../components';
+import { Container, Header } from '../components';
 
 function Terms() {
   return (
@@ -8,12 +8,12 @@ function Terms() {
         <Header>TERMS OF SERVICE</Header>
         <div>Effective date: December 12, 2018</div>
         <Header as='h2'>1. Terms</Header>
-        <p>By accessing the website at <a href="https://brew.geekspace.us">http://brew.geekspace.us</a>, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.</p>
+        <p>By accessing the website at <a href='https://brew.geekspace.us'>http://brew.geekspace.us</a>, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.</p>
         <Header as='h2'>2. Use License</Header>
-        <ul className="uk-list uk-list-bullet">
+        <ul className='uk-list uk-list-bullet'>
           <li>
             Permission is granted to temporarily download one copy of the materials (information or software) on BrewBeer's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title, and under this license you may not:
-            <ul className="uk-list uk-list-bullet">
+            <ul className='uk-list uk-list-bullet'>
               <li>modify or copy the materials;</li>
               <li>use the materials for any commercial purpose, or for any public display (commercial or non-commercial);</li>
               <li>attempt to decompile or reverse engineer any software contained on BrewBeer's website;</li>
@@ -24,7 +24,7 @@ function Terms() {
           <li>This license shall automatically terminate if you violate any of these restrictions and may be terminated by BrewBeer at any time. Upon terminating your viewing of these materials or upon the termination of this license, you must destroy any downloaded materials in your possession whether in electronic or printed format.</li>
         </ul>
         <Header as='h2'>3. Disclaimer</Header>
-        <ul className="uk-list uk-list-bullet">
+        <ul className='uk-list uk-list-bullet'>
           <li>The materials on BrewBeer's website are provided on an 'as is' basis. BrewBeer makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</li>
           <li>Further, BrewBeer does not warrant or make any representations concerning the accuracy, likely results, or reliability of the use of the materials on its website or otherwise relating to such materials or on any sites linked to this site.</li>
         </ul>

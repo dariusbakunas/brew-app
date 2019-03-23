@@ -2,9 +2,9 @@ import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import {
   Container, Table, Spinner,
-} from '../components';
-import { GET_ROLES } from '../queries';
-import { UserRole } from '../../types';
+} from '../../../components';
+import { GET_ROLES } from '../../../queries';
+import { UserRole } from '../../../types';
 
 type RolesPageProps = {
   data: {

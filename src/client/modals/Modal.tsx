@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
-import { Header, LoadingBar } from '../components';
+import { Header, LoadingBar } from '../../../components';
 
 interface IModalProps {
   id: string;

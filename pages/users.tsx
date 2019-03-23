@@ -1,13 +1,14 @@
 import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { User, UserStatus } from '../../../types';
 import {
   Container, IconNav, Spinner, Table,
-} from '../../../components';
-import handleGraphQLError from '../../../errors/handleGraphQLError';
-import withServerContext from '../../../HOC/withServerContext';
-import { GET_ALL_USERS, REMOVE_USER } from '../../../queries';
+} from '../components';
+import handleGraphQLError from '../errors/handleGraphQLError';
+import withServerContext from '../HOC/withServerContext';
+import Main from '../layouts/main';
+import { GET_ALL_USERS, REMOVE_USER } from '../queries';
+import { User, UserStatus } from '../types';
 
 interface IUsersPageProps {
   user: {
@@ -16,6 +17,7 @@ interface IUsersPageProps {
   data: {
     loading: boolean,
     users: User[],
+    error: ApolloError,
   };
   removeUser: (args: { variables: { id: string } }) => Promise<void>;
 }
@@ -41,47 +43,61 @@ class UsersPage extends React.Component<IUsersPageProps> {
     });
   }
 
+  public componentDidUpdate(prevProps: Readonly<IUsersPageProps>): void {
+    if (prevProps.data !== this.props.data) {
+      if (this.props.data.error) {
+        UsersPage.handleError(this.props.data.error);
+      }
+    }
+  }
+
   // TODO: replace Mutation with HOC for easier testing
 
   public render() {
-    const { loading, users = [] } = this.props.data;
+    const { loading, users = [], error } = this.props.data;
+
+    if (error) {
+      return (
+        <span>{JSON.stringify(error)}</span>
+      );
+    }
 
     return (
-      <React.Fragment>
+      <Main>
         <Container>
-            <Table className='uk-margin-large' size='small' stripped={true}>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Username</Table.HeaderCell>
-                  <Table.HeaderCell>Email</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell/>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {
-                  users.map((user: User) => (
-                    <Table.Row key={user.id}>
-                      <Table.Cell>{user.username}</Table.Cell>
-                      <Table.Cell>{user.email}</Table.Cell>
-                      <Table.Cell>{UsersPage.getStatusString(user.status)}</Table.Cell>
-                      <Table.Cell nowrap={true}>
-                        <IconNav>
-                          <IconNav.Item
-                            disabled={this.props.user.id === user.id}
-                            icon='trash'
-                            onClick={() => this.handleRemove(user)}
-                          />
-                        </IconNav>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
-              </Table.Body>
-            </Table>
+          <Table className='uk-margin-large' size='small' stripped={true}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Username</Table.HeaderCell>
+                <Table.HeaderCell>Email</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell/>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                users.map((user: User) => (
+                  <Table.Row key={user.id}>
+                    <Table.Cell>{user.username}</Table.Cell>
+                    <Table.Cell>{user.email}</Table.Cell>
+                    <Table.Cell>{UsersPage.getStatusString(user.status)}</Table.Cell>
+                    <Table.Cell nowrap={true}>
+                      <IconNav>
+                        <IconNav.Item
+                          disabled={this.props.user.id === user.id}
+                          icon='trash'
+                          onClick={() => this.handleRemove(user)}
+                        />
+                      </IconNav>
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              }
+            </Table.Body>
+          </Table>
         </Container>
         <Spinner active={loading}/>
-      </React.Fragment>
+      </Main>
     );
   }
 

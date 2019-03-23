@@ -3,11 +3,11 @@ import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
 import {
   Fermentable, FermentableCategory, FermentableInput, GrainType, ICountry,
-} from '../../types';
-import { Button, Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from '../queries';
+} from '../../../types';
+import { Button, Form } from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
+import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from '../../../queries';
 import Modal from './Modal';
 
 const UNITED_STATES_ID = '236';

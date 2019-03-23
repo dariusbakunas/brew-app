@@ -1,10 +1,10 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
-import { InvitationInput } from '../../types';
-import { Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
+import { InvitationInput } from '../../../types';
+import { Form } from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
+import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../../../queries';
 import Modal from './Modal';
 
 interface IInvitationModalProps {

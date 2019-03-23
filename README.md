@@ -26,3 +26,15 @@
 # Launch
 
     % npm run server:dev
+    
+# IntelliJ
+
+  Runtime config:
+  
+    * Select node 10.x
+    * Params: `-r dotenv/config -r ts-node/register`
+    * Env: `TS_NODE_PROJECT=tsconfig.server.json`
+    
+# References
+
+  * next.js + apollo setup: [https://github.com/necccc/nextjs-apollo-graphql](https://github.com/necccc/nextjs-apollo-graphql)

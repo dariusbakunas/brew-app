@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { IYeast, YeastFlocculation, YeastForm, YeastInput, YeastLab, YeastType } from '../../types';
-import { Button, Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_YEAST, GET_YEAST_LABS, UPDATE_YEAST } from '../queries';
+import { IYeast, YeastFlocculation, YeastForm, YeastInput, YeastLab, YeastType } from '../../../types';
+import { Button, Form } from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
+import { CREATE_YEAST, GET_YEAST_LABS, UPDATE_YEAST } from '../../../queries';
 import Modal from './Modal';
 
 interface IYeastModalProps {

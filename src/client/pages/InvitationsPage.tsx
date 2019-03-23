@@ -1,13 +1,13 @@
 import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { Invitation } from '../../types';
+import { Invitation } from '../../../types';
 import {
   Button, Container, IconNav, Spinner, Table,
-} from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
+} from '../../../components';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
 import InvitationModal from '../modals/InvitationModal';
-import { DELETE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
+import { DELETE_INVITATION, GET_ALL_INVITATIONS } from '../../../queries';
 import confirm from '../utils/confirm';
 
 interface IInvitationsPageProps {

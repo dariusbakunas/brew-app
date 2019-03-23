@@ -1,5 +1,5 @@
 import React, { ComponentType } from 'react';
-import { ServerContext } from '../ServerContext';
+import { ServerContext } from '../src/client/ServerContext';
 
 function withServerContext(WrappedComponent: ComponentType) {
   function getDisplayName(Component: ComponentType) {

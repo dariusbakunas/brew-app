@@ -1,15 +1,15 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
-import { GET_WATER, REMOVE_WATER } from '../queries';
-import handleGraphQLError from '../errors/handleGraphQLError';
+import withPagedQuery, { IPagedQueryProps } from '../../../HOC/withPagedQuery';
+import { GET_WATER, REMOVE_WATER } from '../../../queries';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
 import {
   Button, Pager, Spinner, Table, IconNav,
-} from '../components';
+} from '../../../components';
 import WaterModal from '../modals/WaterModal';
 import confirm from '../utils/confirm';
-import { Water } from '../../types';
+import { Water } from '../../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 

@@ -4,8 +4,8 @@ import queryString from 'query-string';
 import * as React from 'react';
 import { ExecutionResult, withApollo } from 'react-apollo';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Button, Container, Header } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
+import { Button, Container, Header } from '../../../components';
+import handleGraphQLError from '../../../errors/handleGraphQLError';
 
 const ACTIVATE_USER = gql`
   mutation ActivateUser($token: String!) {

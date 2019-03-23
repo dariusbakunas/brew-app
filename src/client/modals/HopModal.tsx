@@ -1,13 +1,13 @@
 import { ApolloError } from 'apollo-client';
 import * as React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { Hop, HopInput, ICountry } from '../../types';
-import { Button, Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
+import { Hop, HopInput, ICountry } from '../../../types';
+import { Button, Form } from '../../../components';
+import { InputChangeHandlerType } from '../../../components/Form/Input';
+import handleGrpahQLError from '../../../errors/handleGraphQLError';
 import {
   CREATE_HOP, GET_ALL_COUNTRIES, UPDATE_HOP,
-} from '../queries';
+} from '../../../queries';
 import Modal from './Modal';
 
 // TODO: find a better way to do this
