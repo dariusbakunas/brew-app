@@ -4,7 +4,7 @@ import Icon from '../Icon';
 
 export type InputChangeHandlerType = (
   e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
-  val: { name: string, value: string | number | boolean }
+  val: { name: string, value: string | string[] | number | boolean },
 ) => void;
 
 interface InputProps {
@@ -38,7 +38,7 @@ class Input extends React.Component<InputProps> {
     const { value } = e.currentTarget;
 
     if (onChange) {
-      if (value !== '' && type === 'number') {
+      if (value !== '' && type === 'number' && typeof value === 'string') {
         const num = step === 1 ? parseInt(value, 10) :
           parseFloat(value);
         onChange(e, { name, value: num });

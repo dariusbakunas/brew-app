@@ -6,7 +6,7 @@ type RadioProps = {
   label: string,
   name: string,
   onChange: (
-    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | number }
+    e: React.FormEvent<HTMLInputElement>, val: { name: string, value: string | string[] | number },
   ) => void,
   value: string,
 };

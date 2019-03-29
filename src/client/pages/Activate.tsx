@@ -15,6 +15,15 @@ const ACTIVATE_USER = gql`
   }
 `;
 
+interface IWindow {
+  UIkit?: any;
+  location: {
+    href: string,
+  };
+}
+
+declare var window: IWindow;
+
 interface IActivateProps {
   client: ApolloClient<any>;
 }

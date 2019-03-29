@@ -1,8 +1,12 @@
 import gql from 'graphql-tag';
-import * as passport from 'passport';
-import * as Auth0Strategy from 'passport-auth0';
+import passport from 'passport';
+import Auth0Strategy from 'passport-auth0';
 import { User, UserStatus } from '../../types';
 import getApolloClient from '../apolloClient';
+
+if (!process.env.AUTH0_DOMAIN) {
+  throw new Error('`env.AUTH0_DOMAIN` is required for auth0');
+}
 
 interface IUserResponse {
   userByEmail: User;
@@ -82,8 +86,7 @@ export const verify: Auth0Strategy.VerifyFunction = (
 // @ts-ignore
 export default new Auth0Strategy(
   {
-    callbackURL:
-      process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+    callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
     clientID: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
     domain: process.env.AUTH0_DOMAIN,

@@ -2,6 +2,12 @@ import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import { Header, LoadingBar } from '../components';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 interface IModalProps {
   id: string;
   error?: string;

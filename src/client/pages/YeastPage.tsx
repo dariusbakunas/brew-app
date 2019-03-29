@@ -1,17 +1,23 @@
+import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { ApolloError } from 'apollo-client';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
-import { GET_YEAST, REMOVE_YEAST } from '../queries';
-import YeastModal from '../modals/YeastModal';
-import {
-  Button, Pager, Spinner, Table, IconNav,
-} from '../components';
-import confirm from '../utils/confirm';
 import { IYeast } from '../../types';
+import {
+  Button, IconNav, Pager, Spinner, Table,
+} from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
+import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+import YeastModal from '../modals/YeastModal';
+import { GET_YEAST, REMOVE_YEAST } from '../queries';
+import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;
+
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
 
 type YeastPageProps = IPagedQueryProps & {
   data: Array<IYeast & { id: string }>,
@@ -19,61 +25,31 @@ type YeastPageProps = IPagedQueryProps & {
   removeYeast: (args: { variables: { id: string } }) => Promise<void>,
 };
 
-type YeastPageState = {
-  loading: boolean,
-  yeastModalOpen: boolean,
-  currentYeast: IYeast,
-};
+interface IYeastPageState {
+  loading: boolean;
+  yeastModalOpen: boolean;
+  currentYeast: IYeast;
+}
 
 class YeastPage extends React.Component<YeastPageProps> {
-  readonly state: YeastPageState = {
-    loading: false,
-    currentYeast: null,
-    yeastModalOpen: false,
-  };
-
-  handleAddYeast = () => {
-    this.setState({
-      currentYeast: null,
-      yeastModalOpen: true,
-    });
-  };
-
-  handleEditYeast = (yeast: IYeast) => {
-    this.setState({
-      currentYeast: yeast,
-      yeastModalOpen: true,
-    });
-  };
-
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
       message: errorMessage,
-      status: 'danger',
       pos: 'top-right',
+      status: 'danger',
       timeout: 5000,
     });
   }
 
-  handleRemoveYeast = ({ id, name, lab }: Partial<IYeast> & { id: string }) => {
-    confirm(`Are you sure you want to remove ${name} (${lab.name})?`, () => {
-      this.setState({ loading: true }, () => {
-        this.props.removeYeast({ variables: { id } })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch((err) => {
-            this.setState({ loading: false }, () => {
-              YeastPage.handleError(err);
-            });
-          });
-      });
-    });
+  public readonly state: IYeastPageState = {
+    currentYeast: null,
+    loading: false,
+    yeastModalOpen: false,
   };
 
-  render() {
+  public render() {
     const {
       data: yeastList, loading, hasNextPage, hasPreviousPage,
       getNextPage, getPreviousPage, getRefetchQuery,
@@ -91,7 +67,7 @@ class YeastPage extends React.Component<YeastPageProps> {
                 hasPrevPage={hasPreviousPage}
                 onNextPage={getNextPage}
                 onPrevPage={getPreviousPage}/>
-              <Table size='small' stripped>
+              <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -134,6 +110,36 @@ class YeastPage extends React.Component<YeastPageProps> {
         />
       </React.Fragment>
     );
+  }
+
+  private handleAddYeast = () => {
+    this.setState({
+      currentYeast: null,
+      yeastModalOpen: true,
+    });
+  }
+
+  private handleEditYeast = (yeast: IYeast) => {
+    this.setState({
+      currentYeast: yeast,
+      yeastModalOpen: true,
+    });
+  }
+
+  private handleRemoveYeast = ({ id, name, lab }: Partial<IYeast> & { id: string }) => {
+    confirm(`Are you sure you want to remove ${name} (${lab.name})?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.removeYeast({ variables: { id } })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch((err) => {
+            this.setState({ loading: false }, () => {
+              YeastPage.handleError(err);
+            });
+          });
+      });
+    });
   }
 }
 

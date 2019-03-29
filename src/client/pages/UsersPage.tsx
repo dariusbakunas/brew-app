@@ -9,6 +9,12 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 import withServerContext from '../HOC/withServerContext';
 import { GET_ALL_USERS, REMOVE_USER } from '../queries';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 interface IUsersPageProps {
   user: {
     id: string,

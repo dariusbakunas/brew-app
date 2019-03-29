@@ -7,7 +7,7 @@ type SelectProps = {
   label?: string,
   name: string,
   onChange: (
-    e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string | number }
+    e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string | string[] | number },
   ) => void,
   options: {
     value: string,

@@ -1,5 +1,5 @@
-import * as React from 'react';
 import classNames from 'classnames';
+import React from 'react';
 
 type CheckboxProps = {
   checked: boolean,
@@ -18,7 +18,7 @@ class Checkbox extends React.Component<CheckboxProps> {
       const { name } = this.props;
       this.props.onChange(e, { name, value });
     }
-  };
+  }
 
   render() {
     const { label, name, checked, disabled } = this.props;

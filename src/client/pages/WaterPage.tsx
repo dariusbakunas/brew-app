@@ -13,6 +13,12 @@ import { Water } from '../../types';
 
 const DEFAULT_PAGE_SIZE = 8;
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 type WaterPageProps = IPagedQueryProps & {
   data: Array<Water & { id: string }>,
   loading: boolean,

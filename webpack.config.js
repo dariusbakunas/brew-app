@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const nodeExternals = require('webpack-node-externals');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-
+const { CheckerPlugin } = require('awesome-typescript-loader');
 
 module.exports = (env, argv) => {
   const dev = argv.mode !== 'production';
@@ -21,6 +21,7 @@ module.exports = (env, argv) => {
       { from: 'src/client/public/images', to: 'images' },
       { from: 'src/manifest.json', to: 'manifest.json' },
     ]),
+    new CheckerPlugin(),
   ];
 
   if (dev) {

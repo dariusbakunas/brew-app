@@ -11,6 +11,12 @@ import HopModal from '../modals/HopModal';
 import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 const DEFAULT_PAGE_SIZE = 8;
 
 type HopsProps = IPagedQueryProps & {

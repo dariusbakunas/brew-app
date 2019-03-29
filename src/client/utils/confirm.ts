@@ -1,3 +1,9 @@
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 const confirm = (message: string, callback: () => void) => {
   const options = {
     labels: { ok: 'Yes', cancel: 'No' },

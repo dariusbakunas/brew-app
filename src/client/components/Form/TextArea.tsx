@@ -7,7 +7,7 @@ type TextAreaProps = {
   label?: string,
   name: string,
   onChange: (
-    e: React.ChangeEvent<HTMLTextAreaElement>, val: { name: string, value: string | number }
+    e: React.ChangeEvent<HTMLTextAreaElement>, val: { name: string, value: string | string[] | number },
   ) => void,
   resize?: boolean,
   rows?: number,

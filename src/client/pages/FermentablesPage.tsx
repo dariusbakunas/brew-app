@@ -13,6 +13,12 @@ import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 type FermentablesProps = IPagedQueryProps & {
   data: Array<Fermentable & { id: string }>,
   loading: boolean,

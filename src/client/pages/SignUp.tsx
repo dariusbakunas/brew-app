@@ -11,6 +11,12 @@ import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withServerContext from '../HOC/withServerContext';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 const REGISTER = gql`
   mutation Register($input: RegistrationInput!) {
     register(input: $input) {

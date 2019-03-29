@@ -10,6 +10,12 @@ import InvitationModal from '../modals/InvitationModal';
 import { DELETE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
 import confirm from '../utils/confirm';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 interface IInvitationsPageProps {
   getAllInvitations: {
     loading: boolean,

@@ -1,6 +1,12 @@
 import React, { Component, ReactNode } from 'react';
 import Icon from '../Icon';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 type SideMenuProps = {
   id: string,
   children: ReactNode,
