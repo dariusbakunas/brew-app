@@ -55,36 +55,36 @@ class UsersPage extends React.Component<IUsersPageProps> {
     return (
       <React.Fragment>
         <Container>
-            <Table className='uk-margin-large' size='small' stripped={true}>
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell>Username</Table.HeaderCell>
-                  <Table.HeaderCell>Email</Table.HeaderCell>
-                  <Table.HeaderCell>Status</Table.HeaderCell>
-                  <Table.HeaderCell/>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {
-                  users.map((user: User) => (
-                    <Table.Row key={user.id}>
-                      <Table.Cell>{user.username}</Table.Cell>
-                      <Table.Cell>{user.email}</Table.Cell>
-                      <Table.Cell>{UsersPage.getStatusString(user.status)}</Table.Cell>
-                      <Table.Cell nowrap={true}>
-                        <IconNav>
-                          <IconNav.Item
-                            disabled={this.props.user.id === user.id}
-                            icon='trash'
-                            onClick={() => this.handleRemove(user)}
-                          />
-                        </IconNav>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
-              </Table.Body>
-            </Table>
+          <Table className='uk-margin-large' size='small' stripped={true}>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Username</Table.HeaderCell>
+                <Table.HeaderCell>Email</Table.HeaderCell>
+                <Table.HeaderCell>Status</Table.HeaderCell>
+                <Table.HeaderCell/>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {
+                users.map((user: User) => (
+                  <Table.Row key={user.id}>
+                    <Table.Cell>{user.username}</Table.Cell>
+                    <Table.Cell>{user.email}</Table.Cell>
+                    <Table.Cell>{UsersPage.getStatusString(user.status)}</Table.Cell>
+                    <Table.Cell nowrap={true}>
+                      <IconNav>
+                        <IconNav.Item
+                          disabled={this.props.user.id === user.id}
+                          icon='trash'
+                          onClick={() => this.handleRemove(user)}
+                        />
+                      </IconNav>
+                    </Table.Cell>
+                  </Table.Row>
+                ))
+              }
+            </Table.Body>
+          </Table>
         </Container>
         <Spinner active={loading}/>
       </React.Fragment>
