@@ -1,19 +1,19 @@
-import * as React from 'react';
 import classNames from 'classnames';
+import * as React from 'react';
 import Icon from '../Icon';
 
-type ButtonProps = {
-  className?: string,
-  children?: React.ReactNode | string,
-  disabled?: boolean,
-  icon?: string,
-  iconPosition?: 'left' | 'right',
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void,
-  type?: 'button' | 'submit',
-  variation?: 'default' | 'primary' | 'secondary' | 'danger' | 'text' | 'link'
-};
+interface IButtonProps {
+  className?: string;
+  children?: React.ReactNode | string;
+  disabled?: boolean;
+  icon?: string;
+  iconPosition?: 'left' | 'right';
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  type?: 'button' | 'submit';
+  variation?: 'default' | 'primary' | 'secondary' | 'danger' | 'text' | 'link';
+}
 
-function Button(props: ButtonProps) {
+function Button(props: IButtonProps) {
   const {
     children, className, disabled, icon, iconPosition, onClick, type, variation,
   } = props;
@@ -30,7 +30,10 @@ function Button(props: ButtonProps) {
       {
         icon ?
           <React.Fragment>
-            {iconPosition === 'right' ? <span>{children}</span> : null} <span className='uk-icon'><Icon icon={icon} width={20}/></span> {iconPosition === 'left' ? <span>{children}</span> : null}
+            {iconPosition === 'right' ? <span>{children}</span> : null}
+            <span className='uk-icon'>
+              <Icon icon={icon} width={20}/>
+            </span> {iconPosition === 'left' ? <span>{children}</span> : null}
           </React.Fragment> : children
       }
     </button>
