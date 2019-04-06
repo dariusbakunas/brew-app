@@ -6,9 +6,11 @@ import Input from './Input';
 import Radio from './Radio';
 import Select from './Select';
 import TextArea from './TextArea';
+import classNames from 'classnames';
 
 interface IFormProps {
   children: ReactNode;
+  className?: string;
   loading?: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
@@ -27,10 +29,14 @@ class Form extends Component<IFormProps> {
   public static Select = Select;
 
   public render() {
-    const { children, loading, onSubmit } = this.props;
+    const { children, className, loading, onSubmit } = this.props;
+
+    const classes = classNames(
+      className,
+    );
 
     return (
-      <form onSubmit={onSubmit}>
+      <form className={classes} onSubmit={onSubmit}>
         {children}
         <Spinner active={loading}/>
       </form>
