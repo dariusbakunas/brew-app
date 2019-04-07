@@ -10,6 +10,20 @@ export const GET_ROLES = gql`
   }
 `;
 
+export const GET_RECIPES = gql`
+  query GetRecipes {
+    recipes {
+      id
+      name
+      description
+      type
+      createdBy {
+        username
+      }
+    }
+  }
+`;
+
 export const GET_HOPS = gql`
   query GetHops($cursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
     hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
@@ -124,6 +138,24 @@ export const CREATE_HOP = gql`
         id
         name
       }
+    }
+  }
+`;
+
+export const CREATE_RECIPE = gql`
+  mutation CreateRecipe($input: RecipeInput!) {
+    createRecipe(input: $input) {
+      id
+      batchSize
+      boilTime
+      createdBy {
+        id
+        username
+      }
+      name
+      description
+      source
+      type
     }
   }
 `;
