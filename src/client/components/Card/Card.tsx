@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import CardBody from './CardBody';
+import CardFooter from './CardFooter';
 import CardHeader from './CardHeader';
 
 interface ICardProps {
@@ -23,7 +24,7 @@ function Card(props: ICardProps) {
   );
 
   return (
-    <div className={classes} style={{ padding: 0 }}>
+    <div className={classes}>
       {children}
     </div>
   );
@@ -31,5 +32,6 @@ function Card(props: ICardProps) {
 
 Card.Header = CardHeader;
 Card.Body = CardBody;
+Card.Footer = CardFooter;
 
 export default Card;
