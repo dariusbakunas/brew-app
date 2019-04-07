@@ -1,63 +1,73 @@
 import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { Button, Container, Form } from '../components';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { IRecipe } from '../../types';
+import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_RECIPE } from '../queries';
-
-interface IRecipe {
-  name: string;
-  description?: string;
-  source?: string;
-  batchSize: number;
-  boilTime: number;
-  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
-}
+import handleGraphQLError from '../errors/handleGraphQLError';
+import { CREATE_RECIPE, GET_RECIPE } from '../queries';
 
 interface IRecipeInput {
   id?: string;
   input: IRecipe;
 }
 
-interface INewRecipePageProps {
+interface IEditRecipePageProps {
   recipe: any;
   createRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
+  data: {
+    loading: boolean,
+    recipe?: IRecipe & { id: string },
+  };
 }
 
-interface INewRecipePageState {
+interface IEditRecipePageState {
   loading: boolean;
   validationErrors: {
     [key: string]: string,
   };
 }
 
-class NewRecipePage extends React.Component<INewRecipePageProps> {
-  private static getDefaultState: () => INewRecipePageState & IRecipe = () => ({
-    batchSize: 5.0,
-    boilTime: 60,
-    description: null,
-    loading: false,
-    name: null,
-    source: null,
-    type: 'ALL_GRAIN',
-    validationErrors: null,
-  })
+class EditRecipePage extends React.Component<IEditRecipePageProps & RouteComponentProps> {
+  private static getInitialState: (recipe: IRecipe & { id: string }) => IEditRecipePageState & IRecipe = (recipe) => {
+    const defaultRecipe: IRecipe = {
+      batchSize: 5.0,
+      boilTime: 60,
+      description: null,
+      name: null,
+      source: null,
+      type: 'ALL_GRAIN',
+    };
 
-  public readonly state: INewRecipePageState & IRecipe;
+    return {
+      ...(recipe || defaultRecipe),
+      loading: false,
+      validationErrors: null,
+    };
+  }
 
-  constructor(props: INewRecipePageProps) {
+  public readonly state: IEditRecipePageState & IRecipe;
+
+  constructor(props: IEditRecipePageProps & RouteComponentProps) {
     super(props);
-    this.state = NewRecipePage.getDefaultState();
+    this.state = EditRecipePage.getInitialState(props.data.recipe);
   }
 
   public render() {
+    const { loading: recipeLoading, recipe } = this.props.data;
+    const { loading: recipeSaving } = this.state;
+    const loading = recipeLoading || recipeSaving;
     const { batchSize, boilTime, name, description, source, type } = this.state;
 
     return (
       <Container>
-        <h3>New Recipe</h3>
-        <Form onSubmit={(e) => this.handleSubmit(e)}>
+        <h3>{recipe ? recipe.name : 'New Recipe'}</h3>
+        <ul className='uk-breadcrumb'>
+          <li><Link to='/recipes'>Recipes</Link></li>
+          <li><span>{recipe ? 'Edit' : 'Create'}</span></li>
+        </ul>
+        <Form onSubmit={(e) => this.handleSubmit(e)} className='uk-margin'>
           <ul uk-accordion='multiple: true'>
             <li className='uk-open'>
               <a className='uk-accordion-title' href='#'>General</a>
@@ -164,6 +174,7 @@ class NewRecipePage extends React.Component<INewRecipePageProps> {
             <Button variation='primary' type='submit'>Submit</Button>
           </div>
         </Form>
+        <Spinner active={loading}/>
       </Container>
     );
   }
@@ -203,7 +214,7 @@ class NewRecipePage extends React.Component<INewRecipePageProps> {
           // go to recipes page?
         });
       }).catch((err: ApolloError) => {
-        const { validationErrors, errorMessage } = handleGrpahQLError(err, false);
+        const { validationErrors, errorMessage } = handleGraphQLError(err, false);
         this.setState({
           error: errorMessage,
           loading: false,
@@ -215,7 +226,15 @@ class NewRecipePage extends React.Component<INewRecipePageProps> {
 }
 
 export default compose(
+  graphql<{ match: { params: { id: string }}}>(GET_RECIPE, {
+    options: (props) => ({
+      variables: {
+        id: props.match.params.id,
+      },
+    }),
+    skip: (props) => props.match.params.id === 'create',
+  }),
   graphql(CREATE_RECIPE, {
     name: 'createRecipe',
   }),
-)(NewRecipePage);
+)(EditRecipePage);
