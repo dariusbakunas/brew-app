@@ -1,35 +1,23 @@
-import * as React from 'react';
 import classNames from 'classnames';
-import getUnhandledProps from '../../utils/getUnhandledProps';
+import * as React from 'react';
 
-type SelectProps = {
-  error?: string,
-  label?: string,
-  name: string,
+interface ISelectProps {
+  error?: string;
+  label?: string;
+  name: string;
   onChange: (
     e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string | string[] | number },
-  ) => void,
-  options: {
+  ) => void;
+  options: Array<{
     value: string,
     label: string,
-  }[],
-  value: string,
-  width?: 'large' | 'medium' | 'small' | 'xsmall'
-};
+  }>;
+  value: string;
+  width?: 'large' | 'medium' | 'small' | 'xsmall';
+}
 
-class Select extends React.Component<SelectProps> {
-  handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {
-      name, onChange,
-    } = this.props;
-    const { value } = e.currentTarget;
-
-    if (onChange) {
-      onChange(e, { name, value });
-    }
-  };
-
-  render() {
+class Select extends React.Component<ISelectProps> {
+  public render() {
     const {
       error, label, name, options, value, width,
     } = this.props;
@@ -45,7 +33,7 @@ class Select extends React.Component<SelectProps> {
     const selectElement = (
       <select id={id} className={classes} onChange={this.handleChange} value={value}>
         {
-          options.map(option => (
+          options.map((option) => (
             <option key={option.value} value={option.value}>{option.label}</option>
           ))
         }
@@ -54,11 +42,22 @@ class Select extends React.Component<SelectProps> {
 
     return (
       <React.Fragment>
-        { label && <label className='uk-form-label' htmlFor={id}>{label}</label> }
+        {label && <label className='uk-form-label' htmlFor={id}>{label}</label>}
         {selectElement}
-        { error && <span className='uk-text-danger'>{error}</span> }
+        {error && <span className='uk-text-danger'>{error}</span>}
       </React.Fragment>
     );
+  }
+
+  private handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const {
+      name, onChange,
+    } = this.props;
+    const { value } = e.currentTarget;
+
+    if (onChange) {
+      onChange(e, { name, value });
+    }
   }
 }
 
