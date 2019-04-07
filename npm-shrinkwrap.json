@@ -5607,6 +5607,11 @@
         }
       }
     },
+    "filepond": {
+      "version": "4.3.5",
+      "resolved": "https://registry.npmjs.org/filepond/-/filepond-4.3.5.tgz",
+      "integrity": "sha512-qJlGCZ2SJvHT7tTcr1X9yMbm7f7US7Qg1LapB3cCCb27BEwM2fiw/rUWL58kuYKx6Bd0VTsx9wRxV7KeXcp7ug=="
+    },
     "fileset": {
       "version": "2.0.3",
       "resolved": "https://registry.npmjs.org/fileset/-/fileset-2.0.3.tgz",
@@ -13919,9 +13924,9 @@
       "integrity": "sha1-SDEm4Rd03y9xuLY53NeZw3YWK4I="
     },
     "uikit": {
-      "version": "3.0.0-rc.25",
-      "resolved": "https://registry.npmjs.org/uikit/-/uikit-3.0.0-rc.25.tgz",
-      "integrity": "sha512-3RdOdn3kr4N8huG9rpGMg8QenD77/eKsR3nsja7/gIl8MLTlZC6K/R/TCcwpb+VY5duOH9bS5vz+3Gd5XXJ53A=="
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/uikit/-/uikit-3.0.3.tgz",
+      "integrity": "sha512-Z73TXlnfJCAXczg5mFCZSTwR0Ii1wW2fZumfIR8G1x1x4SyKHpkU0JCZDoIryYFMu1gSpvy5hZiXk3t4i5tTlw=="
     },
     "undefsafe": {
       "version": "2.0.2",
