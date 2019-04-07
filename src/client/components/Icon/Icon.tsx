@@ -69,8 +69,15 @@ const icons: { [index: string]: { viewBox: string, contents: JSX.Element }} = {
     ),
     viewBox: '0 0 8.15 8.69',
   },
-  trash: {
+  ['plus-circle']: {
+    contents: (
+      <React.Fragment>
+        <circle fill='none' stroke='#000' stroke-width='1.1' cx='9.5' cy='9.5' r='9'/><line fill='none' stroke='#000' x1='9.5' y1='5' x2='9.5' y2='14'/><line fill='none' stroke='#000' x1='5' y1='9.5' x2='14' y2='9.5'/>
+      </React.Fragment>
+    ),
     viewBox: '0 0 20 20 ',
+  },
+  trash: {
     contents: (
       <React.Fragment>
         <polyline fill='none' stroke='#000' points='6.5 3 6.5 1.5 13.5 1.5 13.5 3'/>
@@ -80,6 +87,7 @@ const icons: { [index: string]: { viewBox: string, contents: JSX.Element }} = {
         <rect x='2' y='3' width='16' height='1'/>
       </React.Fragment>
     ),
+    viewBox: '0 0 20 20 ',
   },
 };
 
