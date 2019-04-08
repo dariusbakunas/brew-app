@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 const icons: { [index: string]: { viewBox: string, contents: JSX.Element }} = {
   check: {

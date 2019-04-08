@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { graphql } from 'react-apollo';
 import { Form } from '../components';
 import handleGrpahQLError from '../errors/handleGraphQLError';

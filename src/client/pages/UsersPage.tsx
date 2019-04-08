@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-client';
-import * as React from 'react';
+import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { User, UserStatus } from '../../types';
 import {

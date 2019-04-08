@@ -1,7 +1,7 @@
 import { ApolloClient, ApolloError } from 'apollo-client';
 import gql from 'graphql-tag';
 import queryString from 'query-string';
-import * as React from 'react';
+import React from 'react';
 import { ExecutionResult, withApollo } from 'react-apollo';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Button, Container, Header } from '../components';

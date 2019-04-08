@@ -54,7 +54,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
   constructor(props: IEditRecipePageProps & RouteComponentProps) {
     super(props);
-    this.state = EditRecipePage.getInitialState(props.data.recipe);
+    this.state = EditRecipePage.getInitialState(props.data ? props.data.recipe : null);
   }
 
   public componentDidUpdate(
@@ -68,7 +68,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   }
 
   public render() {
-    const { loading: recipeLoading, recipe } = this.props.data;
+    const { loading: recipeLoading = false, recipe = null } = {...this.props.data};
     const { loading: recipeSaving } = this.state;
     const loading = recipeLoading || recipeSaving;
     const { batchSize, boilTime, name, description, source, type } = this.state;

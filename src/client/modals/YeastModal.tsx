@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { IYeast, YeastFlocculation, YeastForm, YeastInput, YeastLab, YeastType } from '../../types';
 import { Button, Form } from '../components';

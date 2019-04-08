@@ -20,7 +20,7 @@ module.exports = {
     "js",
     "jsx",
     "json",
-    "node"
+    "node",
   ],
   snapshotSerializers: ['enzyme-to-json/serializer'],
 };

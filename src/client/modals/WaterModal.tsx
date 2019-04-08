@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { Water, WaterInput } from '../../types';
 import { Button, Form } from '../components';

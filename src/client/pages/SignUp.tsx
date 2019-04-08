@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-client';
 import gql from 'graphql-tag';
-import * as React from 'react';
+import React from 'react';
 import { Mutation } from 'react-apollo';
 import { Redirect, RouteComponentProps, withRouter } from 'react-router-dom';
 import { User } from '../../types';
