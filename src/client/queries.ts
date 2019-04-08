@@ -24,6 +24,20 @@ export const GET_RECIPES = gql`
   }
 `;
 
+export const GET_RECIPE = gql`
+  query GetRecipe($id: ID!) {
+    recipe(id: $id) {
+      id
+      batchSize
+      boilTime
+      description
+      name
+      type
+      source
+    }
+  }
+`;
+
 export const GET_HOPS = gql`
   query GetHops($cursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
     hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {

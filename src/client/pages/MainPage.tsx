@@ -4,9 +4,11 @@ import { User } from '../../types';
 import { Nav, Navbar, SideMenu } from '../components';
 import withServerContext from '../HOC/withServerContext';
 import Dashboard from './Dashboard';
+import EditRecipePage from './EditRecipePage';
 import IngredientsPage from './IngredientsPage';
 import Invitations from './InvitationsPage';
 import Profile from './Profile';
+import RecipesPage from './RecipesPage';
 import Roles from './RolesPage';
 import Users from './UsersPage';
 
@@ -70,6 +72,8 @@ class MainPage extends React.Component<IMainPageProps> {
               <Route path='/roles' component={Roles}/>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={IngredientsPage}/>
+              <Route path='/recipes' exact={true} component={RecipesPage}/>
+              <Route path='/recipes/:id' component={EditRecipePage}/>
             </React.Fragment>
           }
         </div>
