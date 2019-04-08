@@ -1,12 +1,15 @@
 import { ApolloError } from 'apollo-client';
+import { History } from 'history';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
+import { StaticContext } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { IRecipe } from '../../types';
 import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import { CREATE_RECIPE, GET_RECIPE } from '../queries';
+import LocationState = History.LocationState;
 
 interface IRecipeInput {
   id?: string;
@@ -52,6 +55,16 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   constructor(props: IEditRecipePageProps & RouteComponentProps) {
     super(props);
     this.state = EditRecipePage.getInitialState(props.data.recipe);
+  }
+
+  public componentDidUpdate(
+    prevProps: Readonly<IEditRecipePageProps & RouteComponentProps<{}, StaticContext, LocationState>>,
+    prevState: Readonly<{}>, snapshot?: any): void {
+    if (prevProps.data.recipe !== this.props.data.recipe) {
+      this.setState({
+        ...this.props.data.recipe,
+      });
+    }
   }
 
   public render() {
