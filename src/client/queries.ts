@@ -174,6 +174,24 @@ export const CREATE_RECIPE = gql`
   }
 `;
 
+export const UPDATE_RECIPE = gql`
+  mutation UpdateRecipe($id: ID!, $input: RecipeInput!) {
+    updateRecipe(id: $id, input: $input) {
+      id
+      batchSize
+      boilTime
+      createdBy {
+        id
+        username
+      }
+      name
+      description
+      source
+      type
+    }
+  }
+`;
+
 export const CREATE_ROLE = gql`
   mutation CreateRole($input: RoleInput!) {
     createRole(input: $input) {

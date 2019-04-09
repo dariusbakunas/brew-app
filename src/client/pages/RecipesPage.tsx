@@ -24,8 +24,8 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
         <Grid className='uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s'>
           {
             recipes.map((recipe: IRecipe & { id: string }) => (
-              <div>
-                <Card hover={true} key={recipe.id}>
+              <div key={recipe.id}>
+                <Card hover={true}>
                   <Card.Header>
                     {recipe.name}
                   </Card.Header>

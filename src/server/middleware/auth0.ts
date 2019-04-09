@@ -4,7 +4,7 @@ import Auth0Strategy from 'passport-auth0';
 import { User, UserStatus } from '../../types';
 import getApolloClient from '../apolloClient';
 
-if (!process.env.AUTH0_DOMAIN) {
+if (process.env.NODE_ENV !== 'test' && !process.env.AUTH0_DOMAIN) {
   throw new Error('`env.AUTH0_DOMAIN` is required for auth0');
 }
 

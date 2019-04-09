@@ -8,7 +8,7 @@ import { IRecipe } from '../../types';
 import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { CREATE_RECIPE, GET_RECIPE } from '../queries';
+import { CREATE_RECIPE, GET_RECIPE, UPDATE_RECIPE } from '../queries';
 import LocationState = History.LocationState;
 
 interface IRecipeInput {
@@ -19,6 +19,7 @@ interface IRecipeInput {
 interface IEditRecipePageProps {
   recipe: any;
   createRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
+  updateRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
   data: {
     loading: boolean,
     recipe?: IRecipe & { id: string },
@@ -197,7 +198,8 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { createRecipe, recipe } = this.props;
+    const { createRecipe, updateRecipe } = this.props;
+    const { recipe } = {...this.props.data};
 
     this.setState({ loading: true }, () => {
       const {
@@ -219,7 +221,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
       if (recipe) {
         variables.id = recipe.id;
-        // TODO: finish recipe update
+        fn = updateRecipe;
       }
 
       fn({ variables }).then(() => {
@@ -249,5 +251,8 @@ export default compose(
   }),
   graphql(CREATE_RECIPE, {
     name: 'createRecipe',
+  }),
+  graphql(UPDATE_RECIPE, {
+    name: 'updateRecipe',
   }),
 )(EditRecipePage);
