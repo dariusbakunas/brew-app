@@ -390,6 +390,12 @@ export const GET_YEAST_LABS = gql`
   }
 `;
 
+export const REMOVE_RECIPE = gql`
+  mutation RemoveRecipe($id: ID!) {
+    removeRecipe(id: $id)
+  }
+`;
+
 export const REMOVE_HOP = gql`
   mutation RemoveHop($id: ID!) {
     removeHop(id: $id)

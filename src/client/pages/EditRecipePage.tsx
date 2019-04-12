@@ -1,15 +1,15 @@
 import { ApolloError } from 'apollo-client';
 import { History } from 'history';
+import LocationState = History.LocationState;
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { StaticContext } from 'react-router';
+import { StaticContext, withRouter } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { IRecipe } from '../../types';
 import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import { CREATE_RECIPE, GET_RECIPE, UPDATE_RECIPE } from '../queries';
-import LocationState = History.LocationState;
 
 interface IRecipeInput {
   id?: string;
@@ -61,7 +61,10 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   public componentDidUpdate(
     prevProps: Readonly<IEditRecipePageProps & RouteComponentProps<{}, StaticContext, LocationState>>,
     prevState: Readonly<{}>, snapshot?: any): void {
-    if (prevProps.data.recipe !== this.props.data.recipe) {
+    const prevRecipe = prevProps.data ? prevProps.data.recipe : null;
+    const currentRecipe = this.props.data ? this.props.data.recipe : null;
+
+    if (prevRecipe !== currentRecipe) {
       this.setState({
         ...this.props.data.recipe,
       });
@@ -226,7 +229,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
       fn({ variables }).then(() => {
         this.setState({ loading: false }, () => {
-          // go to recipes page?
+          this.props.history.push('/recipes');
         });
       }).catch((err: ApolloError) => {
         const { validationErrors, errorMessage } = handleGraphQLError(err, false);
@@ -255,4 +258,4 @@ export default compose(
   graphql(UPDATE_RECIPE, {
     name: 'updateRecipe',
   }),
-)(EditRecipePage);
+)(withRouter(EditRecipePage));

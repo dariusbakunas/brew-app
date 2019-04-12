@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-client'
 import path from 'path';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
@@ -5,16 +6,30 @@ import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { IRecipe } from '../../types';
 import { Button, Card, Container, Grid, IconNav, Spinner } from '../components';
-import { GET_RECIPES } from '../queries';
+import handleGraphQLError from '../errors/handleGraphQLError'
+import { GET_RECIPES, REMOVE_RECIPE } from '../queries';
+import confirm from '../utils/confirm';
 
 interface IRecipesPageProps {
   data: {
     loading: boolean,
-    recipes: Array<IRecipe & { id: string }>,
+    recipes: Array<IRecipe & { id: string }>
   };
+  removeRecipe: (args: { variables: { id: string } }) => Promise<void>;
 }
 
 class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProps<{}>> {
+  private static handleError(error: ApolloError) {
+    const { errorMessage } = handleGraphQLError(error, false);
+
+    window.UIkit.notification({
+      message: errorMessage,
+      pos: 'top-right',
+      status: 'danger',
+      timeout: 5000,
+    });
+  }
+
   public render() {
     const { loading, recipes = [] } = this.props.data;
 
@@ -56,8 +71,18 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
     this.props.history.push(path.join(pathname, recipe.id));
   }
 
-  private handleRemoveRecipe = (recipe: IRecipe) => {
-    console.log(recipe);
+  private handleRemoveRecipe = ({ id, name }: IRecipe & { id: string }) => {
+    confirm(`Are you sure you want to remove ${name}?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.removeRecipe({ variables: { id }})
+          .then(() => this.setState({ loading: false }))
+          .catch((err: ApolloError) => {
+            this.setState({ loading: false }, () => {
+              RecipesPage.handleError(err);
+            });
+          });
+      });
+    });
   }
 
   private handleCreate = () => {
@@ -68,4 +93,19 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
 
 export default compose(
   graphql(GET_RECIPES),
+  graphql(REMOVE_RECIPE, {
+    name: 'removeRecipe',
+    options: {
+      update: (cache, { data: { removeRecipe: id } }) => {
+        const { recipes } = cache.readQuery({ query: GET_RECIPES });
+
+        cache.writeQuery({
+          data: {
+            recipes: recipes.filter((recipe: IRecipe & { id: string }) => recipe.id !== id),
+          },
+          query: GET_RECIPES,
+        });
+      },
+    },
+  }),
 )(withRouter(RecipesPage));
