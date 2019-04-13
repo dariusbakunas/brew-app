@@ -304,32 +304,6 @@ export const UPDATE_WATER = gql`
   }
 `;
 
-export const CREATE_INVITATION = gql`
-  mutation CreateInvitation($email: String!, $sendEmail: Boolean) {
-    createInvitation(email: $email, sendEmail: $sendEmail) {
-      id
-      email
-      code
-    }
-  }
-`;
-
-export const GET_ALL_INVITATIONS = gql`
-  query GetAllInvitations{
-    invitations {
-      id
-      code
-      email
-    }
-  }
-`;
-
-export const DELETE_INVITATION = gql`
-  mutation DeleteInvitation($email: String!){
-    deleteInvitation(email: $email)
-  }
-`;
-
 export const GET_ALL_COUNTRIES = gql`
   query GetAllCountries{
     countries {

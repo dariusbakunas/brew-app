@@ -1,10 +1,10 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
+import { compose } from 'react-apollo';
 import { InvitationInput } from '../../types';
 import { Form } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
+import { createInvitationMutation } from '../HOC/invitations';
 import Modal from './Modal';
 
 interface IInvitationModalProps {
@@ -128,15 +128,6 @@ class InvitationModal extends React.Component<IInvitationModalProps> {
   }
 }
 
-export default graphql<IInvitationModalProps>(CREATE_INVITATION, {
-  name: 'createInvitation',
-  options: {
-    update: (cache, { data: { createInvitation } }) => {
-      const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
-      cache.writeQuery({
-        data: { invitations: [...invitations, createInvitation] },
-        query: GET_ALL_INVITATIONS,
-      });
-    },
-  },
-})(InvitationModal);
+export default compose(
+  createInvitationMutation,
+)(InvitationModal);

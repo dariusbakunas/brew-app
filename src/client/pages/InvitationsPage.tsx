@@ -1,12 +1,12 @@
 import { ApolloError } from 'apollo-client';
 import React from 'react';
-import { compose, graphql } from 'react-apollo';
+import { compose } from 'react-apollo';
 import { Invitation } from '../../types';
 import {
   Button, Container, IconNav, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { deleteInvitation, getAllInvitations } from '../HOC/invitations'
+import { deleteInvitationMutation, getAllInvitationsQuery } from '../HOC/invitations';
 import InvitationModal from '../modals/InvitationModal';
 import confirm from '../utils/confirm';
 
@@ -121,6 +121,6 @@ class InvitationsPage extends React.Component<IInvitationsPageProps> {
 }
 
 export default compose(
-  getAllInvitations,
-  deleteInvitation,
+  getAllInvitationsQuery,
+  deleteInvitationMutation,
 )(InvitationsPage);
