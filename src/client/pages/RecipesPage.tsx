@@ -10,8 +10,8 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 import { getRecipes, IGetRecipesQuery, removeRecipe } from '../HOC/recipes';
 import confirm from '../utils/confirm';
 
-interface IRecipesPageProps {
-  data: IGetRecipesQuery;
+export interface IRecipesPageProps {
+  getRecipes: IGetRecipesQuery;
   removeRecipe: (args: { variables: { id: string } }) => Promise<void>;
 }
 
@@ -28,7 +28,7 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
   }
 
   public render() {
-    const { loading, recipes = [] } = this.props.data;
+    const { loading, recipes = [] } = this.props.getRecipes;
 
     return (
       <Container>
