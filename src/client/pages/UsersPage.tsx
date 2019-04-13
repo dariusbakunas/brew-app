@@ -6,8 +6,8 @@ import {
   Container, IconNav, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
+import { getAllUsers, removeUser } from '../HOC/users';
 import withServerContext from '../HOC/withServerContext';
-import { GET_ALL_USERS, REMOVE_USER } from '../queries';
 
 interface IWindow {
   UIkit?: any;
@@ -19,7 +19,7 @@ interface IUsersPageProps {
   user: {
     id: string,
   };
-  data: {
+  getUsers: {
     loading: boolean,
     users: User[],
   };
@@ -50,7 +50,7 @@ class UsersPage extends React.Component<IUsersPageProps> {
   // TODO: replace Mutation with HOC for easier testing
 
   public render() {
-    const { loading, users = [] } = this.props.data;
+    const { loading, users = [] } = this.props.getUsers;
 
     return (
       <React.Fragment>
@@ -113,20 +113,7 @@ class UsersPage extends React.Component<IUsersPageProps> {
 
 export default withServerContext(
   compose(
-    graphql(GET_ALL_USERS),
-    graphql(REMOVE_USER, {
-      name: 'removeUser',
-      options: {
-        update: (cache, { data: { removeUser: id } }) => {
-          const { users } = cache.readQuery({ query: GET_ALL_USERS });
-          cache.writeQuery({
-            data: {
-              users: users.filter((user: User) => user.id !== id),
-            },
-            query: GET_ALL_USERS,
-          });
-        },
-      },
-    }),
+    getAllUsers,
+    removeUser,
   )(UsersPage),
 );
