@@ -10,20 +10,6 @@ export const GET_ROLES = gql`
   }
 `;
 
-export const GET_RECIPES = gql`
-  query GetRecipes {
-    recipes {
-      id
-      name
-      description
-      type
-      createdBy {
-        username
-      }
-    }
-  }
-`;
-
 export const GET_RECIPE = gql`
   query GetRecipe($id: ID!) {
     recipe(id: $id) {
@@ -354,24 +340,6 @@ export const DELETE_INVITATION = gql`
   }
 `;
 
-export const GET_ALL_USERS = gql`
-  query GetAllUsers{
-    users {
-      id
-      username
-      email
-      status
-      isAdmin
-    }
-  }
-`;
-
-export const REMOVE_USER = gql`
-  mutation RemoveUser($id: ID!) {
-    removeUser(id: $id)
-  }
-`;
-
 export const GET_ALL_COUNTRIES = gql`
   query GetAllCountries{
     countries {
@@ -387,12 +355,6 @@ export const GET_YEAST_LABS = gql`
       id
       name
     }
-  }
-`;
-
-export const REMOVE_RECIPE = gql`
-  mutation RemoveRecipe($id: ID!) {
-    removeRecipe(id: $id)
   }
 `;
 
