@@ -65,6 +65,8 @@ class MainPage extends React.Component<IMainPageProps> {
           </SideMenu>
           <Route path='/' exact={true} component={Dashboard}/>
           <Route path='/profile' component={Profile}/>
+          <Route path='/recipes' exact={true} component={RecipesPage}/>
+          <Route path='/recipes/:id' component={EditRecipePage}/>
           {
             this.props.user.isAdmin &&
             <React.Fragment>
@@ -72,8 +74,6 @@ class MainPage extends React.Component<IMainPageProps> {
               <Route path='/roles' component={Roles}/>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={IngredientsPage}/>
-              <Route path='/recipes' exact={true} component={RecipesPage}/>
-              <Route path='/recipes/:id' component={EditRecipePage}/>
             </React.Fragment>
           }
         </div>
