@@ -3,7 +3,7 @@ import React from 'react';
 import { ApolloProvider, getDataFromTree } from 'react-apollo';
 import ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
-import xss from 'xss';
+import { filterXSS } from 'xss';
 import App from '../../client/App';
 import formatClientError from '../../client/errors/formatClientError';
 import { ServerContextProvider } from '../../client/ServerContext';
@@ -50,10 +50,10 @@ export default (req: Request, res: Response, next: NextFunction) => {
     const initialApolloState = apolloClient.extract();
 
     res.render('index', {
-      apolloState: initialApolloState ? xss(JSON.stringify(initialApolloState)) : {},
+      apolloState: initialApolloState ? filterXSS(JSON.stringify(initialApolloState)) : {},
       html,
       nonce: res.locals.nonce,
-      serverContext: xss(JSON.stringify(serverContext)),
+      serverContext: filterXSS(JSON.stringify(serverContext)),
       title: 'Brew',
     });
   }).catch((error) => {
@@ -72,7 +72,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
     res.render('index', {
       html,
       nonce: res.locals.nonce,
-      serverContext: xss(JSON.stringify(serverContext)),
+      serverContext: filterXSS(JSON.stringify(serverContext)),
       title: 'Brew',
     });
   });
