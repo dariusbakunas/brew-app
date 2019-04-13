@@ -6,8 +6,8 @@ import {
   Button, Container, IconNav, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
+import { deleteInvitation, getAllInvitations } from '../HOC/invitations'
 import InvitationModal from '../modals/InvitationModal';
-import { DELETE_INVITATION, GET_ALL_INVITATIONS } from '../queries';
 import confirm from '../utils/confirm';
 
 interface IWindow {
@@ -121,19 +121,6 @@ class InvitationsPage extends React.Component<IInvitationsPageProps> {
 }
 
 export default compose(
-  graphql(GET_ALL_INVITATIONS, { name: 'getAllInvitations' }),
-  graphql(DELETE_INVITATION, {
-    name: 'deleteInvitation',
-    options: {
-      update: (cache, { data: { deleteInvitation: id } }) => {
-        const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
-        cache.writeQuery({
-          data: {
-            invitations: invitations.filter((invitation: Invitation) => invitation.id !== id),
-          },
-          query: GET_ALL_INVITATIONS,
-        });
-      },
-    },
-  }),
+  getAllInvitations,
+  deleteInvitation,
 )(InvitationsPage);
