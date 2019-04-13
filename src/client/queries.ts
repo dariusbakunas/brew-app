@@ -178,16 +178,6 @@ export const UPDATE_RECIPE = gql`
   }
 `;
 
-export const CREATE_ROLE = gql`
-  mutation CreateRole($input: RoleInput!) {
-    createRole(input: $input) {
-      id
-      name
-      code
-    }
-  }
-`;
-
 export const CREATE_FERMENTABLE = gql`
   mutation CreateFermentable($input: FermentableInput!) {
     createFermentable(input: $input) {
