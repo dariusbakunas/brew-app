@@ -31,6 +31,10 @@ class Modal extends React.Component<IModalProps> {
 
   public componentDidMount() {
     this.ref.current.addEventListener('hidden', this.handleHide);
+
+    if (this.props.open) {
+      this.show();
+    }
   }
 
   public componentWillUnmount() {
