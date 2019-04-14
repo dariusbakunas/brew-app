@@ -9,6 +9,7 @@
     "jsx-no-lambda": false,
     "jsx-no-multiline-js": false,
     "no-var-requires": false,
-    "jsx-alignment": false
+    "jsx-alignment": false,
+    "variable-name": [true, "check-format", "allow-leading-underscore"]
   }
 }
