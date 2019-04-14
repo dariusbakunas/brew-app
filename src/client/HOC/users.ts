@@ -6,9 +6,38 @@ interface IRemoveUserResponse {
   removeUser: string;
 }
 
+const GET_ROLES = gql`
+  query GetRoles {
+    roles {
+      id
+      name
+      code
+    }
+  }
+`;
+
 const REMOVE_USER = gql`
   mutation RemoveUser($id: ID!) {
     removeUser(id: $id)
+  }
+`;
+
+const GET_USER = gql`
+  query GetUser($id: ID!) {
+    user(id: $id) {
+      id
+      username
+      email
+      firstName
+      lastName
+      status
+      isAdmin
+      roles {
+        id
+        code
+        name
+      }
+    }
   }
 `;
 
@@ -19,10 +48,18 @@ const GET_ALL_USERS = gql`
       username
       email
       status
-      isAdmin
     }
   }
 `;
+
+export const getUserQuery = graphql<{ userId: string }>(GET_USER, {
+  name: 'getUser',
+  options: (props) => ({
+    variables: {
+      id: props.userId,
+    },
+  }),
+});
 
 export const removeUser = graphql<any, IRemoveUserResponse>(REMOVE_USER, {
   name: 'removeUser',
@@ -38,5 +75,7 @@ export const removeUser = graphql<any, IRemoveUserResponse>(REMOVE_USER, {
     },
   },
 });
+
+export const getRolesQuery = graphql(GET_ROLES, { name: 'getRoles' });
 
 export const getAllUsers = graphql(GET_ALL_USERS, { name: 'getUsers' });

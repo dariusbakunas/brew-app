@@ -87,6 +87,11 @@ export enum UserStatus {
   NEW = 'NEW',
 }
 
+export type UserRole = {
+  name: string,
+  code: string,
+};
+
 export type User = {
   id: string,
   firstName: string,
@@ -94,12 +99,8 @@ export type User = {
   lastName: string,
   username: string,
   email: string,
+  roles: Array<UserRole & { id: string }>,
   status: UserStatus,
-};
-
-export type UserRole = {
-  name: string,
-  code: string,
 };
 
 export type YeastLab = {

@@ -1,15 +1,5 @@
 import gql from 'graphql-tag';
 
-export const GET_ROLES = gql`
-  query GetRoles {
-    roles {
-      id
-      name
-      code
-    }
-  }
-`;
-
 export const GET_RECIPE = gql`
   query GetRecipe($id: ID!) {
     recipe(id: $id) {
