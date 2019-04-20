@@ -137,7 +137,7 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
           id='hop-modal'
           open={this.state.hopModalOpen}
           onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
-          refetchQuery={this.props.getRefetchQuery('name')}
+          refetchQuery={this.props.getRefetchQuery('NAME')}
         />
       </React.Fragment>
     );
