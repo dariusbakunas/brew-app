@@ -13,8 +13,8 @@ import Roles from './RolesPage';
 import Users from './UsersPage';
 
 enum ROLES {
-  MANAGE_USERS = 'MANAGE_USERS',
-  MANAGE_INGREDIENTS = 'MANAGE_INGREDIENTS',
+  USER_MANAGER = 'USER_MANAGER',
+  INGREDIENT_MANAGER = 'INGREDIENT_MANAGER',
 }
 
 interface IUser {
@@ -64,7 +64,7 @@ class MainPage extends React.Component<IMainPageProps> {
               <Nav.Item label='Tools' url='/tools'/>
               {
                 this.props.user.isAdmin ||
-                this.hasRole(user, ROLES.MANAGE_USERS) &&
+                this.hasRole(user, ROLES.USER_MANAGER) &&
                 <React.Fragment>
                   <Nav.Header label='Admin'/>
                   <Nav.Item label='Users' url='/users'/>
@@ -74,7 +74,7 @@ class MainPage extends React.Component<IMainPageProps> {
               }
               {
                 this.props.user.isAdmin ||
-                this.hasRole(user, ROLES.MANAGE_INGREDIENTS) &&
+                this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
                   <React.Fragment>
                     <Nav.Header label='Ingredients'/>
                     <Nav.Item label='Hops' url='/ingredients/hops'/>
@@ -94,7 +94,7 @@ class MainPage extends React.Component<IMainPageProps> {
           <Route path='/recipes/:id' component={EditRecipePage}/>
           {
             this.props.user.isAdmin ||
-            this.hasRole(user, ROLES.MANAGE_USERS) &&
+            this.hasRole(user, ROLES.USER_MANAGER) &&
             <React.Fragment>
               <Route path='/users' component={Users}/>
               <Route path='/roles' component={Roles}/>
@@ -102,7 +102,7 @@ class MainPage extends React.Component<IMainPageProps> {
           }
           {
             this.props.user.isAdmin ||
-            this.hasRole(user, ROLES.MANAGE_INGREDIENTS) &&
+            this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
             <React.Fragment>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={IngredientsPage}/>
