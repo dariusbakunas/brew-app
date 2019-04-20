@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-client';
 import React from 'react';
-import { compose, graphql } from 'react-apollo';
+import { compose } from 'react-apollo';
 import { User, UserStatus } from '../../types';
 import {
   Container, IconNav, Spinner, Table,
@@ -8,6 +8,7 @@ import {
 import handleGraphQLError from '../errors/handleGraphQLError';
 import { getAllUsers, removeUser } from '../HOC/users';
 import withServerContext from '../HOC/withServerContext';
+import UserModal from '../modals/UserModal';
 
 interface IWindow {
   UIkit?: any;
@@ -26,7 +27,13 @@ interface IUsersPageProps {
   removeUser: (args: { variables: { id: string } }) => Promise<void>;
 }
 
-class UsersPage extends React.Component<IUsersPageProps> {
+interface IUsersPageState {
+  currentUser?: User;
+  loading: boolean;
+  userModalOpen: boolean;
+}
+
+class UsersPage extends React.Component<IUsersPageProps, IUsersPageState> {
   private static getStatusString(status: UserStatus) {
     return {
       [UserStatus.ACTIVE]: 'active',
@@ -48,9 +55,15 @@ class UsersPage extends React.Component<IUsersPageProps> {
   }
 
   // TODO: replace Mutation with HOC for easier testing
+  public readonly state: Readonly<IUsersPageState> = {
+    currentUser: null,
+    loading: false,
+    userModalOpen: false,
+  };
 
   public render() {
     const { loading, users = [] } = this.props.getUsers;
+    const { currentUser, userModalOpen } = this.state;
 
     return (
       <React.Fragment>
@@ -74,6 +87,10 @@ class UsersPage extends React.Component<IUsersPageProps> {
                     <Table.Cell nowrap={true}>
                       <IconNav>
                         <IconNav.Item
+                          icon='pencil'
+                          onClick={() => this.handleEditUser(user)}
+                        />
+                        <IconNav.Item
                           disabled={this.props.user.id === user.id}
                           icon='trash'
                           onClick={() => this.handleRemove(user)}
@@ -87,8 +104,24 @@ class UsersPage extends React.Component<IUsersPageProps> {
           </Table>
         </Container>
         <Spinner active={loading}/>
+        {
+          currentUser &&
+          <UserModal
+            id='user-modal'
+            userId={currentUser.id}
+            open={userModalOpen}
+            onHide={() => this.setState({ userModalOpen: false, currentUser: null })}
+          />
+        }
       </React.Fragment>
     );
+  }
+
+  private handleEditUser = (user: User) => {
+    this.setState({
+      currentUser: user,
+      userModalOpen: true,
+    });
   }
 
   private handleRemove({ id, username }: Partial<User>) {

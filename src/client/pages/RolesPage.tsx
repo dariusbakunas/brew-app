@@ -1,13 +1,13 @@
 import React from 'react';
-import { compose, graphql } from 'react-apollo';
+import { compose } from 'react-apollo';
 import { UserRole } from '../../types';
 import {
   Container, Spinner, Table,
 } from '../components';
-import { GET_ROLES } from '../queries';
+import { getRolesQuery } from '../HOC/roles';
 
 interface IRolesPageProps {
-  data: {
+  getRoles: {
     loading: boolean,
     roles: Array<UserRole & { id: string }>,
   };
@@ -15,7 +15,7 @@ interface IRolesPageProps {
 
 class RolesPage extends React.Component<IRolesPageProps> {
   public render() {
-    const { loading, roles = [] } = this.props.data;
+    const { loading, roles = [] } = this.props.getRoles;
 
     return (
       <Container>
@@ -48,5 +48,5 @@ class RolesPage extends React.Component<IRolesPageProps> {
 }
 
 export default compose(
-  graphql<RolesPage>(GET_ROLES),
+  getRolesQuery,
 )(RolesPage);

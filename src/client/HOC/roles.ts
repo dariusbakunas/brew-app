@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { GET_ROLES } from '../queries';
 
 const CREATE_ROLE = gql`
   mutation CreateRole($input: RoleInput!) {
@@ -12,9 +11,21 @@ const CREATE_ROLE = gql`
   }
 `;
 
+const GET_ROLES = gql`
+  query GetRoles {
+    roles {
+      id
+      name
+      code
+    }
+  }
+`;
+
 interface ICreateRoleResponse {
   createRole: string;
 }
+
+export const getRolesQuery = graphql(GET_ROLES, { name: 'getRoles' });
 
 export const createRoleMutation = graphql<any, ICreateRoleResponse>(CREATE_ROLE, {
   name: 'createRole',

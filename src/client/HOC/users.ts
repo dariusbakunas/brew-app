@@ -12,6 +12,38 @@ const REMOVE_USER = gql`
   }
 `;
 
+const UPDATE_USER = gql`
+  mutation UpdateUser($id: ID!, $input: UserInput!) {
+    updateUser(id: $id, input: $input) {
+      id
+      firstName
+      lastName
+      email
+      roles {
+        id
+        code
+      }
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query GetUser($id: ID!) {
+    user(id: $id) {
+      id
+      username
+      email
+      firstName
+      lastName
+      status
+      isAdmin
+      roles {
+        id
+      }
+    }
+  }
+`;
+
 const GET_ALL_USERS = gql`
   query GetAllUsers{
     users {
@@ -19,10 +51,18 @@ const GET_ALL_USERS = gql`
       username
       email
       status
-      isAdmin
     }
   }
 `;
+
+export const getUserQuery = graphql<{ userId: string }>(GET_USER, {
+  name: 'getUser',
+  options: (props) => ({
+    variables: {
+      id: props.userId,
+    },
+  }),
+});
 
 export const removeUser = graphql<any, IRemoveUserResponse>(REMOVE_USER, {
   name: 'removeUser',
@@ -37,6 +77,10 @@ export const removeUser = graphql<any, IRemoveUserResponse>(REMOVE_USER, {
       });
     },
   },
+});
+
+export const updateUserMutation = graphql(UPDATE_USER, {
+  name: 'updateUser',
 });
 
 export const getAllUsers = graphql(GET_ALL_USERS, { name: 'getUsers' });
