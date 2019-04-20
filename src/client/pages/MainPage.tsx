@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import { User } from '../../types';
+import { User, UserRole, UserStatus } from '../../types';
 import { Nav, Navbar, SideMenu } from '../components';
 import withServerContext from '../HOC/withServerContext';
 import Dashboard from './Dashboard';
@@ -12,8 +12,24 @@ import RecipesPage from './RecipesPage';
 import Roles from './RolesPage';
 import Users from './UsersPage';
 
+enum ROLES {
+  USER_MANAGER = 'MANAGE_USERS',
+  INGREDIENT_MANAGER = 'MANAGE_INGREDIENTS',
+}
+
+interface IUser {
+  id: string;
+  firstName: string;
+  isAdmin: boolean;
+  lastName: string;
+  username: string;
+  email: string;
+  roles: Array<{ code: string }>;
+  status: UserStatus;
+}
+
 interface IMainPageProps {
-  user: User;
+  user: IUser;
 }
 
 interface IMainPageState {
@@ -26,6 +42,8 @@ class MainPage extends React.Component<IMainPageProps> {
   };
 
   public render() {
+    const { user } = this.props;
+
     return (
       <React.Fragment>
         <Navbar toggleTarget='side-menu'/>
@@ -45,18 +63,25 @@ class MainPage extends React.Component<IMainPageProps> {
               <Nav.Item label='Sessions' url='/sessions'/>
               <Nav.Item label='Tools' url='/tools'/>
               {
-                this.props.user.isAdmin &&
+                this.props.user.isAdmin ||
+                this.hasRole(user, ROLES.USER_MANAGER) &&
                 <React.Fragment>
                   <Nav.Header label='Admin'/>
                   <Nav.Item label='Users' url='/users'/>
                   <Nav.Item label='Roles' url='/roles'/>
                   <Nav.Item label='Invitations' url='/invitations'/>
-                  <Nav.Header label='Ingredients'/>
-                  <Nav.Item label='Hops' url='/ingredients/hops'/>
-                  <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
-                  <Nav.Item label='Yeast' url='/ingredients/yeast'/>
-                  <Nav.Item label='Water' url='/ingredients/water'/>
                 </React.Fragment>
+              }
+              {
+                this.props.user.isAdmin ||
+                this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
+                  <React.Fragment>
+                    <Nav.Header label='Ingredients'/>
+                    <Nav.Item label='Hops' url='/ingredients/hops'/>
+                    <Nav.Item label='Fermentables' url='/ingredients/fermentables'/>
+                    <Nav.Item label='Yeast' url='/ingredients/yeast'/>
+                    <Nav.Item label='Water' url='/ingredients/water'/>
+                  </React.Fragment>
               }
               <Nav.Header label='Account'/>
               <Nav.Item label='Settings & Profile' url='/profile'/>
@@ -68,10 +93,17 @@ class MainPage extends React.Component<IMainPageProps> {
           <Route path='/recipes' exact={true} component={RecipesPage}/>
           <Route path='/recipes/:id' component={EditRecipePage}/>
           {
-            this.props.user.isAdmin &&
+            this.props.user.isAdmin ||
+            this.hasRole(user, ROLES.USER_MANAGER) &&
             <React.Fragment>
               <Route path='/users' component={Users}/>
               <Route path='/roles' component={Roles}/>
+            </React.Fragment>
+          }
+          {
+            this.props.user.isAdmin ||
+            this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
+            <React.Fragment>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={IngredientsPage}/>
             </React.Fragment>
@@ -79,6 +111,10 @@ class MainPage extends React.Component<IMainPageProps> {
         </div>
       </React.Fragment>
     );
+  }
+
+  private hasRole(user: IUser, role: ROLES) {
+    return user.roles.find((r) => r.code === role.toString());
   }
 
   private showSideBar = () => {

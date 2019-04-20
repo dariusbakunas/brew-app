@@ -4,7 +4,7 @@ import { UserRole } from '../../types';
 import {
   Container, Spinner, Table,
 } from '../components';
-import { getRolesQuery } from '../HOC/users';
+import { getRolesQuery } from '../HOC/roles';
 
 interface IRolesPageProps {
   getRoles: {

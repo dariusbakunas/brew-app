@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-client';
 import sortBy from 'lodash.sortby';
 import React from 'react';
 import { compose } from 'react-apollo';
@@ -5,29 +6,49 @@ import { User, UserRole } from '../../types';
 import { Button, Form } from '../components';
 import CheckboxList from '../components/CheckboxList';
 import { InputChangeHandlerType } from '../components/Form/Input';
-import { getRolesQuery, getUserQuery } from '../HOC/users';
+import handleGraphQLError from '../errors/handleGraphQLError';
+import { getRolesQuery } from '../HOC/roles';
+import { getUserQuery, updateUserMutation } from '../HOC/users';
 import Modal from './Modal';
+
+interface IUserInput {
+  email: string;
+  firstName: string;
+  lastName: string;
+  roleIds: string[];
+}
+
+interface IUser {
+  email: string;
+  firstName: string;
+  isAdmin: boolean;
+  lastName: string;
+  status: string;
+  username: string;
+  roles: Array<{ id: string }>;
+}
 
 interface IUserModalProps {
   id: string;
   onHide?: () => void;
   getUser: {
     loading: boolean,
-    user: User,
+    user: IUser,
   };
   getRoles: {
     loading: boolean,
     roles: Array<{
       id: string,
-      name: string,
       code: string,
+      name: string,
     }>,
   };
+  updateUser?: (args: { variables: { id: string, input: IUserInput } }) => Promise<void>;
   open: boolean;
   userId: string;
 }
 
-type UserModalState = User & {
+type UserModalState = IUser & {
   error?: string,
   loading: boolean,
   validationErrors: {
@@ -148,7 +169,7 @@ export class UserModal extends React.Component<IUserModalProps> {
                 <label>Roles:</label>
                 <div className='uk-panel uk-panel-scrollable uk-resize-vertical'>
                   <CheckboxList
-                    onChange={(items) => console.log(items)}
+                    onChange={this.handleRoleChange}
                     items={roleItems}
                   />
                 </div>
@@ -164,7 +185,22 @@ export class UserModal extends React.Component<IUserModalProps> {
     );
   }
 
-  private getRoleItems = (allRoles: Array<UserRole & { id: string }>, userRoles: Array<UserRole & { id: string }>) => {
+  private handleRoleChange = (items: { [key: string]: boolean }) => {
+    const roles = Object.keys(items).filter((id) => items[id]).map((id) => ({
+      id,
+    }));
+
+    this.setState({
+      roles,
+    });
+  }
+
+  /**
+   * Join all roles array and user roles to make an array compatible with CheckboxList
+   * @param allRoles all existing roles
+   * @param userRoles roles that user currently has
+   */
+  private getRoleItems = (allRoles: Array<UserRole & { id: string }>, userRoles: Array<{ id: string }>) => {
     if (!allRoles) {
       return [];
     }
@@ -181,6 +217,12 @@ export class UserModal extends React.Component<IUserModalProps> {
     );
   }
 
+  /**
+   * Handle all input element changes, save { [name]: value } to component state
+   * @param e
+   * @param name input element name
+   * @param value input element value
+   */
   private handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
   private handleHide = () => {
@@ -189,12 +231,39 @@ export class UserModal extends React.Component<IUserModalProps> {
     }
   }
 
-  private handleSubmit = (e: React.FormEvent<HTMLFormElement>, closeModal: () => void) => {
+  /**
+   * Submit user update form
+   * @param e form event
+   * @param callback run this on successful submission
+   */
+  private handleSubmit = (e: React.FormEvent<HTMLFormElement>, callback: () => void) => {
     e.preventDefault();
+
+    const { firstName, lastName, email, roles } = this.state;
+    const { updateUser, userId } = this.props;
+
+    const userInput: IUserInput = {
+      email,
+      firstName,
+      lastName,
+      roleIds: roles.map((role) => role.id),
+    };
+
+    updateUser({ variables: { id: userId, input: userInput }}).then(() => {
+      callback();
+    }).catch((err: ApolloError) => {
+      const { validationErrors, errorMessage } = handleGraphQLError(err, false);
+      this.setState({
+        error: errorMessage,
+        loading: false,
+        validationErrors,
+      });
+    });
   }
 }
 
 export default compose(
   getRolesQuery,
   getUserQuery,
+  updateUserMutation,
 )(UserModal);

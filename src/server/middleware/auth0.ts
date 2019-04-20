@@ -28,7 +28,7 @@ const getUserByEmail =
           isAdmin
           status
           roles {
-            name
+            code
           }
         }
       }

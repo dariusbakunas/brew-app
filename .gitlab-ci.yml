@@ -6,6 +6,7 @@ cache:
 
 stages:
   - test
+  - build
   - staging
 
 test:
@@ -13,6 +14,12 @@ test:
   script:
     - npm install
     - npm test
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm build:prod
 
 staging:
   type: deploy

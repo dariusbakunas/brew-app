@@ -18,6 +18,9 @@ interface IServerContext {
     firstName: string,
     lastName: string,
     isAdmin: boolean,
+    roles: {
+      code: string,
+    },
     status: string,
   };
 }
@@ -31,6 +34,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
       id: req.user.id,
       isAdmin: req.user.isAdmin,
       lastName: req.user.lastName,
+      roles: req.user.roles,
       status: req.user.status,
     } : null,
   };
