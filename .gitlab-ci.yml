@@ -12,3 +12,13 @@ test:
   script:
     - npm install
     - npm test
+
+staging:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=geekspace-brew-app-staging --api-key=$(echo $HEROKU_API_KEY | base64 --decode)
+  only:
+    - dev
