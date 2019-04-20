@@ -19,7 +19,7 @@ build:
   stage: build
   script:
     - npm install
-    - npm build:prod
+    - npm run build:prod
 
 staging:
   type: deploy
