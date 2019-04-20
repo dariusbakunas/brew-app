@@ -6,6 +6,7 @@ cache:
 
 stages:
   - test
+  - staging
 
 test:
   stage: test
@@ -14,7 +15,8 @@ test:
     - npm test
 
 staging:
-  stage: deploy
+  type: deploy
+  stage: staging
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
