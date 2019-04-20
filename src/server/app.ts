@@ -83,7 +83,11 @@ const helmetConfig: IHelmetConfiguration = {
 };
 
 const sessionConfig: SessionOptions = {
-  cookie: {},
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+  },
+  name: 'brew-app',
   resave: false,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
