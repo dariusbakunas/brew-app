@@ -89,7 +89,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
             <li className='uk-open'>
               <a className='uk-accordion-title' href='#'>General</a>
               <div className='uk-accordion-content'>
-                <div className='uk-grid' uk-grid={true}>
+                <div className='uk-grid' data-uk-grid={true}>
                   <div className='uk-width-1-2'>
                     <Form.Input
                       label='Name'
