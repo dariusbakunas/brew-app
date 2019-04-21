@@ -55,7 +55,8 @@ class RecipeFermentables extends React.Component<IRecipeFermentablesProps> {
   }
 }
 
-export default graphql<IRecipeFermentablesProps>(GET_FERMENTABLES, {
+// TODO: figure out correct typings for this HOC
+export default graphql<any, any, { limit: number, sortBy: string }>(GET_FERMENTABLES, {
   name: 'getFermentables',
   options: (props) => ({
     variables: {
