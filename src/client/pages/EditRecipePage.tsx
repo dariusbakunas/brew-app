@@ -8,8 +8,10 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { IRecipe } from '../../types';
 import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
+import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { CREATE_RECIPE, GET_RECIPE, UPDATE_RECIPE } from '../queries';
+import { getRecipeQuery } from '../HOC/recipes';
+import { CREATE_RECIPE, UPDATE_RECIPE } from '../queries';
 
 interface IRecipeInput {
   id?: string;
@@ -20,7 +22,7 @@ interface IEditRecipePageProps {
   recipe: any;
   createRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
   updateRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
-  data: {
+  getRecipe: {
     loading: boolean,
     recipe?: IRecipe & { id: string },
   };
@@ -55,24 +57,24 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
   constructor(props: IEditRecipePageProps & RouteComponentProps) {
     super(props);
-    this.state = EditRecipePage.getInitialState(props.data ? props.data.recipe : null);
+    this.state = EditRecipePage.getInitialState(props.getRecipe ? props.getRecipe.recipe : null);
   }
 
   public componentDidUpdate(
     prevProps: Readonly<IEditRecipePageProps & RouteComponentProps<{}, StaticContext, LocationState>>,
     prevState: Readonly<{}>, snapshot?: any): void {
-    const prevRecipe = prevProps.data ? prevProps.data.recipe : null;
-    const currentRecipe = this.props.data ? this.props.data.recipe : null;
+    const prevRecipe = prevProps.getRecipe ? prevProps.getRecipe.recipe : null;
+    const currentRecipe = this.props.getRecipe ? this.props.getRecipe.recipe : null;
 
     if (prevRecipe !== currentRecipe) {
       this.setState({
-        ...this.props.data.recipe,
+        ...this.props.getRecipe.recipe,
       });
     }
   }
 
   public render() {
-    const { loading: recipeLoading = false, recipe = null } = {...this.props.data};
+    const { loading: recipeLoading = false, recipe = null } = {...this.props.getRecipe};
     const { loading: recipeSaving } = this.state;
     const loading = recipeLoading || recipeSaving;
     const { batchSize, boilTime, name, description, source, type } = this.state;
@@ -159,7 +161,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
             <li>
               <a className='uk-accordion-title' href='#'>Fermentables</a>
               <div className='uk-accordion-content'>
-                Fermentables
+                <RecipeFermentables/>
               </div>
             </li>
             <li>
@@ -202,7 +204,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     e.preventDefault();
 
     const { createRecipe, updateRecipe } = this.props;
-    const { recipe } = {...this.props.data};
+    const { recipe } = {...this.props.getRecipe};
 
     this.setState({ loading: true }, () => {
       const {
@@ -244,14 +246,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 }
 
 export default compose(
-  graphql<{ match: { params: { id: string }}}>(GET_RECIPE, {
-    options: (props) => ({
-      variables: {
-        id: props.match.params.id,
-      },
-    }),
-    skip: (props) => props.match.params.id === 'create',
-  }),
+  getRecipeQuery,
   graphql(CREATE_RECIPE, {
     name: 'createRecipe',
   }),

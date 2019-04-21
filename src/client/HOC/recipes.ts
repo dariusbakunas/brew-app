@@ -22,6 +22,20 @@ const REMOVE_RECIPE = gql`
   }
 `;
 
+const GET_RECIPE = gql`
+  query GetRecipe($id: ID!) {
+    recipe(id: $id) {
+      id
+      batchSize
+      boilTime
+      description
+      name
+      type
+      source
+    }
+  }
+`;
+
 interface IRemoveRecipeResponse {
   removeRecipe: string;
 }
@@ -30,6 +44,17 @@ export interface IGetRecipesQuery {
   loading: boolean;
   recipes: Array<IRecipe & { id: string }>;
 }
+
+export const getRecipeQuery = graphql<{ match: { params: { id: string }}}>(GET_RECIPE, {
+  name: 'getRecipe',
+  // TODO: make options an argument, so that each component could use props differently
+  options: (props) => ({
+    variables: {
+      id: props.match.params.id,
+    },
+  }),
+  skip: (props) => props.match.params.id === 'create',
+});
 
 export const getRecipes = graphql<any, IGetRecipesQuery>(GET_RECIPES, { name: 'getRecipes' });
 
