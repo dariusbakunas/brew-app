@@ -63,8 +63,8 @@ class MainPage extends React.Component<IMainPageProps> {
               <Nav.Item label='Sessions' url='/sessions'/>
               <Nav.Item label='Tools' url='/tools'/>
               {
-                this.props.user.isAdmin ||
-                this.hasRole(user, ROLES.USER_MANAGER) &&
+                (this.props.user.isAdmin ||
+                this.hasRole(user, ROLES.USER_MANAGER)) &&
                 <React.Fragment>
                   <Nav.Header label='Admin'/>
                   <Nav.Item label='Users' url='/users'/>
@@ -73,8 +73,8 @@ class MainPage extends React.Component<IMainPageProps> {
                 </React.Fragment>
               }
               {
-                this.props.user.isAdmin ||
-                this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
+                (this.props.user.isAdmin ||
+                this.hasRole(user, ROLES.INGREDIENT_MANAGER)) &&
                   <React.Fragment>
                     <Nav.Header label='Ingredients'/>
                     <Nav.Item label='Hops' url='/ingredients/hops'/>
@@ -93,16 +93,16 @@ class MainPage extends React.Component<IMainPageProps> {
           <Route path='/recipes' exact={true} component={RecipesPage}/>
           <Route path='/recipes/:id' component={EditRecipePage}/>
           {
-            this.props.user.isAdmin ||
-            this.hasRole(user, ROLES.USER_MANAGER) &&
+            (this.props.user.isAdmin ||
+            this.hasRole(user, ROLES.USER_MANAGER)) &&
             <React.Fragment>
               <Route path='/users' component={Users}/>
               <Route path='/roles' component={Roles}/>
             </React.Fragment>
           }
           {
-            this.props.user.isAdmin ||
-            this.hasRole(user, ROLES.INGREDIENT_MANAGER) &&
+            (this.props.user.isAdmin ||
+            this.hasRole(user, ROLES.INGREDIENT_MANAGER)) &&
             <React.Fragment>
               <Route path='/invitations' component={Invitations}/>
               <Route path='/ingredients' component={IngredientsPage}/>
