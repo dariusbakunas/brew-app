@@ -44,7 +44,6 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
     loading: false,
     name: null,
     originId: UNITED_STATES_ID,
-    potential: null,
     type: GrainType.BASE,
     validationErrors: null,
     yield: null,
@@ -85,7 +84,7 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
     } = this.props;
 
     const {
-      category, color, description, error, loading, name, originId, potential,
+      category, color, description, error, loading, name, originId,
       type, validationErrors,
     } = this.state;
 
@@ -185,21 +184,6 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
                   <Form.Input
                     disabled={loading}
                     min={0}
-                    max={2000}
-                    width='small'
-                    type='number'
-                    name='potential'
-                    label='Potential, SG'
-                    onChange={this.handleChange}
-                    step={0.001}
-                    value={potential !== null ? potential : ''}
-                    required={true}
-                  />
-                </div>
-                <div>
-                  <Form.Input
-                    disabled={loading}
-                    min={0}
                     max={100}
                     width='small'
                     type='number'
@@ -257,7 +241,7 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
 
     this.setState({ loading: true }, () => {
       const {
-        category, color, description, name, originId, potential, type,
+        category, color, description, name, originId, type,
       } = this.state;
 
       const variables: FermentableInput = {
@@ -267,7 +251,6 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
           description,
           name,
           originId: originId !== '' ? originId : null,
-          potential,
           type,
           yield: this.state.yield,
         },
