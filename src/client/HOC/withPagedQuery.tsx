@@ -61,8 +61,8 @@ const withPagedQuery = (query: any, key: string, pageSize: number) => {
       sortBy: string;
     }
 
-    function getDisplayName(Component: ComponentType) {
-      return Component.displayName || Component.name || 'Component';
+    function getDisplayName(component: ComponentType) {
+      return component.displayName || component.name || 'Component';
     }
 
     class WithPagedQuery extends React.Component<IWithPagedQueryProps> {
