@@ -3,12 +3,35 @@ import { graphql } from 'react-apollo';
 
 const PROP_NAME = 'getPagedData';
 
+interface IQueryResult {
+  [key: string]: {
+    data: any,
+    loading: boolean,
+    pageInfo: {
+      nextCursor: string,
+      prevCursor: string,
+      __typename: string,
+    },
+    __typename: string,
+  };
+}
+
 interface IHOCProps {
   [PROP_NAME]: {
-    loading: boolean,
-    [key: string]: any,
-  };
+    fetchMore: (args: {
+      query: any,
+      updateQuery: (previousResult: IQueryResult, result: { fetchMoreResult: IQueryResult }) => void,
+      variables: any,
+    }) => void,
+  } & IQueryResult;
   variables: any;
+}
+
+interface IHOCState {
+  currentPageInfo: {
+    nextCursor: string,
+    prevCursor: string,
+  };
 }
 
 interface IOptions {
@@ -20,21 +43,26 @@ interface IOptions {
  * /**
  * Adds paging methods, like getNextPage, getPrevPage
  * compatible with current graphql backend implementation
- * @param query GraphQL query
+ * @param mainQuery GraphQL query
  * @param opt name: property name to hold results
  */
-const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) => {
+const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => IOptions | IOptions) => {
   function getDisplayName(component: ComponentType) {
     return component.displayName || component.name || 'Component';
   }
 
   return (WrappedComponent: React.ComponentType) => {
-    class WithPagedQuery extends React.Component<IHOCProps> {
+    class WithPagedQuery extends React.Component<IHOCProps & TProps, IHOCState> {
       public static readonly displayName = `WithPagedQuery(${getDisplayName(WrappedComponent)})`;
 
-      constructor(props) {
+      constructor(props: IHOCProps & TProps) {
         super(props);
-        this.state = {};
+        this.state = {
+          currentPageInfo: {
+            nextCursor: null,
+            prevCursor: null,
+          },
+        };
       }
 
       public render() {
@@ -43,22 +71,22 @@ const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) =>
         const { loading } = this.props[PROP_NAME];
 
         // only support single selection
-        const key = this.getQueryKey(query);
-        const { pageInfo = {}, data = null } = {...this.props[PROP_NAME][key]};
+        const key = this.getQueryKey(mainQuery);
+        const { pageInfo, data = null } = {...this.props[PROP_NAME][key]};
 
-        const { currentPageInfo = {} } = this.state;
+        const { currentPageInfo } = this.state;
 
-        const props = {
+        const childProps: any = {
           ...this.props,
           [options.name]: {
             data,
             getNextPage: () => this.getPage(options, pageInfo.nextCursor),
             getPrevPage: () => this.getPage(options, null, pageInfo.prevCursor),
-            hasNextPage: !!pageInfo.nextCursor,
-            hasPrevPage: !!pageInfo.prevCursor,
+            hasNextPage: pageInfo ? !!pageInfo.nextCursor : false,
+            hasPrevPage: pageInfo ? !!pageInfo.prevCursor : false,
             loading,
             refetchQuery: {
-              query,
+              query: mainQuery,
               variables: {
                 nextCursor: currentPageInfo.nextCursor,
                 prevCursor: currentPageInfo.prevCursor,
@@ -68,32 +96,32 @@ const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) =>
           },
         };
 
-        delete(props[PROP_NAME]);
+        delete childProps[PROP_NAME];
 
         return (
           <WrappedComponent
-            {...props}
+            {...childProps}
           />
         );
       }
 
-      private getQueryKey = (query) => {
+      private getQueryKey = (query: any) => {
         return query.definitions[0].selectionSet.selections[0].name.value;
       }
 
       private getPage = (options: IOptions, nextCursor: string, prevCursor: string = null) => {
         const { fetchMore } = this.props[PROP_NAME];
-        const key = this.getQueryKey(query);
+        const key = this.getQueryKey(mainQuery);
 
         fetchMore({
-          query,
+          query: mainQuery,
           updateQuery: (previousResult, { fetchMoreResult }) => {
             this.setState({
               currentPageInfo: previousResult[key].pageInfo,
             });
 
             const newData = fetchMoreResult[key].data;
-            const { nextCursor, prevCursor } = fetchMoreResult[key].pageInfo;
+            const { nextCursor: next, prevCursor: prev } = fetchMoreResult[key].pageInfo;
 
             return {
               [key]: {
@@ -101,8 +129,8 @@ const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) =>
                 data: [...newData],
                 pageInfo: {
                   __typename: previousResult[key].pageInfo.__typename,
-                  nextCursor,
-                  prevCursor,
+                  nextCursor: next,
+                  prevCursor: prev,
                 },
               },
             };
@@ -116,7 +144,7 @@ const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) =>
       }
     }
 
-    return graphql<IHOCProps>(query, {
+    return graphql<IHOCProps>(mainQuery, {
       name: PROP_NAME,
       options: (props) => {
         const options = (typeof opt === 'function') ? opt(props) : opt;

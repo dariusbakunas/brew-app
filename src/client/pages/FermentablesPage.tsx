@@ -19,7 +19,7 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type FermentablesProps = {
+interface IFermentablesProps {
   fermentables: {
     data: Array<Fermentable & { id: string }>,
     getNextPage: () => void,
@@ -31,9 +31,9 @@ type FermentablesProps = {
       query: any,
       variables: any,
     },
-  },
-  removeFermentable: (args: { variables: { id: string } }) => Promise<void>,
-};
+  };
+  removeFermentable: (args: { variables: { id: string } }) => Promise<void>;
+}
 
 interface IFermentablesState {
   loading: boolean;
@@ -41,7 +41,7 @@ interface IFermentablesState {
   currentFermentable: null;
 }
 
-class FermentablesPage extends React.Component<FermentablesProps> {
+class FermentablesPage extends React.Component<IFermentablesProps> {
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
@@ -170,7 +170,7 @@ class FermentablesPage extends React.Component<FermentablesProps> {
 }
 
 export default compose(
-  withPagedQuery(GET_FERMENTABLES, (props) => ({
+  withPagedQuery<IFermentablesProps>(GET_FERMENTABLES, (props) => ({
     name: 'fermentables',
     variables: {
       limit: DEFAULT_PAGE_SIZE,
@@ -179,7 +179,7 @@ export default compose(
   })),
   graphql(REMOVE_FERMENTABLE, {
     name: 'removeFermentable',
-    options: (props: FermentablesProps) => ({
+    options: (props: IFermentablesProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.fermentables.refetchQuery,

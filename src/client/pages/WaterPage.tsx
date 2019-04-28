@@ -1,15 +1,15 @@
+import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
-import { ApolloError } from 'apollo-client';
-import withPagedQuery from '../HOC/withPagedQuery';
-import { GET_WATER, REMOVE_WATER } from '../queries';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import {
-  Button, Pager, Spinner, Table, IconNav,
-} from '../components';
-import WaterModal from '../modals/WaterModal';
-import confirm from '../utils/confirm';
 import { Water } from '../../types';
+import {
+  Button, IconNav, Pager, Spinner, Table,
+} from '../components';
+import handleGraphQLError from '../errors/handleGraphQLError';
+import withPagedQuery from '../HOC/withPagedQuery';
+import WaterModal from '../modals/WaterModal';
+import { GET_WATER, REMOVE_WATER } from '../queries';
+import confirm from '../utils/confirm';
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -19,67 +19,47 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type WaterPageProps = {
-  data: Array<Water & { id: string }>,
-  loading: boolean,
-  removeWater: (args: { variables: { id: string } }) => Promise<void>,
-};
-
-type WaterPageState = {
-  loading: boolean,
-  waterModalOpen: false,
-  currentWater: Water,
-};
-
-class WaterPage extends React.Component<WaterPageProps> {
-  readonly state: Readonly<WaterPageState> = {
-    loading: false,
-    waterModalOpen: false,
-    currentWater: null,
+interface IWaterPageProps {
+  water: {
+    data: Array<Water & { id: string }>,
+    getNextPage: () => void,
+    getPrevPage: () => void,
+    hasNextPage: boolean,
+    hasPrevPage: boolean,
+    loading: boolean,
+    refetchQuery: {
+      query: any,
+      variables: any,
+    },
   };
+  removeWater: (args: { variables: { id: string } }) => Promise<void>;
+}
 
+interface IWaterPageState {
+  loading: boolean;
+  waterModalOpen: false;
+  currentWater: Water;
+}
+
+class WaterPage extends React.Component<IWaterPageProps> {
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
     window.UIkit.notification({
       message: errorMessage,
-      status: 'danger',
       pos: 'top-right',
+      status: 'danger',
       timeout: 5000,
     });
   }
 
-  handleAddWater = () => {
-    this.setState({
-      currentWater: null,
-      waterModalOpen: true,
-    });
+  public readonly state: Readonly<IWaterPageState> = {
+    currentWater: null,
+    loading: false,
+    waterModalOpen: false,
   };
 
-  handleEditWater = (water: Water) => {
-    this.setState({
-      currentWater: water,
-      waterModalOpen: true,
-    });
-  };
-
-  handleRemoveWater = ({ id, name }: Partial<Water> & { id: string }) => {
-    confirm(`Are you sure you want to remove ${name}?`, () => {
-      this.setState({ loading: true }, () => {
-        this.props.removeWater({ variables: { id } })
-          .then(() => {
-            this.setState({ loading: false });
-          })
-          .catch((err) => {
-            this.setState({ loading: false }, () => {
-              WaterPage.handleError(err);
-            });
-          });
-      });
-    });
-  };
-
-  render() {
+  public render() {
     const {
       data: waterProfiles = [],
       getNextPage,
@@ -137,8 +117,7 @@ class WaterPage extends React.Component<WaterPageProps> {
                           </IconNav>
                         </Table.Cell>
                       </Table.Row>
-                    ))
-                  }
+                    ))}
                 </Table.Body>
               </Table>
             </React.Fragment> :
@@ -156,19 +135,49 @@ class WaterPage extends React.Component<WaterPageProps> {
       </React.Fragment>
     );
   }
+
+  private handleAddWater = () => {
+    this.setState({
+      currentWater: null,
+      waterModalOpen: true,
+    });
+  }
+
+  private handleEditWater = (water: Water) => {
+    this.setState({
+      currentWater: water,
+      waterModalOpen: true,
+    });
+  }
+
+  private handleRemoveWater = ({ id, name }: Partial<Water> & { id: string }) => {
+    confirm(`Are you sure you want to remove ${name}?`, () => {
+      this.setState({ loading: true }, () => {
+        this.props.removeWater({ variables: { id } })
+          .then(() => {
+            this.setState({ loading: false });
+          })
+          .catch((err) => {
+            this.setState({ loading: false }, () => {
+              WaterPage.handleError(err);
+            });
+          });
+      });
+    });
+  }
 }
 
 export default compose(
-  withPagedQuery(GET_WATER, {
+  withPagedQuery(GET_WATER, (props) => ({
     name: 'water',
     variables: {
       limit: DEFAULT_PAGE_SIZE,
       sortBy: 'NAME',
     },
-  }),
+  })),
   graphql(REMOVE_WATER, {
     name: 'removeWater',
-    options: (props: WaterPageProps) => ({
+    options: (props: IWaterPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.water.refetchQuery,

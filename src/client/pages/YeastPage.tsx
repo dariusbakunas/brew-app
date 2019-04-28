@@ -19,11 +19,21 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type YeastPageProps = {
-  data: Array<IYeast & { id: string }>,
-  loading: boolean,
-  removeYeast: (args: { variables: { id: string } }) => Promise<void>,
-};
+interface IYeastPageProps {
+  yeast: {
+    data: Array<IYeast & { id: string }>,
+    getNextPage: () => void,
+    getPrevPage: () => void,
+    hasNextPage: boolean,
+    hasPrevPage: boolean,
+    loading: boolean,
+    refetchQuery: {
+      query: any,
+      variables: any,
+    },
+  };
+  removeYeast: (args: { variables: { id: string } }) => Promise<void>;
+}
 
 interface IYeastPageState {
   loading: boolean;
@@ -31,7 +41,7 @@ interface IYeastPageState {
   currentYeast: IYeast;
 }
 
-class YeastPage extends React.Component<YeastPageProps> {
+class YeastPage extends React.Component<IYeastPageProps> {
   private static handleError(error: ApolloError) {
     const { errorMessage } = handleGraphQLError(error, false);
 
@@ -97,8 +107,7 @@ class YeastPage extends React.Component<YeastPageProps> {
                           </IconNav>
                         </Table.Cell>
                       </Table.Row>
-                    ))
-                  }
+                    ))}
                 </Table.Body>
               </Table>
             </React.Fragment> :
@@ -149,16 +158,16 @@ class YeastPage extends React.Component<YeastPageProps> {
 }
 
 export default compose(
-  withPagedQuery(GET_YEAST, {
+  withPagedQuery(GET_YEAST, (props) => ({
     name: 'yeast',
     variables: {
       limit: DEFAULT_PAGE_SIZE,
       sortBy: 'NAME',
     },
-  }),
+  })),
   graphql(REMOVE_YEAST, {
     name: 'removeYeast',
-    options: (props: YeastPageProps) => ({
+    options: (props: IYeastPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.yeast.refetchQuery,

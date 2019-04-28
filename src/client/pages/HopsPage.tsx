@@ -19,13 +19,21 @@ declare var window: IWindow;
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type HopsProps = {
+interface IHopsProps {
   hops: {
     data: Array<Hop & { id: string }>,
+    getNextPage: () => void,
+    getPrevPage: () => void,
+    hasNextPage: boolean,
+    hasPrevPage: boolean,
     loading: boolean,
-  },
-  removeHop: (args: { variables: { id: string } }) => Promise<void>,
-};
+    refetchQuery: {
+      query: any,
+      variables: any,
+    },
+  };
+  removeHop: (args: { variables: { id: string } }) => Promise<void>;
+}
 
 interface IHopPageState {
   loading: boolean;
@@ -33,7 +41,7 @@ interface IHopPageState {
   currentHop: Hop;
 }
 
-class HopsPage extends React.Component<HopsProps, IHopPageState> {
+class HopsPage extends React.Component<IHopsProps, IHopPageState> {
   private static formatAcidValue(low: number, high: number) {
     if (low && high) {
       return `${low.toFixed(1)} - ${high.toFixed(1)}%`;
@@ -185,16 +193,16 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
 }
 
 export default compose(
-  withPagedQuery(GET_HOPS, {
+  withPagedQuery(GET_HOPS, (props) => ({
     name: 'hops',
     variables: {
       limit: DEFAULT_PAGE_SIZE,
       sortBy: 'NAME',
     },
-  }),
+  })),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
-    options: (props: HopsProps) => ({
+    options: (props: IHopsProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
         props.hops.refetchQuery,
