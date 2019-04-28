@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const GET_HOPS = gql`
-  query GetHops($cursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
-    hops(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
+  query GetHops($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
+    hops(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
       data {
         id
         name
@@ -20,14 +20,15 @@ export const GET_HOPS = gql`
       }
       pageInfo {
         nextCursor
+        prevCursor
       }
     }
   }
 `;
 
 export const GET_FERMENTABLES = gql`
-  query GetFermentables($cursor: String, $limit: Int, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
-    fermentables(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
+  query GetFermentables($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
+    fermentables(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
       data {
         id
         name
@@ -44,14 +45,15 @@ export const GET_FERMENTABLES = gql`
       }
       pageInfo {
         nextCursor
+        prevCursor
       }
     }
   }
 `;
 
 export const GET_YEAST = gql`
-  query GetYeast($cursor: String, $limit: Int, $sortBy: SortableYeastField, $sortDirection: SortDirection) {
-    yeast(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "yeast") {
+  query GetYeast($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableYeastField, $sortDirection: SortDirection) {
+    yeast(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "yeast") {
       data {
         id
         name
@@ -70,14 +72,15 @@ export const GET_YEAST = gql`
       }
       pageInfo {
         nextCursor
+        prevCursor
       }
     }
   }
 `;
 
 export const GET_WATER = gql`
-  query GetWater($cursor: String, $limit: Int, $sortBy: SortableWaterField, $sortDirection: SortDirection) {
-    water(cursor: $cursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "water") {
+  query GetWater($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableWaterField, $sortDirection: SortDirection) {
+    water(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "water") {
       data {
         id
         name

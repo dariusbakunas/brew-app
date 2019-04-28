@@ -1,7 +1,7 @@
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { ApolloError } from 'apollo-client';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery from '../HOC/withPagedQuery';
 import { GET_WATER, REMOVE_WATER } from '../queries';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import {
@@ -19,7 +19,7 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type WaterPageProps = IPagedQueryProps & {
+type WaterPageProps = {
   data: Array<Water & { id: string }>,
   loading: boolean,
   removeWater: (args: { variables: { id: string } }) => Promise<void>,
@@ -81,9 +81,14 @@ class WaterPage extends React.Component<WaterPageProps> {
 
   render() {
     const {
-      data: waterProfiles, loading, hasNextPage, hasPreviousPage,
-      getNextPage, getPreviousPage, getRefetchQuery,
-    } = this.props;
+      data: waterProfiles = [],
+      getNextPage,
+      getPrevPage,
+      hasNextPage,
+      hasPrevPage,
+      loading,
+      refetchQuery,
+    } = this.props.water;
 
     const { currentWater, waterModalOpen } = this.state;
 
@@ -94,10 +99,10 @@ class WaterPage extends React.Component<WaterPageProps> {
             <React.Fragment>
               <Pager
                 hasNextPage={hasNextPage}
-                hasPrevPage={hasPreviousPage}
+                hasPrevPage={hasPrevPage}
                 onNextPage={getNextPage}
-                onPrevPage={getPreviousPage}/>
-              <Table size='small' stripped>
+                onPrevPage={getPrevPage}/>
+              <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
                     <Table.HeaderCell>Name</Table.HeaderCell>
@@ -146,7 +151,7 @@ class WaterPage extends React.Component<WaterPageProps> {
           id='water-modal'
           open={waterModalOpen}
           onHide={() => this.setState({ waterModalOpen: false, currentWater: null })}
-          refetchQuery={getRefetchQuery('NAME')}
+          refetchQuery={refetchQuery}
         />
       </React.Fragment>
     );
@@ -154,13 +159,19 @@ class WaterPage extends React.Component<WaterPageProps> {
 }
 
 export default compose(
-  withPagedQuery(GET_WATER, 'water', DEFAULT_PAGE_SIZE),
+  withPagedQuery(GET_WATER, {
+    name: 'water',
+    variables: {
+      limit: DEFAULT_PAGE_SIZE,
+      sortBy: 'NAME',
+    },
+  }),
   graphql(REMOVE_WATER, {
     name: 'removeWater',
     options: (props: WaterPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
-        props.getRefetchQuery('NAME'),
+        props.water.refetchQuery,
       ],
     }),
   }),

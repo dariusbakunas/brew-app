@@ -6,7 +6,7 @@ import {
   Button, IconNav, Pager, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery from '../HOC/withPagedQuery';
 import FermentableModal from '../modals/FermentableModal';
 import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from '../queries';
 import confirm from '../utils/confirm';
@@ -19,9 +19,19 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type FermentablesProps = IPagedQueryProps & {
-  data: Array<Fermentable & { id: string }>,
-  loading: boolean,
+type FermentablesProps = {
+  fermentables: {
+    data: Array<Fermentable & { id: string }>,
+    getNextPage: () => void,
+    getPrevPage: () => void,
+    hasNextPage: boolean,
+    hasPrevPage: boolean,
+    loading: boolean,
+    refetchQuery: {
+      query: any,
+      variables: any,
+    },
+  },
   removeFermentable: (args: { variables: { id: string } }) => Promise<void>,
 };
 
@@ -51,9 +61,15 @@ class FermentablesPage extends React.Component<FermentablesProps> {
 
   public render() {
     const {
-      data: fermentables, loading, hasNextPage, hasPreviousPage,
-      getNextPage, getPreviousPage, getRefetchQuery,
-    } = this.props;
+      data: fermentables = [],
+      getNextPage,
+      getPrevPage,
+      hasNextPage,
+      hasPrevPage,
+      loading,
+      refetchQuery,
+    } = this.props.fermentables;
+
     const { currentFermentable, fermentableModalOpen } = this.state;
 
     return (
@@ -63,9 +79,9 @@ class FermentablesPage extends React.Component<FermentablesProps> {
             <React.Fragment>
               <Pager
                 hasNextPage={hasNextPage}
-                hasPrevPage={hasPreviousPage}
+                hasPrevPage={hasPrevPage}
                 onNextPage={getNextPage}
-                onPrevPage={getPreviousPage}/>
+                onPrevPage={getPrevPage}/>
               <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
@@ -116,7 +132,7 @@ class FermentablesPage extends React.Component<FermentablesProps> {
           id='fermentable-modal'
           open={fermentableModalOpen}
           onHide={() => this.setState({ fermentableModalOpen: false, currentFermentable: null })}
-          refetchQuery={getRefetchQuery('NAME')}
+          refetchQuery={refetchQuery}
         />
       </React.Fragment>
     );
@@ -154,13 +170,19 @@ class FermentablesPage extends React.Component<FermentablesProps> {
 }
 
 export default compose(
-  withPagedQuery(GET_FERMENTABLES, 'fermentables', DEFAULT_PAGE_SIZE),
+  withPagedQuery(GET_FERMENTABLES, (props) => ({
+    name: 'fermentables',
+    variables: {
+      limit: DEFAULT_PAGE_SIZE,
+      sortBy: 'NAME',
+    },
+  })),
   graphql(REMOVE_FERMENTABLE, {
     name: 'removeFermentable',
     options: (props: FermentablesProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
-        props.getRefetchQuery('NAME'),
+        props.fermentables.refetchQuery,
       ],
     }),
   }),

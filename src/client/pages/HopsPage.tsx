@@ -6,7 +6,7 @@ import {
   Button, Icon, IconNav, Pager, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery from '../HOC/withPagedQuery';
 import HopModal from '../modals/HopModal';
 import { GET_HOPS, REMOVE_HOP } from '../queries';
 import confirm from '../utils/confirm';
@@ -19,9 +19,11 @@ declare var window: IWindow;
 
 const DEFAULT_PAGE_SIZE = 8;
 
-type HopsProps = IPagedQueryProps & {
-  data: Array<Hop & { id: string }>,
-  loading: boolean,
+type HopsProps = {
+  hops: {
+    data: Array<Hop & { id: string }>,
+    loading: boolean,
+  },
   removeHop: (args: { variables: { id: string } }) => Promise<void>,
 };
 
@@ -64,7 +66,15 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
   };
 
   public render() {
-    const { data: hops, loading } = this.props;
+    const {
+      data: hops = [],
+      getNextPage,
+      getPrevPage,
+      hasNextPage,
+      hasPrevPage,
+      loading,
+      refetchQuery,
+    } = this.props.hops;
 
     return (
       <React.Fragment>
@@ -72,10 +82,10 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
           hops && hops.length ?
             <React.Fragment>
               <Pager
-                hasNextPage={this.props.hasNextPage}
-                hasPrevPage={this.props.hasPreviousPage}
-                onNextPage={this.props.getNextPage}
-                onPrevPage={this.props.getPreviousPage}
+                hasNextPage={hasNextPage}
+                hasPrevPage={hasPrevPage}
+                onNextPage={getNextPage}
+                onPrevPage={getPrevPage}
               />
               <Table size='small' stripped={true}>
                 <Table.Header>
@@ -137,7 +147,7 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
           id='hop-modal'
           open={this.state.hopModalOpen}
           onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
-          refetchQuery={this.props.getRefetchQuery('NAME')}
+          refetchQuery={refetchQuery}
         />
       </React.Fragment>
     );
@@ -175,13 +185,19 @@ class HopsPage extends React.Component<HopsProps, IHopPageState> {
 }
 
 export default compose(
-  withPagedQuery(GET_HOPS, 'hops', DEFAULT_PAGE_SIZE),
+  withPagedQuery(GET_HOPS, {
+    name: 'hops',
+    variables: {
+      limit: DEFAULT_PAGE_SIZE,
+      sortBy: 'NAME',
+    },
+  }),
   graphql(REMOVE_HOP, {
     name: 'removeHop',
     options: (props: HopsProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
-        props.getRefetchQuery('name'),
+        props.hops.refetchQuery,
       ],
     }),
   }),

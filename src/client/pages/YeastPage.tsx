@@ -6,7 +6,7 @@ import {
   Button, IconNav, Pager, Spinner, Table,
 } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery, { IPagedQueryProps } from '../HOC/withPagedQuery';
+import withPagedQuery from '../HOC/withPagedQuery';
 import YeastModal from '../modals/YeastModal';
 import { GET_YEAST, REMOVE_YEAST } from '../queries';
 import confirm from '../utils/confirm';
@@ -19,7 +19,7 @@ interface IWindow {
 
 declare var window: IWindow;
 
-type YeastPageProps = IPagedQueryProps & {
+type YeastPageProps = {
   data: Array<IYeast & { id: string }>,
   loading: boolean,
   removeYeast: (args: { variables: { id: string } }) => Promise<void>,
@@ -51,9 +51,14 @@ class YeastPage extends React.Component<YeastPageProps> {
 
   public render() {
     const {
-      data: yeastList, loading, hasNextPage, hasPreviousPage,
-      getNextPage, getPreviousPage, getRefetchQuery,
-    } = this.props;
+      data: yeastList = [],
+      getNextPage,
+      getPrevPage,
+      hasNextPage,
+      hasPrevPage,
+      loading,
+      refetchQuery,
+    } = this.props.yeast;
 
     const { currentYeast, yeastModalOpen } = this.state;
 
@@ -64,9 +69,9 @@ class YeastPage extends React.Component<YeastPageProps> {
             <React.Fragment>
               <Pager
                 hasNextPage={hasNextPage}
-                hasPrevPage={hasPreviousPage}
+                hasPrevPage={hasPrevPage}
                 onNextPage={getNextPage}
-                onPrevPage={getPreviousPage}/>
+                onPrevPage={getPrevPage}/>
               <Table size='small' stripped={true}>
                 <Table.Header>
                   <Table.Row>
@@ -106,7 +111,7 @@ class YeastPage extends React.Component<YeastPageProps> {
           id='yeast-modal'
           open={yeastModalOpen}
           onHide={() => this.setState({ yeastModalOpen: false, currentYeast: null })}
-          refetchQuery={getRefetchQuery('NAME')}
+          refetchQuery={refetchQuery}
         />
       </React.Fragment>
     );
@@ -144,13 +149,19 @@ class YeastPage extends React.Component<YeastPageProps> {
 }
 
 export default compose(
-  withPagedQuery(GET_YEAST, 'yeast', DEFAULT_PAGE_SIZE),
+  withPagedQuery(GET_YEAST, {
+    name: 'yeast',
+    variables: {
+      limit: DEFAULT_PAGE_SIZE,
+      sortBy: 'NAME',
+    },
+  }),
   graphql(REMOVE_YEAST, {
     name: 'removeYeast',
     options: (props: YeastPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [
-        props.getRefetchQuery('NAME'),
+        props.yeast.refetchQuery,
       ],
     }),
   }),
