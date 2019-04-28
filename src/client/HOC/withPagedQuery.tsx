@@ -1,128 +1,99 @@
 import React, { ComponentType } from 'react';
 import { graphql } from 'react-apollo';
-import { PagingContext, PagingProviderContextType } from '../context/PagingProvider';
 
-interface IVariables {
-  cursor?: string;
-  limit: number;
-  sortBy: string;
-}
+const PROP_NAME = 'getPagedData';
 
-export interface IPagedQueryProps {
-  data: any;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  getNextPage: () => void;
-  getPreviousPage: () => void;
-  getRefetchQuery: (sortBy: string) => {
-    query: any,
-    variables: {
-      cursor: string,
-      sortBy: string,
-      limit: number,
-    },
+interface IHOCProps {
+  [PROP_NAME]: {
+    loading: boolean,
+    [key: string]: any,
   };
-  loading: boolean;
+  variables: any;
 }
 
-// TODO: figure out type for gql query
-const withPagedQuery = (query: any, key: string, pageSize: number) => {
-  return (WrappedComponent: React.ComponentType<Partial<IPagedQueryProps>>) => {
-    interface IResponse {
-      data: any;
-      pageInfo: {
-        nextCursor: string,
-      };
-    }
+interface IOptions {
+  name: string;
+  variables: any;
+}
 
-    interface IWithPagedQueryProps {
-      getPagedData: {
-        fetchMore: (options: {
-          query: any,
-          updateQuery: (
-            previousResult: {
-              [key: string]: { __typename: string, pageInfo: { __typename: string } },
-            },
-            result: {
-              fetchMoreResult: {
-                [key: string]: {
-                  data: any,
-                  pageInfo: {
-                    nextCursor: string,
-                  },
-                },
-              },
-            },
-          ) => void,
-          variables: IVariables,
-        }) => void,
-        loading: boolean,
-      } & { [key: string]: IResponse };
-      sortBy: string;
-    }
+/**
+ * /**
+ * Adds paging methods, like getNextPage, getPrevPage
+ * compatible with current graphql backend implementation
+ * @param query GraphQL query
+ * @param opt name: property name to hold results
+ */
+const withPagedQuery = (query: any, opt: (props: any) => IOptions | IOptions) => {
+  function getDisplayName(component: ComponentType) {
+    return component.displayName || component.name || 'Component';
+  }
 
-    function getDisplayName(component: ComponentType) {
-      return component.displayName || component.name || 'Component';
-    }
-
-    class WithPagedQuery extends React.Component<IWithPagedQueryProps> {
+  return (WrappedComponent: React.ComponentType) => {
+    class WithPagedQuery extends React.Component<IHOCProps> {
       public static readonly displayName = `WithPagedQuery(${getDisplayName(WrappedComponent)})`;
-      public static contextType = PagingContext;
 
-      public context: PagingProviderContextType;
-
-      public componentDidMount() {
-        const { getPreviousPage, setPage } = this.context;
-
-        if (!getPreviousPage || !setPage) {
-          console.error('Warning: Wrap component with PagingProvider to enable paging functionality');
-        }
+      constructor(props) {
+        super(props);
+        this.state = {};
       }
 
       public render() {
-        const pagedData = this.props.getPagedData[key];
+        const options = (typeof opt === 'function') ? opt(this.props) : opt;
+
+        const { loading } = this.props[PROP_NAME];
+
+        // only support single selection
+        const key = this.getQueryKey(query);
+        const { pageInfo = {}, data = null } = {...this.props[PROP_NAME][key]};
+
+        const { currentPageInfo = {} } = this.state;
+
+        const props = {
+          ...this.props,
+          [options.name]: {
+            data,
+            getNextPage: () => this.getPage(options, pageInfo.nextCursor),
+            getPrevPage: () => this.getPage(options, null, pageInfo.prevCursor),
+            hasNextPage: !!pageInfo.nextCursor,
+            hasPrevPage: !!pageInfo.prevCursor,
+            loading,
+            refetchQuery: {
+              query,
+              variables: {
+                nextCursor: currentPageInfo.nextCursor,
+                prevCursor: currentPageInfo.prevCursor,
+                ...options.variables,
+              },
+            },
+          },
+        };
+
+        delete(props[PROP_NAME]);
 
         return (
           <WrappedComponent
-            data={pagedData ? pagedData.data : null}
-            loading={this.props.getPagedData.loading}
-            hasNextPage={this.hasNextPage()}
-            hasPreviousPage={this.hasPreviousPage()}
-            getNextPage={this.getNextPage}
-            getPreviousPage={this.getPreviousPage}
-            getRefetchQuery={this.getRefetchQuery}
-            {...this.props}
+            {...props}
           />
         );
       }
 
-      private hasNextPage = () => {
-        const entries = this.props.getPagedData[key];
-        const nextCursor = entries ? entries.pageInfo.nextCursor : null;
-        return !!nextCursor;
+      private getQueryKey = (query) => {
+        return query.definitions[0].selectionSet.selections[0].name.value;
       }
 
-      private hasPreviousPage = () => this.context.pages[key] && this.context.pages[key].length > 0;
-
-      private getNextPage = () => {
-        const pageData = this.props.getPagedData[key];
-        const nextCursor = pageData ? pageData.pageInfo.nextCursor : null;
-
-        if (nextCursor) {
-          this.context.setPage(key, nextCursor);
-          this.getPage(nextCursor);
-        }
-      }
-
-      private getPage = (cursor: string) => {
-        const { fetchMore } = this.props.getPagedData;
-        const { sortBy } = this.props;
+      private getPage = (options: IOptions, nextCursor: string, prevCursor: string = null) => {
+        const { fetchMore } = this.props[PROP_NAME];
+        const key = this.getQueryKey(query);
 
         fetchMore({
           query,
           updateQuery: (previousResult, { fetchMoreResult }) => {
+            this.setState({
+              currentPageInfo: previousResult[key].pageInfo,
+            });
+
             const newData = fetchMoreResult[key].data;
-            const { nextCursor } = fetchMoreResult[key].pageInfo;
+            const { nextCursor, prevCursor } = fetchMoreResult[key].pageInfo;
 
             return {
               [key]: {
@@ -131,42 +102,31 @@ const withPagedQuery = (query: any, key: string, pageSize: number) => {
                 pageInfo: {
                   __typename: previousResult[key].pageInfo.__typename,
                   nextCursor,
+                  prevCursor,
                 },
               },
             };
           },
-          variables: { cursor, limit: pageSize, sortBy },
+          variables: {
+            nextCursor,
+            prevCursor,
+            ...options.variables,
+          },
         });
       }
-
-      private getPreviousPage = () => {
-        this.context.getPreviousPage(key, (cursor) => {
-          this.getPage(cursor);
-        });
-      }
-
-      private getRefetchQuery = (sortBy: string) => ({
-        query,
-        variables: {
-          cursor: this.context.getCurrentCursor(key),
-          limit: pageSize,
-          sortBy,
-        },
-      })
     }
 
-    return graphql<{}, IResponse, IVariables>(query, {
-      name: 'getPagedData',
-      options: (props: { sortBy: string }) => ({
-        notifyOnNetworkStatusChange: true,
-        variables: {
-          // default props don't seem to work here
-          limit: pageSize,
-          sortBy: props.sortBy,
-        },
-      }),
-      // TODO: figure out typing here
-      // @ts-ignore
+    return graphql<IHOCProps>(query, {
+      name: PROP_NAME,
+      options: (props) => {
+        const options = (typeof opt === 'function') ? opt(props) : opt;
+
+        return {
+          variables: {
+            ...options.variables,
+          },
+        };
+      },
     })(WithPagedQuery);
   };
 };
