@@ -1,6 +1,5 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { IRecipe } from '../../types';
 
 const GET_RECIPES = gql`
   query GetRecipes {
@@ -29,12 +28,52 @@ const GET_RECIPE = gql`
       batchSize
       boilTime
       description
+      fermentables {
+        id
+        name
+        unit
+        amount
+      }
       name
       type
       source
     }
   }
 `;
+
+export interface IRecipeFermentable {
+  id: string;
+  name: string;
+  unit: string;
+  amount: number;
+}
+
+export interface IRecipe {
+  name: string;
+  description?: string;
+  source?: string;
+  batchSize: number;
+  boilTime: number;
+  fermentables: IRecipeFermentable[];
+  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+}
+
+export interface IRecipeInput {
+  id?: string;
+  input: {
+    name: string;
+    description?: string;
+    source?: string;
+    batchSize: number;
+    boilTime: number;
+    fermentables: Array<{
+      id: string,
+      unit: string;
+      amount: number;
+    }>,
+    type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+  };
+}
 
 interface IRemoveRecipeResponse {
   removeRecipe: string;

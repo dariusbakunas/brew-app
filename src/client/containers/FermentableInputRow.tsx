@@ -3,7 +3,7 @@ import React from 'react';
 import { Fermentable } from '../../types';
 import { Button, Form } from '../components';
 import { IAutoCompleteItem } from '../components/Form/AutoComplete';
-import Input, { InputChangeHandlerType } from '../components/Form/Input';
+import Input from '../components/Form/Input';
 import Select from '../components/Form/Select';
 import withPagedQuery from '../HOC/withPagedQuery';
 
@@ -34,7 +34,7 @@ interface IFermentable {
   id?: string;
   name?: string;
   unit: 'lbs' | 'oz';
-  weight?: number;
+  amount?: number;
 }
 
 interface IFermentableInputRowProps {
@@ -60,12 +60,12 @@ interface IFermentableInputRowState {
   fermentable?: string;
   name: string;
   unit?: 'lb' | 'oz';
-  weight?: number;
+  amount?: number;
 }
 
 class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFermentableInputRowState> {
   public render() {
-    const { fermentable: { id, name: fermentableName, unit, weight } } = this.props;
+    const { fermentable: { id, name: fermentableName, unit, amount } } = this.props;
     const { data: fermentables = [], loading } = {} = this.props.fermentables;
 
     const items = fermentables.map((item) => ({
@@ -77,13 +77,13 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
       <div className='uk-grid' data-uk-grid={true}>
         <div>
           <Input
-            name='weight'
+            name='amount'
             type='number'
             required={true}
             onChange={this.handleChange}
             step={0.1}
             min={0}
-            value={weight}
+            value={amount}
           />
         </div>
         <div>
@@ -156,8 +156,20 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
   }
 }
 
+interface IQueryOpts {
+  fetchPolicy?: string;
+  name: string;
+  variables: {
+    filter?: {
+      name: string,
+    },
+    limit: number,
+    sortBy: string,
+  };
+}
+
 export default withPagedQuery(GET_FERMENTABLES, (props) => {
-  const options = {
+  const options: IQueryOpts = {
     fetchPolicy: 'no-cache',
     name: 'fermentables',
     variables: {

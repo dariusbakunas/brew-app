@@ -5,27 +5,13 @@ import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { StaticContext, withRouter } from 'react-router';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { IRecipe } from '../../types';
 import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { getRecipeQuery } from '../HOC/recipes';
+import { getRecipeQuery, IRecipe, IRecipeFermentable, IRecipeInput } from '../HOC/recipes';
 import { CREATE_RECIPE, UPDATE_RECIPE } from '../queries';
 import { randomId } from '../utils/random';
-
-interface IRecipeInput {
-  id?: string;
-  input: IRecipe;
-}
-
-interface IFermentable {
-  id: string;
-  key: string;
-  name: string;
-  unit: string;
-  weight: number;
-}
 
 interface IEditRecipePageProps {
   recipe: any;
@@ -38,7 +24,13 @@ interface IEditRecipePageProps {
 }
 
 interface IEditRecipePageState {
-  fermentables: IFermentable[];
+  name: string;
+  description?: string;
+  source?: string;
+  batchSize: number;
+  boilTime: number;
+  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+  fermentables: Array<IRecipeFermentable & { key: string, name: string }>;
   loading: boolean;
   validationErrors: {
     [key: string]: string,
@@ -46,25 +38,32 @@ interface IEditRecipePageState {
 }
 
 class EditRecipePage extends React.Component<IEditRecipePageProps & RouteComponentProps> {
-  private static getInitialState: (recipe: IRecipe & { id: string }) => IEditRecipePageState & IRecipe = (recipe) => {
+  private static getInitialState: (recipe: IRecipe & { id: string }) => IEditRecipePageState = (recipe) => {
     const defaultRecipe: IRecipe = {
       batchSize: 5.0,
       boilTime: 60,
       description: null,
-      name: null,
+      fermentables: [],
+      name: '',
       source: null,
       type: 'ALL_GRAIN',
     };
 
     return {
       ...(recipe || defaultRecipe),
-      fermentables: [],
+      fermentables: recipe ? recipe.fermentables.map(({ id, name, unit, amount }) => ({
+        amount,
+        id,
+        key: randomId(),
+        name,
+        unit,
+      })) : [],
       loading: false,
       validationErrors: null,
     };
   }
 
-  public readonly state: IEditRecipePageState & IRecipe;
+  public readonly state: IEditRecipePageState;
 
   constructor(props: IEditRecipePageProps & RouteComponentProps) {
     super(props);
@@ -158,8 +157,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
                       value={boilTime}
                     />
                   </div>
-                  <div className='uk-width-3-6'>
-                  </div>
+                  <div className='uk-width-3-6'/>
                   <div className='uk-width-expand uk-margin'>
                     <Form.TextArea
                       name='description'
@@ -224,11 +222,11 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
       fermentables: [
         ...prevState.fermentables,
         {
+          amount: null,
           id: null,
           key: randomId(),
           name: '',
           unit: 'LB',
-          weight: null,
         },
       ],
     }));
@@ -254,7 +252,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
    * @param key unique key that identifies specific row
    * @param fermentable updated fermentable object
    */
-  private handleUpdateFermentable = (key: string, fermentable: IFermentable) => {
+  private handleUpdateFermentable = (key: string, fermentable: IRecipeFermentable) => {
     this.setState((prevState: IEditRecipePageState) => {
       const fermentables = [...prevState.fermentables];
 
@@ -288,7 +286,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
     this.setState({ loading: true }, () => {
       const {
-        name, description, boilTime, batchSize, type, source,
+        name, boilTime, batchSize, fermentables, description, type, source,
       } = this.state;
 
       const variables: IRecipeInput = {
@@ -296,6 +294,11 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
           batchSize,
           boilTime,
           description,
+          fermentables: fermentables.map(({ id, unit, amount }) => ({
+            amount,
+            id,
+            unit,
+          })),
           name,
           source,
           type,

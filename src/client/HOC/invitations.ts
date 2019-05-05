@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { graphql } from 'react-apollo';
-import { Invitation, IRecipe } from '../../types';
+import { Invitation } from '../../types';
 
 const GET_ALL_INVITATIONS = gql`
   query GetAllInvitations{
@@ -30,7 +30,6 @@ const DELETE_INVITATION = gql`
 
 export interface IGetInvitationsResponse {
   loading: boolean;
-  recipes: Array<IRecipe & { id: string }>;
 }
 
 export interface IDeleteInvitationResponse {

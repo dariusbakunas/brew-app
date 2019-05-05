@@ -23,15 +23,6 @@ export interface ICountry {
   name: string;
 }
 
-export interface IRecipe {
-  name: string;
-  description?: string;
-  source?: string;
-  batchSize: number;
-  boilTime: number;
-  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
-}
-
 export type Fermentable = {
   category: FermentableCategory,
   color: number,

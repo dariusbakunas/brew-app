@@ -7,7 +7,7 @@ interface IFermentable {
   key: string;
   name: string;
   unit: string;
-  weight: number;
+  amount: number;
 }
 
 interface IRecipeFermentableProps {
