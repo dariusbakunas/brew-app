@@ -12,7 +12,7 @@ import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import { getRecipeQuery } from '../HOC/recipes';
 import { CREATE_RECIPE, UPDATE_RECIPE } from '../queries';
-import { randomId } from '../utils/random'
+import { randomId } from '../utils/random';
 
 interface IRecipeInput {
   id?: string;
@@ -216,6 +216,9 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     );
   }
 
+  /**
+   * Invoked whenever new (empty) fermentable row is added
+   */
   private handleAddFermentable = () => {
     this.setState((prevState: IEditRecipePageState) => ({
       fermentables: [
@@ -224,13 +227,17 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
           id: null,
           key: randomId(),
           name: '',
-          unit: 'lbs',
+          unit: 'LB',
           weight: null,
         },
       ],
     }));
   }
 
+  /**
+   * Invoked whenever fermentable row is removed
+   * @param key unique key that identifies specific row
+   */
   private handleRemoveFermentable = (key: string) => {
     this.setState((prevState: IEditRecipePageState) => {
       const fermentables = [...prevState.fermentables]
@@ -242,6 +249,11 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     });
   }
 
+  /**
+   * Invoked whenever fermentable row is updated
+   * @param key unique key that identifies specific row
+   * @param fermentable updated fermentable object
+   */
   private handleUpdateFermentable = (key: string, fermentable: IFermentable) => {
     this.setState((prevState: IEditRecipePageState) => {
       const fermentables = [...prevState.fermentables];
@@ -263,6 +275,11 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   private handleChange: InputChangeHandlerType = (e, { name, value }) =>
     this.setState({ [name]: value })
 
+  /**
+   * Recipe submit function, if this is the new recipe createRecipe query is used,
+   * otherwise it uses updateRecipe
+   * @param e form event (use to cancel form submission)
+   */
   private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
