@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 import React from 'react';
 import { Fermentable } from '../../types';
 import { Button, Form } from '../components';
+import { IAutoCompleteItem } from '../components/Form/AutoComplete';
 import Input, { InputChangeHandlerType } from '../components/Form/Input';
 import Select from '../components/Form/Select';
 import withPagedQuery from '../HOC/withPagedQuery';
@@ -118,7 +119,7 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
    }
   }
 
-  private handleSelect = (item) => {
+  private handleSelect = (item: IAutoCompleteItem) => {
     if (this.props.onChange) {
       const fermentable = {
         ...this.props.fermentable,

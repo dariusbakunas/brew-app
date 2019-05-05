@@ -2,19 +2,19 @@ import debounce from 'lodash.debounce';
 import React from 'react';
 import Input, { InputChangeHandlerType } from './Input';
 
-interface IItem {
+export interface IAutoCompleteItem {
   value: string;
   label: string;
 }
 
 interface IAutoCompleteProps {
   debounced?: boolean;
-  items: IItem[];
+  items: IAutoCompleteItem[];
   name: string;
   onInputChange?: (id: string | number | boolean | string[]) => void;
-  onSelect?: (item: IItem) => void;
+  onSelect?: (item: IAutoCompleteItem) => void;
   style?: object;
-  selected: IItem;
+  selected: IAutoCompleteItem;
 }
 
 interface IAutoCompleteState {
@@ -79,7 +79,7 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
     );
   }
 
-  private handleClick = (item: IItem) => {
+  private handleClick = (item: IAutoCompleteItem) => {
     this.setState({
       search: item.label,
     }, () => {
