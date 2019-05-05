@@ -92,11 +92,13 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
     return (
       <Container>
-        <h3>{recipe ? recipe.name : 'New Recipe'}</h3>
-        <ul className='uk-breadcrumb'>
-          <li><Link to='/recipes'>Recipes</Link></li>
-          <li><span>{recipe ? 'Edit' : 'Create'}</span></li>
-        </ul>
+        <div data-uk-sticky='offset: 72' style={{ backgroundColor: 'white' }}>
+          <h3>{recipe ? recipe.name : 'New Recipe'}</h3>
+          <ul className='uk-breadcrumb'>
+            <li><Link to='/recipes'>Recipes</Link></li>
+            <li><span>{recipe ? 'Edit' : 'Create'}</span></li>
+          </ul>
+        </div>
         <Form onSubmit={(e) => this.handleSubmit(e)} className='uk-margin'>
           <ul data-uk-accordion='multiple: true'>
             <li className='uk-open'>
