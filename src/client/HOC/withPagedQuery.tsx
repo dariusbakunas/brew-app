@@ -18,6 +18,7 @@ interface IQueryResult {
 
 interface IHOCProps {
   [PROP_NAME]: {
+    refetch: (variables: any) => void,
     fetchMore: (args: {
       query: any,
       updateQuery: (previousResult: IQueryResult, result: { fetchMoreResult: IQueryResult }) => void,
@@ -68,11 +69,11 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
       public render() {
         const options = (typeof opt === 'function') ? opt(this.props) : opt;
 
-        const { loading } = this.props[PROP_NAME];
+        const { loading, refetch } = this.props[PROP_NAME];
 
         // only support single selection
         const key = this.getQueryKey(mainQuery);
-        const { pageInfo, data = null } = {...this.props[PROP_NAME][key]};
+        const { pageInfo, data } = {...this.props[PROP_NAME][key]};
 
         const { currentPageInfo } = this.state;
 
@@ -85,6 +86,7 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
             hasNextPage: pageInfo ? !!pageInfo.nextCursor : false,
             hasPrevPage: pageInfo ? !!pageInfo.prevCursor : false,
             loading,
+            refetch,
             refetchQuery: {
               query: mainQuery,
               variables: {
@@ -144,7 +146,7 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
       }
     }
 
-    return graphql<IHOCProps>(mainQuery, {
+    return graphql<any>(mainQuery, {
       name: PROP_NAME,
       options: (props) => {
         const options = (typeof opt === 'function') ? opt(props) : opt;
