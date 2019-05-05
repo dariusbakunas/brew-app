@@ -5,7 +5,7 @@ import { Form } from '../index';
 
 describe('Input', () => {
   it('should render without throwing an error', () => {
-    const wrapper = shallow(<Form.Input label='test' name='test'/>);
+    const wrapper = shallow(<Form.Input id='test-input' label='test' name='test'/>);
     expect(wrapper).toMatchSnapshot();
   });
 
@@ -18,7 +18,7 @@ describe('Input', () => {
   });
 
   it('should render with icon', () => {
-    const wrapper = shallow(<Form.Input label='test' name='test' icon='percent'/>);
+    const wrapper = shallow(<Form.Input id='test-input' label='test' name='test' icon='percent'/>);
     expect(wrapper).toMatchSnapshot();
   });
 

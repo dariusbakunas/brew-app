@@ -80,7 +80,7 @@ class Input extends React.Component<IInputProps> {
 
     return (
       <React.Fragment>
-        {label && <label className='uk-form-label' htmlFor={this.inputId}>{label}</label>}
+        {label && <label className='uk-form-label' htmlFor={id || this.inputId}>{label}</label>}
         { icon ? <div className='uk-inline'>
           <span className='uk-form-icon uk-form-icon-flip uk-icon'>
             <Icon icon={icon} width={iconWidth}/>
