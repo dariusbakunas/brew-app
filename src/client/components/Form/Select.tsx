@@ -6,7 +6,7 @@ interface ISelectProps {
   label?: string;
   name: string;
   onChange: (
-    e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string | string[] | number },
+    e: React.ChangeEvent<HTMLSelectElement>, val: { name: string, value: string },
   ) => void;
   options: Array<{
     value: string,

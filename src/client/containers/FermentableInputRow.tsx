@@ -59,13 +59,13 @@ interface IFermentableInputRowProps {
 interface IFermentableInputRowState {
   fermentable?: string;
   name: string;
-  unit?: 'lbs' | 'oz';
+  unit?: 'lb' | 'oz';
   weight?: number;
 }
 
 class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFermentableInputRowState> {
   public render() {
-    const { fermentable: { id, name, unit, weight } } = this.props;
+    const { fermentable: { id, name: fermentableName, unit, weight } } = this.props;
     const { data: fermentables = [], loading } = {} = this.props.fermentables;
 
     const items = fermentables.map((item) => ({
@@ -88,12 +88,12 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
         </div>
         <div>
           <Select name='unit'
-                  onChange={this.handleChange}
+                  onChange={(e, { name, value }) => this.handleChange(e, { name, value: value.toUpperCase() })}
                   options={[
-                    { value: 'lbs', label: 'lbs' },
+                    { value: 'lb', label: 'lb' },
                     { value: 'oz', label: 'oz' },
                   ]}
-                  value={unit}
+                  value={unit.toLowerCase()}
           />
         </div>
         <div className='uk-width-expand'>
@@ -101,7 +101,7 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
             debounced={true}
             items={items}
             name='id'
-            selected={{ value: id, label: name }}
+            selected={{ value: id, label: fermentableName }}
             onInputChange={this.handleInputChange}
             onSelect={this.handleSelect}
           />
@@ -131,7 +131,9 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
     }
   }
 
-  private handleChange: InputChangeHandlerType = (e, { name, value }) => {
+  private handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    { name, value }: { name: string, value: string }) => {
       if (this.props.onChange) {
         const fermentable = {
           ...this.props.fermentable,
