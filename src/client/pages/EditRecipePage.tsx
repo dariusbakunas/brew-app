@@ -12,10 +12,19 @@ import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import { getRecipeQuery } from '../HOC/recipes';
 import { CREATE_RECIPE, UPDATE_RECIPE } from '../queries';
+import { randomId } from '../utils/random'
 
 interface IRecipeInput {
   id?: string;
   input: IRecipe;
+}
+
+interface IFermentable {
+  id: string;
+  key: string;
+  name: string;
+  unit: string;
+  weight: number;
 }
 
 interface IEditRecipePageProps {
@@ -29,6 +38,7 @@ interface IEditRecipePageProps {
 }
 
 interface IEditRecipePageState {
+  fermentables: IFermentable[];
   loading: boolean;
   validationErrors: {
     [key: string]: string,
@@ -48,6 +58,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
     return {
       ...(recipe || defaultRecipe),
+      fermentables: [],
       loading: false,
       validationErrors: null,
     };
@@ -75,7 +86,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
   public render() {
     const { loading: recipeLoading = false, recipe = null } = {...this.props.getRecipe};
-    const { loading: recipeSaving } = this.state;
+    const { loading: recipeSaving, fermentables } = this.state;
     const loading = recipeLoading || recipeSaving;
     const { batchSize, boilTime, name, description, source, type } = this.state;
 
@@ -87,7 +98,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
           <li><span>{recipe ? 'Edit' : 'Create'}</span></li>
         </ul>
         <Form onSubmit={(e) => this.handleSubmit(e)} className='uk-margin'>
-          <ul uk-accordion='multiple: true'>
+          <ul data-uk-accordion='multiple: true'>
             <li className='uk-open'>
               <a className='uk-accordion-title' href='#'>General</a>
               <div className='uk-accordion-content'>
@@ -161,7 +172,12 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
             <li>
               <a className='uk-accordion-title' href='#'>Fermentables</a>
               <div className='uk-accordion-content'>
-                <RecipeFermentables/>
+                <RecipeFermentables
+                  fermentables={fermentables}
+                  onAdd={this.handleAddFermentable}
+                  onRemove={this.handleRemoveFermentable}
+                  onUpdate={this.handleUpdateFermentable}
+                />
               </div>
             </li>
             <li>
@@ -198,7 +214,52 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     );
   }
 
-  private handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
+  private handleAddFermentable = () => {
+    this.setState((prevState: IEditRecipePageState) => ({
+      fermentables: [
+        ...prevState.fermentables,
+        {
+          id: null,
+          key: randomId(),
+          name: '',
+          unit: 'lbs',
+          weight: null,
+        },
+      ],
+    }));
+  }
+
+  private handleRemoveFermentable = (key: string) => {
+    this.setState((prevState: IEditRecipePageState) => {
+      const fermentables = [...prevState.fermentables]
+        .filter((fermentable) => fermentable.key !== key);
+
+      return {
+        fermentables,
+      };
+    });
+  }
+
+  private handleUpdateFermentable = (key: string, fermentable: IFermentable) => {
+    this.setState((prevState: IEditRecipePageState) => {
+      const fermentables = [...prevState.fermentables];
+
+      return {
+        fermentables: fermentables.map((f) => {
+          if (f.key !== key) {
+            return f;
+          }
+
+          return {
+            ...fermentable,
+          };
+        }),
+      };
+    });
+  }
+
+  private handleChange: InputChangeHandlerType = (e, { name, value }) =>
+    this.setState({ [name]: value })
 
   private handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

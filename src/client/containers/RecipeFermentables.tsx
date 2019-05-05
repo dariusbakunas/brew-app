@@ -1,67 +1,40 @@
-import gql from 'graphql-tag';
 import React from 'react';
-import { graphql } from 'react-apollo';
-import { Form } from '../components';
+import { Button } from '../components';
+import FermentableInputRow from './FermentableInputRow';
 
-const GET_FERMENTABLES = gql`
-  query GetFermentables(
-  $cursor: String,
-  $limit: Int,
-  $sortBy: SortableFermentableField,
-  $sortDirection: SortDirection) {
-    fermentables(
-      cursor: $cursor,
-      limit: $limit,
-      sortBy: $sortBy,
-      sortDirection: $sortDirection) @connection(key: "fermentables") {
-      data {
-        id
-        name
-      }
-      pageInfo {
-        nextCursor
-      }
-    }
-  }
-`;
-
-interface IRecipeFermentablesProps {
-  getFermentables: {
-    fermentables?: {
-      data: Array<{
-        id: string,
-        name: string,
-      }>,
-      pageInfo: {
-        nextCursor?: string,
-      },
-    }
-    loading: boolean,
-  };
+interface IFermentable {
+  id: string;
+  key: string;
+  name: string;
+  unit: string;
+  weight: number;
 }
 
-class RecipeFermentables extends React.Component<IRecipeFermentablesProps> {
-  public render() {
-    const { fermentables: { data: fermentables = [] } = {} } = this.props.getFermentables;
-
-    const items = fermentables.map((fermentable) => ({
-      label: fermentable.name,
-      value: fermentable.id,
-    }));
-
-    return (
-      <Form.AutoComplete items={items}/>
-    );
-  }
+interface IRecipeFermentableProps {
+  fermentables: ReadonlyArray<IFermentable>;
+  onAdd: () => void;
+  onRemove: (key: string) => void;
+  onUpdate: (key: string, fermentable: IFermentable) => void;
 }
 
-// TODO: figure out correct typings for this HOC
-export default graphql<any, any, { limit: number, sortBy: string }>(GET_FERMENTABLES, {
-  name: 'getFermentables',
-  options: (props) => ({
-    variables: {
-      limit: 15,
-      sortBy: 'NAME',
-    },
-  }),
-})(RecipeFermentables);
+function RecipeFermentables({ fermentables, onAdd, onRemove, onUpdate }: IRecipeFermentableProps) {
+  return (
+    <React.Fragment>
+      {
+        fermentables.map((fermentable) => (
+          <FermentableInputRow
+            fermentable={fermentable}
+            key={fermentable.key}
+            onChange={(f: IFermentable) => onUpdate(fermentable.key, f)}
+            onRemove={() => onRemove(fermentable.key)}
+          />
+        ))
+      }
+      <div className='uk-margin-small-top'>
+        <Button onClick={onAdd} className='uk-button-small' variation='link'>Add Fermentable</Button>
+      </div>
+    </React.Fragment>
+  );
+}
+
+export default RecipeFermentables;
