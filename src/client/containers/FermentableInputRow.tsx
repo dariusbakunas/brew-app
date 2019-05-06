@@ -74,9 +74,10 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
     }));
 
     return (
-      <div className='uk-grid' data-uk-grid={true}>
+      <div className='uk-flex uk-flex-bottom' data-uk-grid={true}>
         <div>
           <Input
+            label='Amount'
             name='amount'
             type='number'
             required={true}
@@ -100,13 +101,16 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
           <Form.AutoComplete
             debounced={true}
             items={items}
+            label='Fermentable'
             name='id'
+            required={true}
             selected={{ value: id, label: fermentableName }}
             onInputChange={this.handleInputChange}
             onSelect={this.handleSelect}
           />
         </div>
-        <div className='uk-width-small'>
+        {/* TODO: fine better way to align row contents */}
+        <div className='uk-width-auto'>
           <Button variation='danger' onClick={this.handleRemove}>Remove</Button>
         </div>
       </div>
