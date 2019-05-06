@@ -79,6 +79,13 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     if (prevRecipe !== currentRecipe) {
       this.setState({
         ...this.props.getRecipe.recipe,
+        fermentables: this.props.getRecipe.recipe.fermentables.map(({ id, name, unit, amount }) => ({
+          amount,
+          id,
+          key: randomId(),
+          name,
+          unit,
+        })),
       });
     }
   }
@@ -222,7 +229,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
       fermentables: [
         ...prevState.fermentables,
         {
-          amount: null,
+          amount: '',
           id: null,
           key: randomId(),
           name: '',

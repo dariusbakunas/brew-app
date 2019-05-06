@@ -29,10 +29,10 @@ const GET_RECIPE = gql`
       boilTime
       description
       fermentables {
+        amount
         id
         name
         unit
-        amount
       }
       name
       type

@@ -149,6 +149,12 @@ export const UPDATE_RECIPE = gql`
         id
         username
       }
+      fermentables {
+        amount
+        id
+        name
+        unit
+      }
       name
       description
       source
