@@ -10,9 +10,11 @@ export interface IAutoCompleteItem {
 interface IAutoCompleteProps {
   debounced?: boolean;
   items: IAutoCompleteItem[];
+  label?: string;
   name: string;
   onInputChange?: (id: string | number | boolean | string[]) => void;
   onSelect?: (item: IAutoCompleteItem) => void;
+  required?: boolean;
   style?: object;
   selected: IAutoCompleteItem;
 }
@@ -51,16 +53,18 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
   }
 
   public render() {
-    const { style } = this.props;
+    const { style, required, label } = this.props;
     const { search } = this.state;
 
     return (
       <div style={style}>
         <Input
+          label={label}
           name='search'
           onBlur={() => setTimeout(() => this.setState({ search: this.props.selected.label }), 100)}
           onChange={this.handleSearchChange}
           ref={this.inputRef}
+          required={required}
           value={search}
         />
         <div ref={this.dropdownRef}>
