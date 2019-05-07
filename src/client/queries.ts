@@ -121,48 +121,6 @@ export const CREATE_HOP = gql`
   }
 `;
 
-export const CREATE_RECIPE = gql`
-  mutation CreateRecipe($input: RecipeInput!) {
-    createRecipe(input: $input) {
-      id
-      batchSize
-      boilTime
-      createdBy {
-        id
-        username
-      }
-      name
-      description
-      source
-      type
-    }
-  }
-`;
-
-export const UPDATE_RECIPE = gql`
-  mutation UpdateRecipe($id: ID!, $input: RecipeInput!) {
-    updateRecipe(id: $id, input: $input) {
-      id
-      batchSize
-      boilTime
-      createdBy {
-        id
-        username
-      }
-      fermentables {
-        amount
-        id
-        name
-        unit
-      }
-      name
-      description
-      source
-      type
-    }
-  }
-`;
-
 export const CREATE_FERMENTABLE = gql`
   mutation CreateFermentable($input: FermentableInput!) {
     createFermentable(input: $input) {

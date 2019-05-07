@@ -9,8 +9,14 @@ import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { getRecipeQuery, IRecipe, IRecipeFermentable, IRecipeInput } from '../HOC/recipes';
-import { CREATE_RECIPE, UPDATE_RECIPE } from '../queries';
+import {
+  CREATE_RECIPE,
+  getRecipeQuery,
+  IRecipe,
+  IRecipeFermentable,
+  IRecipeInput,
+  UPDATE_RECIPE
+} from '../HOC/recipes';
 import { randomId } from '../utils/random';
 
 interface IEditRecipePageProps {
