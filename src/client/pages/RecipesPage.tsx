@@ -4,10 +4,9 @@ import React from 'react';
 import { compose } from 'react-apollo';
 import { RouteComponentProps } from 'react-router';
 import { withRouter } from 'react-router-dom';
-import { IRecipe } from '../../types';
 import { Button, Card, Container, Grid, IconNav, Spinner } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import { getRecipes, IGetRecipesQuery, removeRecipe } from '../HOC/recipes';
+import { getRecipes, IGetRecipesQuery, IRecipe, removeRecipe } from '../HOC/recipes';
 import confirm from '../utils/confirm';
 
 export interface IRecipesPageProps {
@@ -25,6 +24,13 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
       status: 'danger',
       timeout: 5000,
     });
+  }
+
+  public componentDidMount(): void {
+    const { location: { state = {} } } = this.props;
+    if (state.recipeCreated) {
+      this.props.getRecipes.refetch();
+    }
   }
 
   public render() {

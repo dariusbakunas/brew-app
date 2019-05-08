@@ -327,7 +327,12 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
       fn({ variables }).then(() => {
         this.setState({ loading: false }, () => {
-          this.props.history.push('/recipes');
+          this.props.history.push({
+            pathname: '/recipes',
+            state: {
+              recipeCreated: fn === createRecipe,
+            },
+          });
         });
       }).catch((err: ApolloError) => {
         const { validationErrors, errorMessage } = handleGraphQLError(err, false);

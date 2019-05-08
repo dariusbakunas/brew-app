@@ -9,6 +9,7 @@ const GET_RECIPES = gql`
       description
       type
       createdBy {
+        id
         username
       }
     }
@@ -131,6 +132,7 @@ interface IRemoveRecipeResponse {
 export interface IGetRecipesQuery {
   loading: boolean;
   recipes: Array<IRecipe & { id: string }>;
+  refetch: () => Promise<void>;
 }
 
 export const getRecipeQuery = graphql<{ match: { params: { id: string }}}>(GET_RECIPE, {
