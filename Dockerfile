@@ -18,7 +18,7 @@ RUN npm ci
 FROM dependencies as build
 COPY . .
 RUN npm run test
-RUN npm run build
+RUN npm run build:prod
 
 # ---- Release ----
 FROM base AS release
