@@ -17,7 +17,7 @@ RUN npm ci
 # ---- Build, Test ----
 FROM dependencies as build
 COPY . .
-RUN npm run test:nowatch
+RUN npm run test
 RUN npm run build
 
 # ---- Release ----
