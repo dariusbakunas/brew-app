@@ -6,7 +6,7 @@ interface ICheckboxProps {
   disabled?: boolean;
   label: string;
   name: string;
-  onChange: (
+  onChange?: (
     e: React.FormEvent<HTMLInputElement>, val: { name: string, value: boolean },
   ) => void;
 }

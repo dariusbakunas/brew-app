@@ -4,7 +4,7 @@ import Checkbox from '../Form/Checkbox';
 type ItemArray = Array<{ label: string, key: string, checked?: boolean }>;
 
 interface ICheckboxListProps {
-  onChange: (items: ICheckboxListState) => void;
+  onChange?: (items: ICheckboxListState) => void;
   items: ItemArray;
 }
 
