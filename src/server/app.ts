@@ -29,6 +29,11 @@ const app = express();
 
 app.use(compression());
 
+app.get('/health-check', (req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Status: OK!');
+});
+
 // force HTTPS in production
 app.get('*', (req, res, next) => {
   if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
