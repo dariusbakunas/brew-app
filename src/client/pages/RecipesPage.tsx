@@ -9,6 +9,12 @@ import handleGraphQLError from '../errors/handleGraphQLError';
 import { getRecipes, IGetRecipesQuery, IRecipe, removeRecipe } from '../HOC/recipes';
 import confirm from '../utils/confirm';
 
+interface IWindow {
+  UIkit?: any;
+}
+
+declare var window: IWindow;
+
 export interface IRecipesPageProps {
   getRecipes: IGetRecipesQuery;
   removeRecipe: (args: { variables: { id: string } }) => Promise<void>;

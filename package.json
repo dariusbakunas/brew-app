@@ -12,7 +12,6 @@
     "client:dev": "",
     "server:dev": "nodemon -r dotenv/config dist/server.bundle.js",
     "server:prod": "node dist/server.bundle.js",
-    "heroku-postbuild": "webpack --mode=production --progress",
     "start": "node dist/server.bundle.js",
     "test": "jest",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
