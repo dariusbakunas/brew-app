@@ -24,6 +24,6 @@ RUN npm run build:prod
 FROM base AS release
 COPY --from=dependencies /app/prod_node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-EXPOSE 4000
+EXPOSE 3000
 CMD npm run server:prod
 
