@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "outDir": "build",
     "sourceMap": true,
-    "typeRoots": [ "./types", "./node_modules/@types"],
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["./src/**/*.tsx?"]
 }

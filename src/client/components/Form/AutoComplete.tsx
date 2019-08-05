@@ -60,7 +60,7 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
       <div style={style}>
         <Input
           label={label}
-          name='search'
+          name="search"
           onBlur={() => setTimeout(() => this.setState({ search: this.props.selected.label }), 100)}
           onChange={this.handleSearchChange}
           ref={this.inputRef}
@@ -68,15 +68,15 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
           value={search}
         />
         <div ref={this.dropdownRef}>
-          <ul className='uk-nav uk-dropdown-nav'>
+          <ul className="uk-nav uk-dropdown-nav">
             {/*<li className='uk-active'><a href='#'>Active</a></li>*/}
-            {
-              this.props.items.map((item) => (
-                <li key={item.value}>
-                  <a href='#' onClick={() => this.handleClick(item)}>{item.label}</a>
-                </li>
-              ))
-            }
+            {this.props.items.map((item) => (
+              <li key={item.value}>
+                <a href="#" onClick={() => this.handleClick(item)}>
+                  {item.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -84,20 +84,23 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
   }
 
   private handleClick = (item: IAutoCompleteItem) => {
-    this.setState({
-      search: item.label,
-    }, () => {
-      if (this.props.onSelect) {
-        this.props.onSelect(item);
+    this.setState(
+      {
+        search: item.label,
+      },
+      () => {
+        if (this.props.onSelect) {
+          this.props.onSelect(item);
+        }
       }
-    });
-  }
+    );
+  };
 
   private changeCallback = (value: string | number | boolean | string[]) => {
     if (this.props.onInputChange) {
       this.props.onInputChange(value);
     }
-  }
+  };
 
   private handleSearchChange: InputChangeHandlerType = (e, { value }) => {
     // @ts-ignore
@@ -106,7 +109,7 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
     });
     window.UIkit.dropdown(this.dropdownRef.current).show();
     this.changeCallback(value);
-  }
+  };
 }
 
 export default AutoComplete;

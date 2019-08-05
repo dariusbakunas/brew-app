@@ -2,9 +2,7 @@ import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { Hop } from '../../types';
-import {
-  Button, Icon, IconNav, Pager, Spinner, Table,
-} from '../components';
+import { Button, Icon, IconNav, Pager, Spinner, Table } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withPagedQuery from '../HOC/withPagedQuery';
 import HopModal from '../modals/HopModal';
@@ -21,16 +19,16 @@ const DEFAULT_PAGE_SIZE = 8;
 
 interface IHopsProps {
   hops: {
-    data: Array<Hop & { id: string }>,
-    getNextPage: () => void,
-    getPrevPage: () => void,
-    hasNextPage: boolean,
-    hasPrevPage: boolean,
-    loading: boolean,
+    data: Array<Hop & { id: string }>;
+    getNextPage: () => void;
+    getPrevPage: () => void;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    loading: boolean;
     refetchQuery: {
-      query: any,
-      variables: any,
-    },
+      query: any;
+      variables: any;
+    };
   };
   removeHop: (args: { variables: { id: string } }) => Promise<void>;
 }
@@ -74,89 +72,53 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
   };
 
   public render() {
-    const {
-      data: hops = [],
-      getNextPage,
-      getPrevPage,
-      hasNextPage,
-      hasPrevPage,
-      loading,
-      refetchQuery,
-    } = this.props.hops;
+    const { data: hops = [], getNextPage, getPrevPage, hasNextPage, hasPrevPage, loading, refetchQuery } = this.props.hops;
 
     return (
       <React.Fragment>
-        {
-          hops && hops.length ?
-            <React.Fragment>
-              <Pager
-                hasNextPage={hasNextPage}
-                hasPrevPage={hasPrevPage}
-                onNextPage={getNextPage}
-                onPrevPage={getPrevPage}
-              />
-              <Table size='small' stripped={true}>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Origin</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Alpha</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@m'>Beta</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s uk-table-shrink '>Aroma</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s uk-table-shrink'>Bittering</Table.HeaderCell>
-                    <Table.HeaderCell/>
+        {hops && hops.length ? (
+          <React.Fragment>
+            <Pager hasNextPage={hasNextPage} hasPrevPage={hasPrevPage} onNextPage={getNextPage} onPrevPage={getPrevPage} />
+            <Table size="small" stripped={true}>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>Origin</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s">Alpha</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@m">Beta</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s uk-table-shrink ">Aroma</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s uk-table-shrink">Bittering</Table.HeaderCell>
+                  <Table.HeaderCell />
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {hops.map((hop: Hop & { id: string }) => (
+                  <Table.Row key={hop.id}>
+                    <Table.Cell>{hop.name}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap">{hop.origin.name}</Table.Cell>
+                    <Table.Cell className="uk-visible@s uk-text-nowrap">{HopsPage.formatAcidValue(hop.aaLow, hop.aaHigh)}</Table.Cell>
+                    <Table.Cell className="uk-visible@m uk-text-nowrap">{HopsPage.formatAcidValue(hop.betaLow, hop.betaHigh)}</Table.Cell>
+                    <Table.Cell className="uk-visible@s">{hop.aroma ? <Icon icon="check" width="20px" /> : <Icon icon="close" width="20px" />}</Table.Cell>
+                    <Table.Cell className="uk-visible@s">{hop.bittering ? <Icon icon="check" width="20px" /> : <Icon icon="close" width="20px" />}</Table.Cell>
+                    <Table.Cell>
+                      <IconNav className="uk-text-nowrap">
+                        <IconNav.Item icon="pencil" onClick={() => this.handleEditHop(hop)} />
+                        <IconNav.Item icon="trash" onClick={() => this.handleRemoveHop(hop)} />
+                      </IconNav>
+                    </Table.Cell>
                   </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {
-                    hops.map((hop: Hop & { id: string }) => (
-                      <Table.Row key={hop.id}>
-                        <Table.Cell>{hop.name}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{hop.origin.name}</Table.Cell>
-                        <Table.Cell
-                          className='uk-visible@s uk-text-nowrap'>
-                          {HopsPage.formatAcidValue(hop.aaLow, hop.aaHigh)}
-                        </Table.Cell>
-                        <Table.Cell
-                          className='uk-visible@m uk-text-nowrap'>
-                          {HopsPage.formatAcidValue(hop.betaLow, hop.betaHigh)}
-                        </Table.Cell>
-                        <Table.Cell className='uk-visible@s'>
-                          {
-                            hop.aroma ?
-                              <Icon icon='check' width='20px'/> :
-                              <Icon icon='close' width='20px'/>
-                          }
-                        </Table.Cell>
-                        <Table.Cell className='uk-visible@s'>
-                          {
-                            hop.bittering ?
-                              <Icon icon='check' width='20px'/> :
-                              <Icon icon='close' width='20px'/>
-                          }
-                        </Table.Cell>
-                        <Table.Cell>
-                          <IconNav className='uk-text-nowrap'>
-                            <IconNav.Item icon='pencil' onClick={() => this.handleEditHop(hop)}/>
-                            <IconNav.Item icon='trash' onClick={() => this.handleRemoveHop(hop)}/>
-                          </IconNav>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                </Table.Body>
-              </Table>
-            </React.Fragment> :
-            <div className='uk-margin-bottom'>No hops</div>
-        }
-        <Spinner active={loading || this.state.loading}/>
-        <Button variation='primary' onClick={this.handleAddHop}>Add</Button>
-        <HopModal
-          hop={this.state.currentHop}
-          id='hop-modal'
-          open={this.state.hopModalOpen}
-          onHide={() => this.setState({ hopModalOpen: false, currentHop: null })}
-          refetchQuery={refetchQuery}
-        />
+                ))}
+              </Table.Body>
+            </Table>
+          </React.Fragment>
+        ) : (
+          <div className="uk-margin-bottom">No hops</div>
+        )}
+        <Spinner active={loading || this.state.loading} />
+        <Button variation="primary" onClick={this.handleAddHop}>
+          Add
+        </Button>
+        <HopModal hop={this.state.currentHop} id="hop-modal" open={this.state.hopModalOpen} onHide={() => this.setState({ hopModalOpen: false, currentHop: null })} refetchQuery={refetchQuery} />
       </React.Fragment>
     );
   }
@@ -166,19 +128,20 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
       currentHop: null,
       hopModalOpen: true,
     });
-  }
+  };
 
   private handleEditHop = (hop: Hop) => {
     this.setState({
       currentHop: hop,
       hopModalOpen: true,
     });
-  }
+  };
 
   private handleRemoveHop = ({ id, name, origin }: Partial<Hop> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
       this.setState({ loading: true }, () => {
-        this.props.removeHop({ variables: { id } })
+        this.props
+          .removeHop({ variables: { id } })
           .then(() => {
             this.setState({ loading: false });
           })
@@ -189,7 +152,7 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
           });
       });
     });
-  }
+  };
 }
 
 export default compose(
@@ -204,9 +167,7 @@ export default compose(
     name: 'removeHop',
     options: (props: IHopsProps) => ({
       awaitRefetchQueries: true,
-      refetchQueries: [
-        props.hops.refetchQuery,
-      ],
+      refetchQueries: [props.hops.refetchQuery],
     }),
-  }),
+  })
 )(HopsPage);

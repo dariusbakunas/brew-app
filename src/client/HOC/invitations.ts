@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo';
 import { Invitation } from '../../types';
 
 const GET_ALL_INVITATIONS = gql`
-  query GetAllInvitations{
+  query GetAllInvitations {
     invitations {
       id
       code
@@ -23,7 +23,7 @@ const CREATE_INVITATION = gql`
 `;
 
 const DELETE_INVITATION = gql`
-  mutation DeleteInvitation($email: String!){
+  mutation DeleteInvitation($email: String!) {
     deleteInvitation(email: $email)
   }
 `;
@@ -38,9 +38,9 @@ export interface IDeleteInvitationResponse {
 
 export interface ICreateInvitationResponse {
   createInvitation: {
-    id: string,
-    email: string,
-    code: string,
+    id: string;
+    email: string;
+    code: string;
   };
 }
 
@@ -72,5 +72,4 @@ export const createInvitationMutation = graphql<any, ICreateInvitationResponse>(
   },
 });
 
-export const getAllInvitationsQuery = graphql<any, IGetInvitationsResponse>(
-  GET_ALL_INVITATIONS, { name: 'getAllInvitations' });
+export const getAllInvitationsQuery = graphql<any, IGetInvitationsResponse>(GET_ALL_INVITATIONS, { name: 'getAllInvitations' });

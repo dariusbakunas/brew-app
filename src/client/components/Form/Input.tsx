@@ -6,7 +6,7 @@ import Icon from '../Icon';
 
 export type InputChangeHandlerType = (
   e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
-  val: { name: string, value: string | string[] | number | boolean },
+  val: { name: string; value: string | string[] | number | boolean }
 ) => void;
 
 interface IInputProps {
@@ -50,16 +50,9 @@ class Input extends React.Component<IInputProps> {
   }
 
   public render() {
-    const {
-      disabled, error, id, label, min, max, icon, iconWidth,
-      name, required, step, type, value, width, style,
-    } = this.props;
+    const { disabled, error, id, label, min, max, icon, iconWidth, name, required, step, type, value, width, style } = this.props;
 
-    const classes = classNames(
-      'uk-input',
-      { 'uk-form-danger': error },
-      { [`uk-form-width-${width}`]: width },
-    );
+    const classes = classNames('uk-input', { 'uk-form-danger': error }, { [`uk-form-width-${width}`]: width });
 
     const inputElement = (
       <input
@@ -76,18 +69,27 @@ class Input extends React.Component<IInputProps> {
         disabled={disabled}
         required={required}
         style={style}
-      />);
+      />
+    );
 
     return (
       <React.Fragment>
-        {label && <label className='uk-form-label' htmlFor={id || this.inputId}>{label}</label>}
-        { icon ? <div className='uk-inline'>
-          <span className='uk-form-icon uk-form-icon-flip uk-icon'>
-            <Icon icon={icon} width={iconWidth}/>
-          </span>
-          {inputElement}
-        </div> : inputElement}
-        {error && <span className='uk-text-danger'>{error}</span>}
+        {label && (
+          <label className="uk-form-label" htmlFor={id || this.inputId}>
+            {label}
+          </label>
+        )}
+        {icon ? (
+          <div className="uk-inline">
+            <span className="uk-form-icon uk-form-icon-flip uk-icon">
+              <Icon icon={icon} width={iconWidth} />
+            </span>
+            {inputElement}
+          </div>
+        ) : (
+          inputElement
+        )}
+        {error && <span className="uk-text-danger">{error}</span>}
       </React.Fragment>
     );
   }
@@ -96,24 +98,21 @@ class Input extends React.Component<IInputProps> {
     if (this.props.onChange) {
       this.props.onChange(e, value);
     }
-  }
+  };
 
   private handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const {
-      name, onChange, step, type,
-    } = this.props;
+    const { name, onChange, step, type } = this.props;
     const { value } = e.currentTarget;
 
     if (onChange) {
       if (value !== '' && type === 'number' && typeof value === 'string') {
-        const num = step === 1 ? parseInt(value, 10) :
-          parseFloat(value);
+        const num = step === 1 ? parseInt(value, 10) : parseFloat(value);
         this.changeCallback(e, { name, value: num });
       } else {
         this.changeCallback(e, { name, value });
       }
     }
-  }
+  };
 }
 
 export default Input;

@@ -24,51 +24,51 @@ export interface ICountry {
 }
 
 export type Fermentable = {
-  category: FermentableCategory,
-  color: number,
-  description: string,
-  name: string,
-  origin?: ICountry,
-  potential?: number,
-  type?: GrainType,
-  yield: number,
+  category: FermentableCategory;
+  color: number;
+  description: string;
+  name: string;
+  origin?: ICountry;
+  potential?: number;
+  type?: GrainType;
+  yield: number;
 };
 
 export type FermentableInput = {
-  id?: string,
+  id?: string;
   input: Fermentable & {
-    originId: string,
-  }
+    originId: string;
+  };
 };
 
 export type Hop = {
-  aaLow?: number,
-  aaHigh?: number,
-  aroma: boolean,
-  bittering: boolean,
-  betaLow?: number,
-  betaHigh?: number,
-  description: string,
-  name: string,
-  origin?: ICountry,
+  aaLow?: number;
+  aaHigh?: number;
+  aroma: boolean;
+  bittering: boolean;
+  betaLow?: number;
+  betaHigh?: number;
+  description: string;
+  name: string;
+  origin?: ICountry;
 };
 
 export type HopInput = {
-  id?: string,
+  id?: string;
   input: Hop & {
-    originId: string,
-  },
+    originId: string;
+  };
 };
 
 export type Invitation = {
-  id?: string,
-  code: string,
-  email: string,
+  id?: string;
+  code: string;
+  email: string;
 };
 
 export type InvitationInput = {
-  email: string,
-  sendEmail: boolean,
+  email: string;
+  sendEmail: boolean;
 };
 
 export enum UserStatus {
@@ -79,24 +79,24 @@ export enum UserStatus {
 }
 
 export type UserRole = {
-  name: string,
-  code: string,
+  name: string;
+  code: string;
 };
 
 export type User = {
-  id: string,
-  firstName: string,
-  isAdmin: boolean,
-  lastName: string,
-  username: string,
-  email: string,
-  roles: Array<UserRole & { id: string }>,
-  status: UserStatus,
+  id: string;
+  firstName: string;
+  isAdmin: boolean;
+  lastName: string;
+  username: string;
+  email: string;
+  roles: Array<UserRole & { id: string }>;
+  status: UserStatus;
 };
 
 export type YeastLab = {
-  id: string,
-  name: string,
+  id: string;
+  name: string;
 };
 
 export enum YeastForm {
@@ -126,24 +126,24 @@ export interface IYeast {
 }
 
 export type YeastInput = {
-  id?: string,
-  input: IYeast & { labId: string },
+  id?: string;
+  input: IYeast & { labId: string };
 };
 
 export type Water = {
-  name: string,
-  pH: number,
-  alkalinity: number,
-  calcium: number,
-  magnesium: number,
-  sodium: number,
-  sulfate: number,
-  chloride: number,
-  bicarbonate: number,
-  description: string,
+  name: string;
+  pH: number;
+  alkalinity: number;
+  calcium: number;
+  magnesium: number;
+  sodium: number;
+  sulfate: number;
+  chloride: number;
+  bicarbonate: number;
+  description: string;
 };
 
 export type WaterInput = {
-  id?: string,
-  input: Water,
+  id?: string;
+  input: Water;
 };

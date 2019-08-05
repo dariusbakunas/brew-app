@@ -5,33 +5,29 @@ const PROP_NAME = 'getPagedData';
 
 interface IQueryResult {
   [key: string]: {
-    data: any,
-    loading: boolean,
+    data: any;
+    loading: boolean;
     pageInfo: {
-      nextCursor: string,
-      prevCursor: string,
-      __typename: string,
-    },
-    __typename: string,
+      nextCursor: string;
+      prevCursor: string;
+      __typename: string;
+    };
+    __typename: string;
   };
 }
 
 interface IHOCProps {
   [PROP_NAME]: {
-    refetch: (variables: any) => void,
-    fetchMore: (args: {
-      query: any,
-      updateQuery: (previousResult: IQueryResult, result: { fetchMoreResult: IQueryResult }) => void,
-      variables: any,
-    }) => void,
+    refetch: (variables: any) => void;
+    fetchMore: (args: { query: any; updateQuery: (previousResult: IQueryResult, result: { fetchMoreResult: IQueryResult }) => void; variables: any }) => void;
   } & IQueryResult;
   variables: any;
 }
 
 interface IHOCState {
   currentPageInfo: {
-    nextCursor: string,
-    prevCursor: string,
+    nextCursor: string;
+    prevCursor: string;
   };
 }
 
@@ -67,13 +63,13 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
       }
 
       public render() {
-        const options = (typeof opt === 'function') ? opt(this.props) : opt;
+        const options = typeof opt === 'function' ? opt(this.props) : opt;
 
         const { loading, refetch } = this.props[PROP_NAME];
 
         // only support single selection
         const key = this.getQueryKey(mainQuery);
-        const { pageInfo, data } = {...this.props[PROP_NAME][key]};
+        const { pageInfo, data } = { ...this.props[PROP_NAME][key] };
 
         const { currentPageInfo } = this.state;
 
@@ -100,16 +96,12 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
 
         delete childProps[PROP_NAME];
 
-        return (
-          <WrappedComponent
-            {...childProps}
-          />
-        );
+        return <WrappedComponent {...childProps} />;
       }
 
       private getQueryKey = (query: any) => {
         return query.definitions[0].selectionSet.selections[0].name.value;
-      }
+      };
 
       private getPage = (options: IOptions, nextCursor: string, prevCursor: string = null) => {
         const { fetchMore } = this.props[PROP_NAME];
@@ -143,13 +135,13 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
             ...options.variables,
           },
         });
-      }
+      };
     }
 
     return graphql<any>(mainQuery, {
       name: PROP_NAME,
       options: (props) => {
-        const options = (typeof opt === 'function') ? opt(props) : opt;
+        const options = typeof opt === 'function' ? opt(props) : opt;
 
         return {
           variables: {

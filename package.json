@@ -16,7 +16,8 @@
     "test": "jest",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build"
+    "styleguide:build": "styleguidist build",
+    "prettier": "pretty-quick"
   },
   "repository": {
     "type": "git",
@@ -129,6 +130,8 @@
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.11",
     "postcss-loader": "^3.0.0",
+    "prettier": "1.18.2",
+    "pretty-quick": "^1.11.1",
     "react-docgen-typescript": "^1.12.3",
     "react-styleguidist": "^9.0.7",
     "sass-loader": "^7.1.0",

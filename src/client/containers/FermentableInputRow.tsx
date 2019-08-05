@@ -8,18 +8,8 @@ import Select from '../components/Form/Select';
 import withPagedQuery from '../HOC/withPagedQuery';
 
 const GET_FERMENTABLES = gql`
-  query GetFermentables(
-  $nextCursor: String,
-  $limit: Int,
-  $filter: FermentablesFilter,
-  $sortBy: SortableFermentableField,
-  $sortDirection: SortDirection) {
-    fermentables(
-      nextCursor: $nextCursor,
-      limit: $limit,
-      filter: $filter,
-      sortBy: $sortBy,
-      sortDirection: $sortDirection) {
+  query GetFermentables($nextCursor: String, $limit: Int, $filter: FermentablesFilter, $sortBy: SortableFermentableField, $sortDirection: SortDirection) {
+    fermentables(nextCursor: $nextCursor, limit: $limit, filter: $filter, sortBy: $sortBy, sortDirection: $sortDirection) {
       data {
         id
         name
@@ -28,7 +18,8 @@ const GET_FERMENTABLES = gql`
         nextCursor
       }
     }
-  }`;
+  }
+`;
 
 interface IFermentable {
   id?: string;
@@ -39,17 +30,17 @@ interface IFermentable {
 
 interface IFermentableInputRowProps {
   fermentables: {
-    data: Array<Fermentable & { id: string }>,
-    getNextPage: () => void,
-    getPrevPage: () => void,
-    hasNextPage: boolean,
-    hasPrevPage: boolean,
-    loading: boolean,
+    data: Array<Fermentable & { id: string }>;
+    getNextPage: () => void;
+    getPrevPage: () => void;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    loading: boolean;
     refetchQuery: {
-      query: any,
-      variables: any,
-    },
-    refetch: (variables: any) => void,
+      query: any;
+      variables: any;
+    };
+    refetch: (variables: any) => void;
   };
   fermentable: IFermentable;
   onChange: (fermentable: IFermentable) => void;
@@ -65,8 +56,10 @@ interface IFermentableInputRowState {
 
 class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFermentableInputRowState> {
   public render() {
-    const { fermentable: { id, name: fermentableName, unit, amount } } = this.props;
-    const { data: fermentables = [], loading } = {} = this.props.fermentables;
+    const {
+      fermentable: { id, name: fermentableName, unit, amount },
+    } = this.props;
+    const { data: fermentables = [], loading } = ({} = this.props.fermentables);
 
     const items = fermentables.map((item) => ({
       label: item.name,
@@ -74,35 +67,24 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
     }));
 
     return (
-      <div className='uk-flex uk-flex-bottom' data-uk-grid={true}>
+      <div className="uk-flex uk-flex-bottom" data-uk-grid={true}>
         <div>
-          <Input
-            label='Amount'
-            name='amount'
-            type='number'
-            required={true}
-            onChange={this.handleChange}
-            step={0.1}
-            min={0}
-            value={amount}
-          />
+          <Input label="Amount" name="amount" type="number" required={true} onChange={this.handleChange} step={0.1} min={0} value={amount} />
         </div>
         <div>
-          <Select name='unit'
-                  onChange={(e, { name, value }) => this.handleChange(e, { name, value: value.toUpperCase() })}
-                  options={[
-                    { value: 'lb', label: 'lb' },
-                    { value: 'oz', label: 'oz' },
-                  ]}
-                  value={unit.toLowerCase()}
+          <Select
+            name="unit"
+            onChange={(e, { name, value }) => this.handleChange(e, { name, value: value.toUpperCase() })}
+            options={[{ value: 'lb', label: 'lb' }, { value: 'oz', label: 'oz' }]}
+            value={unit.toLowerCase()}
           />
         </div>
-        <div className='uk-width-expand'>
+        <div className="uk-width-expand">
           <Form.AutoComplete
             debounced={true}
             items={items}
-            label='Fermentable'
-            name='id'
+            label="Fermentable"
+            name="id"
             required={true}
             selected={{ value: id, label: fermentableName }}
             onInputChange={this.handleInputChange}
@@ -110,18 +92,20 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
           />
         </div>
         {/* TODO: fine better way to align row contents */}
-        <div className='uk-width-auto'>
-          <Button variation='danger' onClick={this.handleRemove}>Remove</Button>
+        <div className="uk-width-auto">
+          <Button variation="danger" onClick={this.handleRemove}>
+            Remove
+          </Button>
         </div>
       </div>
     );
   }
 
   private handleRemove = () => {
-   if (this.props.onRemove) {
-     this.props.onRemove();
-   }
-  }
+    if (this.props.onRemove) {
+      this.props.onRemove();
+    }
+  };
 
   private handleSelect = (item: IAutoCompleteItem) => {
     if (this.props.onChange) {
@@ -133,20 +117,18 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
 
       this.props.onChange(fermentable);
     }
-  }
+  };
 
-  private handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-    { name, value }: { name: string, value: string }) => {
-      if (this.props.onChange) {
-        const fermentable = {
-          ...this.props.fermentable,
-          [name]: value,
-        };
+  private handleChange = (e: React.ChangeEvent<HTMLSelectElement>, { name, value }: { name: string; value: string }) => {
+    if (this.props.onChange) {
+      const fermentable = {
+        ...this.props.fermentable,
+        [name]: value,
+      };
 
-        this.props.onChange(fermentable);
-      }
-  }
+      this.props.onChange(fermentable);
+    }
+  };
 
   private handleInputChange = (value: string) => {
     const { refetch } = this.props.fermentables;
@@ -157,7 +139,7 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
       limit: 15,
       sortBy: 'NAME',
     });
-  }
+  };
 }
 
 interface IQueryOpts {
@@ -165,10 +147,10 @@ interface IQueryOpts {
   name: string;
   variables: {
     filter?: {
-      name: string,
-    },
-    limit: number,
-    sortBy: string,
+      name: string;
+    };
+    limit: number;
+    sortBy: string;
   };
 }
 

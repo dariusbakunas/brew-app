@@ -33,7 +33,9 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
   }
 
   public componentDidMount(): void {
-    const { location: { state = {} } } = this.props;
+    const {
+      location: { state = {} },
+    } = this.props;
     if (state.recipeCreated) {
       this.props.getRecipes.refetch();
     }
@@ -45,32 +47,31 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
     return (
       <Container>
         <h3>Recipes</h3>
-        <Grid className='uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s'>
-          {
-            recipes.map((recipe: IRecipe & { id: string }) => (
-              <div key={recipe.id}>
-                <Card hover={true}>
-                  <Card.Header>
-                    {recipe.name}
-                  </Card.Header>
-                  <Card.Body>
-                    {recipe.description || 'No description'}
-                  </Card.Body>
-                  <Card.Footer>
-                    <a href='#' className='uk-button uk-button-text'>Brew</a>
-                    <IconNav className='uk-text-nowrap uk-float-right'>
-                      <IconNav.Item icon='pencil' onClick={() => this.handleEditRecipe(recipe)}/>
-                      <IconNav.Item icon='trash' onClick={() => this.handleRemoveRecipe(recipe)}/>
-                    </IconNav>
-                  </Card.Footer>
-                </Card>
-              </div>
-            ))}
-          <div className='uk-width-3-3'>
-            <Button variation='primary' onClick={this.handleCreate}>New</Button>
+        <Grid className="uk-child-width-1-3@l uk-child-width-1-2@m uk-child-width-1-1@s">
+          {recipes.map((recipe: IRecipe & { id: string }) => (
+            <div key={recipe.id}>
+              <Card hover={true}>
+                <Card.Header>{recipe.name}</Card.Header>
+                <Card.Body>{recipe.description || 'No description'}</Card.Body>
+                <Card.Footer>
+                  <a href="#" className="uk-button uk-button-text">
+                    Brew
+                  </a>
+                  <IconNav className="uk-text-nowrap uk-float-right">
+                    <IconNav.Item icon="pencil" onClick={() => this.handleEditRecipe(recipe)} />
+                    <IconNav.Item icon="trash" onClick={() => this.handleRemoveRecipe(recipe)} />
+                  </IconNav>
+                </Card.Footer>
+              </Card>
+            </div>
+          ))}
+          <div className="uk-width-3-3">
+            <Button variation="primary" onClick={this.handleCreate}>
+              New
+            </Button>
           </div>
         </Grid>
-        <Spinner active={loading}/>
+        <Spinner active={loading} />
       </Container>
     );
   }
@@ -78,12 +79,13 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
   private handleEditRecipe = (recipe: IRecipe & { id: string }) => {
     const { pathname } = this.props.location;
     this.props.history.push(path.join(pathname, recipe.id));
-  }
+  };
 
   private handleRemoveRecipe = ({ id, name }: IRecipe & { id: string }) => {
     confirm(`Are you sure you want to remove ${name}?`, () => {
       this.setState({ loading: true }, () => {
-        this.props.removeRecipe({ variables: { id }})
+        this.props
+          .removeRecipe({ variables: { id } })
           .then(() => this.setState({ loading: false }))
           .catch((err: ApolloError) => {
             this.setState({ loading: false }, () => {
@@ -92,15 +94,15 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
           });
       });
     });
-  }
+  };
 
   private handleCreate = () => {
     const { pathname } = this.props.location;
     this.props.history.push(path.join(pathname, 'create'));
-  }
+  };
 }
 
 export default compose(
   getRecipes,
-  removeRecipe,
+  removeRecipe
 )(withRouter(RecipesPage));

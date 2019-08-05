@@ -1,7 +1,7 @@
 import React from 'react';
 import Checkbox from '../Form/Checkbox';
 
-type ItemArray = Array<{ label: string, key: string, checked?: boolean }>;
+type ItemArray = Array<{ label: string; key: string; checked?: boolean }>;
 
 interface ICheckboxListProps {
   onChange?: (items: ICheckboxListState) => void;
@@ -31,20 +31,12 @@ class CheckboxList extends React.Component<ICheckboxListProps> {
     const { items } = this.props;
 
     return (
-      <ul className='uk-list'>
-        {
-          items.map((item) => (
-            <li key={item.key}>
-              <Checkbox
-                checked={!!this.state[item.key]}
-                label={item.label}
-                name={item.key}
-                onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                  this.handleChange(item.key, e.currentTarget.checked)}
-              />
-            </li>
-          ))
-        }
+      <ul className="uk-list">
+        {items.map((item) => (
+          <li key={item.key}>
+            <Checkbox checked={!!this.state[item.key]} label={item.label} name={item.key} onChange={(e: React.FormEvent<HTMLInputElement>) => this.handleChange(item.key, e.currentTarget.checked)} />
+          </li>
+        ))}
       </ul>
     );
   }

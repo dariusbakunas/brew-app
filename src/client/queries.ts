@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_HOPS = gql`
-  query GetHops($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection){
+  query GetHops($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection) {
     hops(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
       data {
         id
@@ -27,7 +27,7 @@ export const GET_HOPS = gql`
 `;
 
 export const GET_FERMENTABLES = gql`
-  query GetFermentables($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableFermentableField, $sortDirection: SortDirection){
+  query GetFermentables($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableFermentableField, $sortDirection: SortDirection) {
     fermentables(nextCursor: $nextCursor, prevCursor: $prevCursor, limit: $limit, sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
       data {
         id
@@ -248,7 +248,7 @@ export const UPDATE_WATER = gql`
 `;
 
 export const GET_ALL_COUNTRIES = gql`
-  query GetAllCountries{
+  query GetAllCountries {
     countries {
       id
       name
@@ -257,7 +257,7 @@ export const GET_ALL_COUNTRIES = gql`
 `;
 
 export const GET_YEAST_LABS = gql`
-  query GetYeastLabs{
+  query GetYeastLabs {
     yeastLabs {
       id
       name

@@ -9,14 +9,7 @@ import { Button, Container, Form, Spinner } from '../components';
 import { InputChangeHandlerType } from '../components/Form/Input';
 import RecipeFermentables from '../containers/RecipeFermentables';
 import handleGraphQLError from '../errors/handleGraphQLError';
-import {
-  CREATE_RECIPE,
-  getRecipeQuery,
-  IRecipe,
-  IRecipeFermentable,
-  IRecipeInput,
-  UPDATE_RECIPE
-} from '../HOC/recipes';
+import { CREATE_RECIPE, getRecipeQuery, IRecipe, IRecipeFermentable, IRecipeInput, UPDATE_RECIPE } from '../HOC/recipes';
 import { randomId } from '../utils/random';
 
 interface IEditRecipePageProps {
@@ -24,8 +17,8 @@ interface IEditRecipePageProps {
   createRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
   updateRecipe?: (args: { variables: IRecipeInput }) => Promise<void>;
   getRecipe: {
-    loading: boolean,
-    recipe?: IRecipe & { id: string },
+    loading: boolean;
+    recipe?: IRecipe & { id: string };
   };
 }
 
@@ -36,10 +29,10 @@ interface IEditRecipePageState {
   batchSize: number;
   boilTime: number;
   type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
-  fermentables: Array<IRecipeFermentable & { key: string, name: string }>;
+  fermentables: Array<IRecipeFermentable & { key: string; name: string }>;
   loading: boolean;
   validationErrors: {
-    [key: string]: string,
+    [key: string]: string;
   };
 }
 
@@ -57,17 +50,19 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
     return {
       ...(recipe || defaultRecipe),
-      fermentables: recipe ? recipe.fermentables.map(({ id, name, unit, amount }) => ({
-        amount,
-        id,
-        key: randomId(),
-        name,
-        unit,
-      })) : [],
+      fermentables: recipe
+        ? recipe.fermentables.map(({ id, name, unit, amount }) => ({
+            amount,
+            id,
+            key: randomId(),
+            name,
+            unit,
+          }))
+        : [],
       loading: false,
       validationErrors: null,
     };
-  }
+  };
 
   public readonly state: IEditRecipePageState;
 
@@ -76,9 +71,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     this.state = EditRecipePage.getInitialState(props.getRecipe ? props.getRecipe.recipe : null);
   }
 
-  public componentDidUpdate(
-    prevProps: Readonly<IEditRecipePageProps & RouteComponentProps<{}, StaticContext, LocationState>>,
-    prevState: Readonly<{}>, snapshot?: any): void {
+  public componentDidUpdate(prevProps: Readonly<IEditRecipePageProps & RouteComponentProps<{}, StaticContext, LocationState>>, prevState: Readonly<{}>, snapshot?: any): void {
     const prevRecipe = prevProps.getRecipe ? prevProps.getRecipe.recipe : null;
     const currentRecipe = this.props.getRecipe ? this.props.getRecipe.recipe : null;
 
@@ -97,132 +90,100 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
   }
 
   public render() {
-    const { loading: recipeLoading = false, recipe = null } = {...this.props.getRecipe};
+    const { loading: recipeLoading = false, recipe = null } = { ...this.props.getRecipe };
     const { loading: recipeSaving, fermentables } = this.state;
     const loading = recipeLoading || recipeSaving;
     const { batchSize, boilTime, name, description, source, type } = this.state;
 
     return (
       <Container>
-        <div data-uk-sticky='offset: 72' style={{ backgroundColor: 'white' }}>
+        <div data-uk-sticky="offset: 72" style={{ backgroundColor: 'white' }}>
           <h3>{recipe ? recipe.name : 'New Recipe'}</h3>
-          <ul className='uk-breadcrumb'>
-            <li><Link to='/recipes'>Recipes</Link></li>
-            <li><span>{recipe ? 'Edit' : 'Create'}</span></li>
+          <ul className="uk-breadcrumb">
+            <li>
+              <Link to="/recipes">Recipes</Link>
+            </li>
+            <li>
+              <span>{recipe ? 'Edit' : 'Create'}</span>
+            </li>
           </ul>
         </div>
-        <Form onSubmit={(e) => this.handleSubmit(e)} className='uk-margin'>
-          <ul data-uk-accordion='multiple: true'>
-            <li className='uk-open'>
-              <a className='uk-accordion-title' href='#'>General</a>
-              <div className='uk-accordion-content'>
-                <div className='uk-grid' data-uk-grid={true}>
-                  <div className='uk-width-1-2'>
-                    <Form.Input
-                      label='Name'
-                      name='name'
-                      onChange={this.handleChange}
-                      required={true}
-                      value={name || ''}
-                    />
+        <Form onSubmit={(e) => this.handleSubmit(e)} className="uk-margin">
+          <ul data-uk-accordion="multiple: true">
+            <li className="uk-open">
+              <a className="uk-accordion-title" href="#">
+                General
+              </a>
+              <div className="uk-accordion-content">
+                <div className="uk-grid" data-uk-grid={true}>
+                  <div className="uk-width-1-2">
+                    <Form.Input label="Name" name="name" onChange={this.handleChange} required={true} value={name || ''} />
                   </div>
-                  <div className='uk-width-1-2'>
-                    <Form.Input
-                      label='Author/Source'
-                      name='source'
-                      onChange={this.handleChange}
-                      required={true}
-                      value={source || ''}
-                    />
+                  <div className="uk-width-1-2">
+                    <Form.Input label="Author/Source" name="source" onChange={this.handleChange} required={true} value={source || ''} />
                   </div>
-                  <div className='uk-width-1-6 uk-margin'>
+                  <div className="uk-width-1-6 uk-margin">
                     <Form.Select
-                      label='Type'
-                      name='type'
+                      label="Type"
+                      name="type"
                       onChange={this.handleChange}
-                      options={[
-                        { value: 'ALL_GRAIN', label: 'All Grain' },
-                        { value: 'EXTRACT', label: 'Extract' },
-                        { value: 'MEAD', label: 'Mead' },
-                        { value: 'WINE', label: 'Wine' },
-                      ]}
+                      options={[{ value: 'ALL_GRAIN', label: 'All Grain' }, { value: 'EXTRACT', label: 'Extract' }, { value: 'MEAD', label: 'Mead' }, { value: 'WINE', label: 'Wine' }]}
                       value={type}
                     />
                   </div>
-                  <div className='uk-width-1-6 uk-margin'>
-                    <Form.Input
-                      label='Batch Size, gal'
-                      name='batchSize'
-                      onChange={this.handleChange}
-                      step={0.1}
-                      type='number'
-                      value={batchSize}
-                    />
+                  <div className="uk-width-1-6 uk-margin">
+                    <Form.Input label="Batch Size, gal" name="batchSize" onChange={this.handleChange} step={0.1} type="number" value={batchSize} />
                   </div>
-                  <div className='uk-width-1-6 uk-margin'>
-                    <Form.Input
-                      label='Boil time, min'
-                      min={0}
-                      name='boilTime'
-                      onChange={this.handleChange}
-                      step={0.1}
-                      type='number'
-                      value={boilTime}
-                    />
+                  <div className="uk-width-1-6 uk-margin">
+                    <Form.Input label="Boil time, min" min={0} name="boilTime" onChange={this.handleChange} step={0.1} type="number" value={boilTime} />
                   </div>
-                  <div className='uk-width-3-6'/>
-                  <div className='uk-width-expand uk-margin'>
-                    <Form.TextArea
-                      name='description'
-                      label='Description'
-                      onChange={this.handleChange}
-                      value={description || ''}
-                    />
+                  <div className="uk-width-3-6" />
+                  <div className="uk-width-expand uk-margin">
+                    <Form.TextArea name="description" label="Description" onChange={this.handleChange} value={description || ''} />
                   </div>
                 </div>
               </div>
             </li>
             <li>
-              <a className='uk-accordion-title' href='#'>Fermentables</a>
-              <div className='uk-accordion-content'>
-                <RecipeFermentables
-                  fermentables={fermentables}
-                  onAdd={this.handleAddFermentable}
-                  onRemove={this.handleRemoveFermentable}
-                  onUpdate={this.handleUpdateFermentable}
-                />
+              <a className="uk-accordion-title" href="#">
+                Fermentables
+              </a>
+              <div className="uk-accordion-content">
+                <RecipeFermentables fermentables={fermentables} onAdd={this.handleAddFermentable} onRemove={this.handleRemoveFermentable} onUpdate={this.handleUpdateFermentable} />
               </div>
             </li>
             <li>
-              <a className='uk-accordion-title' href='#'>Hops</a>
-              <div className='uk-accordion-content'>
+              <a className="uk-accordion-title" href="#">
                 Hops
-              </div>
+              </a>
+              <div className="uk-accordion-content">Hops</div>
             </li>
             <li>
-              <a className='uk-accordion-title' href='#'>Water</a>
-              <div className='uk-accordion-content'>
+              <a className="uk-accordion-title" href="#">
                 Water
-              </div>
+              </a>
+              <div className="uk-accordion-content">Water</div>
             </li>
             <li>
-              <a className='uk-accordion-title' href='#'>Yeast</a>
-              <div className='uk-accordion-content'>
-                Water
-              </div>
+              <a className="uk-accordion-title" href="#">
+                Yeast
+              </a>
+              <div className="uk-accordion-content">Water</div>
             </li>
             <li>
-              <a className='uk-accordion-title' href='#'>Mash</a>
-              <div className='uk-accordion-content'>
+              <a className="uk-accordion-title" href="#">
                 Mash
-              </div>
+              </a>
+              <div className="uk-accordion-content">Mash</div>
             </li>
           </ul>
-          <div className='uk-margin'>
-            <Button variation='primary' type='submit'>Submit</Button>
+          <div className="uk-margin">
+            <Button variation="primary" type="submit">
+              Submit
+            </Button>
           </div>
         </Form>
-        <Spinner active={loading}/>
+        <Spinner active={loading} />
       </Container>
     );
   }
@@ -243,7 +204,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
         },
       ],
     }));
-  }
+  };
 
   /**
    * Invoked whenever fermentable row is removed
@@ -251,14 +212,13 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
    */
   private handleRemoveFermentable = (key: string) => {
     this.setState((prevState: IEditRecipePageState) => {
-      const fermentables = [...prevState.fermentables]
-        .filter((fermentable) => fermentable.key !== key);
+      const fermentables = [...prevState.fermentables].filter((fermentable) => fermentable.key !== key);
 
       return {
         fermentables,
       };
     });
-  }
+  };
 
   /**
    * Invoked whenever fermentable row is updated
@@ -281,10 +241,9 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
         }),
       };
     });
-  }
+  };
 
-  private handleChange: InputChangeHandlerType = (e, { name, value }) =>
-    this.setState({ [name]: value })
+  private handleChange: InputChangeHandlerType = (e, { name, value }) => this.setState({ [name]: value });
 
   /**
    * Recipe submit function, if this is the new recipe createRecipe query is used,
@@ -295,12 +254,10 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
     e.preventDefault();
 
     const { createRecipe, updateRecipe } = this.props;
-    const { recipe } = {...this.props.getRecipe};
+    const { recipe } = { ...this.props.getRecipe };
 
     this.setState({ loading: true }, () => {
-      const {
-        name, boilTime, batchSize, fermentables, description, type, source,
-      } = this.state;
+      const { name, boilTime, batchSize, fermentables, description, type, source } = this.state;
 
       const variables: IRecipeInput = {
         input: {
@@ -325,25 +282,27 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
         fn = updateRecipe;
       }
 
-      fn({ variables }).then(() => {
-        this.setState({ loading: false }, () => {
-          this.props.history.push({
-            pathname: '/recipes',
-            state: {
-              recipeCreated: fn === createRecipe,
-            },
+      fn({ variables })
+        .then(() => {
+          this.setState({ loading: false }, () => {
+            this.props.history.push({
+              pathname: '/recipes',
+              state: {
+                recipeCreated: fn === createRecipe,
+              },
+            });
+          });
+        })
+        .catch((err: ApolloError) => {
+          const { validationErrors, errorMessage } = handleGraphQLError(err, false);
+          this.setState({
+            error: errorMessage,
+            loading: false,
+            validationErrors,
           });
         });
-      }).catch((err: ApolloError) => {
-        const { validationErrors, errorMessage } = handleGraphQLError(err, false);
-        this.setState({
-          error: errorMessage,
-          loading: false,
-          validationErrors,
-        });
-      });
     });
-  }
+  };
 }
 
 export default compose(
@@ -353,5 +312,5 @@ export default compose(
   }),
   graphql(UPDATE_RECIPE, {
     name: 'updateRecipe',
-  }),
+  })
 )(withRouter(EditRecipePage));

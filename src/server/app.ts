@@ -60,7 +60,7 @@ const apiProxyConfig: Config = {
 
     res.end(JSON.stringify({ message: err.message }));
   },
-  onProxyReq: (proxyReq, req: IncomingMessage & { accessToken: string, user: User }) => {
+  onProxyReq: (proxyReq, req: IncomingMessage & { accessToken: string; user: User }) => {
     const token = jwt.sign({ user: req.user || {} }, process.env.JWT_SECRET);
     proxyReq.setHeader('auth-token', token);
     proxyReq.setHeader('authorization', `Bearer ${req.accessToken}`);
@@ -77,10 +77,7 @@ const apiProxyConfig: Config = {
 const helmetConfig: IHelmetConfiguration = {
   contentSecurityPolicy: {
     directives: {
-      scriptSrc: [
-        '\'self\'',
-        (req, res) => `'nonce-${res.locals.nonce}'`,
-      ],
+      scriptSrc: ["'self'", (req, res) => `'nonce-${res.locals.nonce}'`],
     },
   },
   frameguard: { action: 'deny' },

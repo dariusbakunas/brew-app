@@ -12,18 +12,15 @@ interface IItemProps {
 function Item(props: IItemProps) {
   const { disabled, icon, onClick, ratio = 1 } = props;
 
-  const classes = classNames(
-    'uk-icon',
-    { 'uk-disabled': disabled },
-  );
+  const classes = classNames('uk-icon', { 'uk-disabled': disabled });
 
   const width = 20 * ratio;
   const height = 20 * ratio;
 
   return (
     <li>
-      <a href='#' className={classes} onClick={onClick}>
-        <Icon className='uk-preserve-width' icon={icon} width={width} height={height}/>
+      <a href="#" className={classes} onClick={onClick}>
+        <Icon className="uk-preserve-width" icon={icon} width={width} height={height} />
       </a>
     </li>
   );

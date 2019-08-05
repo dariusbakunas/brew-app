@@ -90,7 +90,6 @@ export const UPDATE_RECIPE = gql`
   }
 `;
 
-
 export interface IRecipeFermentable {
   id: string;
   name: string;
@@ -117,10 +116,10 @@ export interface IRecipeInput {
     batchSize: number;
     boilTime: number;
     fermentables: Array<{
-      id: string,
+      id: string;
       unit: string;
       amount: number;
-    }>,
+    }>;
     type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
   };
 }
@@ -135,7 +134,7 @@ export interface IGetRecipesQuery {
   refetch: () => Promise<void>;
 }
 
-export const getRecipeQuery = graphql<{ match: { params: { id: string }}}>(GET_RECIPE, {
+export const getRecipeQuery = graphql<{ match: { params: { id: string } } }>(GET_RECIPE, {
   name: 'getRecipe',
   // TODO: make options an argument, so that each component could use props differently
   options: (props) => ({

@@ -2,9 +2,7 @@ import { ApolloError } from 'apollo-client';
 import React from 'react';
 import { compose, graphql } from 'react-apollo';
 import { Fermentable } from '../../types';
-import {
-  Button, IconNav, Pager, Spinner, Table,
-} from '../components';
+import { Button, IconNav, Pager, Spinner, Table } from '../components';
 import handleGraphQLError from '../errors/handleGraphQLError';
 import withPagedQuery from '../HOC/withPagedQuery';
 import FermentableModal from '../modals/FermentableModal';
@@ -21,16 +19,16 @@ declare var window: IWindow;
 
 interface IFermentablesProps {
   fermentables: {
-    data: Array<Fermentable & { id: string }>,
-    getNextPage: () => void,
-    getPrevPage: () => void,
-    hasNextPage: boolean,
-    hasPrevPage: boolean,
-    loading: boolean,
+    data: Array<Fermentable & { id: string }>;
+    getNextPage: () => void;
+    getPrevPage: () => void;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    loading: boolean;
     refetchQuery: {
-      query: any,
-      variables: any,
-    },
+      query: any;
+      variables: any;
+    };
   };
   removeFermentable: (args: { variables: { id: string } }) => Promise<void>;
 }
@@ -60,76 +58,59 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
   };
 
   public render() {
-    const {
-      data: fermentables = [],
-      getNextPage,
-      getPrevPage,
-      hasNextPage,
-      hasPrevPage,
-      loading,
-      refetchQuery,
-    } = this.props.fermentables;
+    const { data: fermentables = [], getNextPage, getPrevPage, hasNextPage, hasPrevPage, loading, refetchQuery } = this.props.fermentables;
 
     const { currentFermentable, fermentableModalOpen } = this.state;
 
     return (
       <React.Fragment>
-        {
-          fermentables && fermentables.length ?
-            <React.Fragment>
-              <Pager
-                hasNextPage={hasNextPage}
-                hasPrevPage={hasPrevPage}
-                onNextPage={getNextPage}
-                onPrevPage={getPrevPage}/>
-              <Table size='small' stripped={true}>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Origin</Table.HeaderCell>
-                    <Table.HeaderCell>Category</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@m'>Type</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Color, °L</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Potential, SG</Table.HeaderCell>
-                    <Table.HeaderCell className='uk-visible@s'>Yield, %</Table.HeaderCell>
-                    <Table.HeaderCell/>
+        {fermentables && fermentables.length ? (
+          <React.Fragment>
+            <Pager hasNextPage={hasNextPage} hasPrevPage={hasPrevPage} onNextPage={getNextPage} onPrevPage={getPrevPage} />
+            <Table size="small" stripped={true}>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>Origin</Table.HeaderCell>
+                  <Table.HeaderCell>Category</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@m">Type</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s">Color, °L</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s">Potential, SG</Table.HeaderCell>
+                  <Table.HeaderCell className="uk-visible@s">Yield, %</Table.HeaderCell>
+                  <Table.HeaderCell />
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {fermentables.map((fermentable: Fermentable & { id: string }) => (
+                  <Table.Row key={fermentable.id}>
+                    <Table.Cell>{fermentable.name}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap">{fermentable.origin.name}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap">{fermentable.category}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@m">{fermentable.type}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.yield}</Table.Cell>
+                    <Table.Cell>
+                      <IconNav className="uk-text-nowrap">
+                        <IconNav.Item icon="pencil" onClick={() => this.handleEditFermentable(fermentable)} />
+                        <IconNav.Item icon="trash" onClick={() => this.handleRemoveFermentable(fermentable)} />
+                      </IconNav>
+                    </Table.Cell>
                   </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {
-                    fermentables.map((fermentable: Fermentable & { id: string }) => (
-                      <Table.Row key={fermentable.id}>
-                        <Table.Cell>{fermentable.name}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{fermentable.origin.name}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap'>{fermentable.category}</Table.Cell>
-                        <Table.Cell className='uk-text-nowrap uk-visible@m'>{fermentable.type}</Table.Cell>
-                        <Table.Cell
-                          className='uk-text-nowrap uk-visible@s'>
-                          {fermentable.color ? fermentable.color : 'N/A'}
-                        </Table.Cell>
-                        <Table.Cell
-                          className='uk-text-nowrap uk-visible@s'>
-                          {fermentable.potential ? fermentable.potential : 'N/A'}
-                        </Table.Cell>
-                        <Table.Cell className='uk-text-nowrap uk-visible@s'>{fermentable.yield}</Table.Cell>
-                        <Table.Cell>
-                          <IconNav className='uk-text-nowrap'>
-                            <IconNav.Item icon='pencil' onClick={() => this.handleEditFermentable(fermentable)}/>
-                            <IconNav.Item icon='trash' onClick={() => this.handleRemoveFermentable(fermentable)}/>
-                          </IconNav>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                </Table.Body>
-              </Table>
-            </React.Fragment> :
-            <div className='uk-margin-bottom'>No fermentables</div>
-        }
-        <Spinner active={loading || this.state.loading}/>
-        <Button variation='primary' onClick={this.handleAddFermentable}>Add</Button>
+                ))}
+              </Table.Body>
+            </Table>
+          </React.Fragment>
+        ) : (
+          <div className="uk-margin-bottom">No fermentables</div>
+        )}
+        <Spinner active={loading || this.state.loading} />
+        <Button variation="primary" onClick={this.handleAddFermentable}>
+          Add
+        </Button>
         <FermentableModal
           fermentable={currentFermentable}
-          id='fermentable-modal'
+          id="fermentable-modal"
           open={fermentableModalOpen}
           onHide={() => this.setState({ fermentableModalOpen: false, currentFermentable: null })}
           refetchQuery={refetchQuery}
@@ -143,19 +124,20 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
       currentFermentable: null,
       fermentableModalOpen: true,
     });
-  }
+  };
 
   private handleEditFermentable = (fermentable: Fermentable) => {
     this.setState({
       currentFermentable: fermentable,
       fermentableModalOpen: true,
     });
-  }
+  };
 
   private handleRemoveFermentable = ({ id, name, origin }: Partial<Fermentable> & { id: string }) => {
     confirm(`Are you sure you want to remove ${name} (${origin.name})?`, () => {
       this.setState({ loading: true }, () => {
-        this.props.removeFermentable({ variables: { id } })
+        this.props
+          .removeFermentable({ variables: { id } })
           .then(() => {
             this.setState({ loading: false });
           })
@@ -166,7 +148,7 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
           });
       });
     });
-  }
+  };
 }
 
 export default compose(
@@ -181,9 +163,7 @@ export default compose(
     name: 'removeFermentable',
     options: (props: IFermentablesProps) => ({
       awaitRefetchQueries: true,
-      refetchQueries: [
-        props.fermentables.refetchQuery,
-      ],
+      refetchQueries: [props.fermentables.refetchQuery],
     }),
-  }),
+  })
 )(FermentablesPage);

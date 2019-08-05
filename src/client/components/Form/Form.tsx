@@ -34,14 +34,12 @@ class Form extends Component<IFormProps> {
   public render() {
     const { children, className, loading, onSubmit } = this.props;
 
-    const classes = classNames(
-      className,
-    );
+    const classes = classNames(className);
 
     return (
       <form className={classes} onSubmit={onSubmit}>
         {children}
-        <Spinner active={loading}/>
+        <Spinner active={loading} />
       </form>
     );
   }
