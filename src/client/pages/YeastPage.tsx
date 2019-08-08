@@ -1,13 +1,13 @@
-import { ApolloError } from 'apollo-client';
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { IYeast } from '../../types';
-import { Button, IconNav, Pager, Spinner, Table } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
-import YeastModal from '../modals/YeastModal';
-import { GET_YEAST, REMOVE_YEAST } from '../queries';
-import confirm from '../utils/confirm';
+import { ApolloError } from "apollo-client";
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { IYeast } from "../../types";
+import { Button, IconNav, Pager, Spinner, Table } from "../components";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import withPagedQuery from "../HOC/withPagedQuery";
+import YeastModal from "../modals/YeastModal";
+import { GET_YEAST, REMOVE_YEAST } from "../queries";
+import confirm from "../utils/confirm";
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -45,8 +45,8 @@ class YeastPage extends React.Component<IYeastPageProps> {
 
     window.UIkit.notification({
       message: errorMessage,
-      pos: 'top-right',
-      status: 'danger',
+      pos: "top-right",
+      status: "danger",
       timeout: 5000,
     });
   }
@@ -141,14 +141,14 @@ class YeastPage extends React.Component<IYeastPageProps> {
 
 export default compose(
   withPagedQuery(GET_YEAST, (props) => ({
-    name: 'yeast',
+    name: "yeast",
     variables: {
       limit: DEFAULT_PAGE_SIZE,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     },
   })),
   graphql(REMOVE_YEAST, {
-    name: 'removeYeast',
+    name: "removeYeast",
     options: (props: IYeastPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.yeast.refetchQuery],

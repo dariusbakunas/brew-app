@@ -1,13 +1,13 @@
-import { ApolloError } from 'apollo-client';
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { Fermentable } from '../../types';
-import { Button, IconNav, Pager, Spinner, Table } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
-import FermentableModal from '../modals/FermentableModal';
-import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from '../queries';
-import confirm from '../utils/confirm';
+import { ApolloError } from "apollo-client";
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { Fermentable } from "../../types";
+import { Button, IconNav, Pager, Spinner, Table } from "../components";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import withPagedQuery from "../HOC/withPagedQuery";
+import FermentableModal from "../modals/FermentableModal";
+import { GET_FERMENTABLES, REMOVE_FERMENTABLE } from "../queries";
+import confirm from "../utils/confirm";
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -45,8 +45,8 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
 
     window.UIkit.notification({
       message: errorMessage,
-      pos: 'top-right',
-      status: 'danger',
+      pos: "top-right",
+      status: "danger",
       timeout: 5000,
     });
   }
@@ -87,8 +87,8 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
                     <Table.Cell className="uk-text-nowrap">{fermentable.origin.name}</Table.Cell>
                     <Table.Cell className="uk-text-nowrap">{fermentable.category}</Table.Cell>
                     <Table.Cell className="uk-text-nowrap uk-visible@m">{fermentable.type}</Table.Cell>
-                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.color ? fermentable.color : 'N/A'}</Table.Cell>
-                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.potential ? fermentable.potential : 'N/A'}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.color ? fermentable.color : "N/A"}</Table.Cell>
+                    <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.potential ? fermentable.potential : "N/A"}</Table.Cell>
                     <Table.Cell className="uk-text-nowrap uk-visible@s">{fermentable.yield}</Table.Cell>
                     <Table.Cell>
                       <IconNav className="uk-text-nowrap">
@@ -153,14 +153,14 @@ class FermentablesPage extends React.Component<IFermentablesProps> {
 
 export default compose(
   withPagedQuery<IFermentablesProps>(GET_FERMENTABLES, (props) => ({
-    name: 'fermentables',
+    name: "fermentables",
     variables: {
       limit: DEFAULT_PAGE_SIZE,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     },
   })),
   graphql(REMOVE_FERMENTABLE, {
-    name: 'removeFermentable',
+    name: "removeFermentable",
     options: (props: IFermentablesProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.fermentables.refetchQuery],

@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import gql from "graphql-tag";
 
 export const GET_HOPS = gql`
   query GetHops($nextCursor: String, $prevCursor: String, $limit: Int, $sortBy: SortableHopField, $sortDirection: SortDirection) {

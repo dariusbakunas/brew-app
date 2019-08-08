@@ -1,14 +1,14 @@
-import { ApolloError } from 'apollo-client';
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { Fermentable, FermentableCategory, FermentableInput, GrainType, ICountry } from '../../types';
-import { Button, Form } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import handleGrpahQLError from '../errors/handleGraphQLError';
-import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from '../queries';
-import Modal from './Modal';
+import { ApolloError } from "apollo-client";
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { Fermentable, FermentableCategory, FermentableInput, GrainType, ICountry } from "../../types";
+import { Button, Form } from "../components";
+import { InputChangeHandlerType } from "../components/Form/Input";
+import handleGrpahQLError from "../errors/handleGraphQLError";
+import { CREATE_FERMENTABLE, GET_ALL_COUNTRIES, UPDATE_FERMENTABLE } from "../queries";
+import Modal from "./Modal";
 
-const UNITED_STATES_ID = '236';
+const UNITED_STATES_ID = "236";
 
 interface IFermentableModalProps {
   id: string;
@@ -82,28 +82,28 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
     const { category, color, description, error, loading, name, originId, type, validationErrors } = this.state;
 
     const categories = [
-      { value: 'DRY_EXTRACT', label: 'Dry Extract' },
-      { value: 'FRUIT', label: 'Fruit' },
-      { value: 'GRAIN', label: 'Grain' },
-      { value: 'JUICE', label: 'Juice' },
-      { value: 'LIQUID_EXTRACT', label: 'Liquid Extract' },
-      { value: 'SUGAR', label: 'Sugar' },
+      { value: "DRY_EXTRACT", label: "Dry Extract" },
+      { value: "FRUIT", label: "Fruit" },
+      { value: "GRAIN", label: "Grain" },
+      { value: "JUICE", label: "Juice" },
+      { value: "LIQUID_EXTRACT", label: "Liquid Extract" },
+      { value: "SUGAR", label: "Sugar" },
     ];
 
     const types = [
-      { value: 'BASE', label: 'Base' },
-      { value: 'COLOR', label: 'Color' },
-      { value: 'CARAMEL_CRYSTAL', label: 'Caramel & Crystal' },
-      { value: 'ROASTED', label: 'Roasted' },
-      { value: 'ADJUNCT', label: 'Adjunct' },
-      { value: 'SPECIALTY', label: 'Specialty' },
+      { value: "BASE", label: "Base" },
+      { value: "COLOR", label: "Color" },
+      { value: "CARAMEL_CRYSTAL", label: "Caramel & Crystal" },
+      { value: "ROASTED", label: "Roasted" },
+      { value: "ADJUNCT", label: "Adjunct" },
+      { value: "SPECIALTY", label: "Specialty" },
     ];
 
     return (
       <Modal
         error={error}
         loading={loading}
-        header={fermentable ? fermentable.name : 'New Fermentable'}
+        header={fermentable ? fermentable.name : "New Fermentable"}
         onHide={this.handleHide}
         open={open}
         id={id}
@@ -111,7 +111,7 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
           <Form onSubmit={(e) => this.handleSubmit(e, close)}>
             <Form.Fieldset layout="stacked">
               <div className="uk-margin">
-                <Form.Input disabled={loading} error={validationErrors ? validationErrors.name : null} label="Name" name="name" onChange={this.handleChange} value={name || ''} required={true} />
+                <Form.Input disabled={loading} error={validationErrors ? validationErrors.name : null} label="Name" name="name" onChange={this.handleChange} value={name || ""} required={true} />
               </div>
               <div className="uk-margin">
                 <Form.Select
@@ -126,9 +126,9 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
               <div className="uk-margin">
                 <Form.Select label="Category" error={validationErrors ? validationErrors.category : null} name="category" value={category} onChange={this.handleCategoryChange} options={categories} />
               </div>
-              {(!category || category === 'GRAIN') && (
+              {(!category || category === "GRAIN") && (
                 <div className="uk-margin">
-                  <Form.Select label="Type" error={validationErrors ? validationErrors.type : null} name="type" value={type || 'BASE'} onChange={this.handleChange} options={types} />
+                  <Form.Select label="Type" error={validationErrors ? validationErrors.type : null} name="type" value={type || "BASE"} onChange={this.handleChange} options={types} />
                 </div>
               )}
               <div className="uk-margin uk-grid-small uk-child-width-auto uk-grid">
@@ -143,7 +143,7 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
                     label="Color, °L"
                     onChange={this.handleChange}
                     step={0.1}
-                    value={color !== null ? color : ''}
+                    value={color !== null ? color : ""}
                     required={true}
                   />
                 </div>
@@ -158,12 +158,12 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
                     label="Yield, %"
                     onChange={this.handleChange}
                     step={0.01}
-                    value={this.state.yield !== null ? this.state.yield : ''}
+                    value={this.state.yield !== null ? this.state.yield : ""}
                     required={true}
                   />
                 </div>
               </div>
-              <Form.TextArea disabled={loading} name="description" label="Description" onChange={this.handleChange} value={description || ''} />
+              <Form.TextArea disabled={loading} name="description" label="Description" onChange={this.handleChange} value={description || ""} />
             </Form.Fieldset>
             <div className="uk-text-right">
               <Button className="uk-modal-close uk-margin-small-right" disabled={loading}>
@@ -210,7 +210,7 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
           color,
           description,
           name,
-          originId: originId !== '' ? originId : null,
+          originId: originId !== "" ? originId : null,
           type,
           yield: this.state.yield,
         },
@@ -242,16 +242,16 @@ export class FermentableModal extends React.Component<IFermentableModalProps> {
 }
 
 export default compose(
-  graphql(GET_ALL_COUNTRIES, { name: 'getAllCountries' }),
+  graphql(GET_ALL_COUNTRIES, { name: "getAllCountries" }),
   graphql(CREATE_FERMENTABLE, {
-    name: 'createFermentable',
+    name: "createFermentable",
     options: (props: IFermentableModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],
     }),
   }),
   graphql(UPDATE_FERMENTABLE, {
-    name: 'updateFermentable',
+    name: "updateFermentable",
     options: (props: IFermentableModalProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.refetchQuery],

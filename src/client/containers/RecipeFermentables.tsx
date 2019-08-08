@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button } from '../components';
-import FermentableInputRow from './FermentableInputRow';
+import React from "react";
+import { Button } from "../components";
+import FermentableInputRow from "./FermentableInputRow";
 
 interface IFermentable {
   id: string;

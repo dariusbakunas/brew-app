@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
 
 const GET_RECIPES = gql`
   query GetRecipes {
@@ -104,7 +104,7 @@ export interface IRecipe {
   batchSize: number;
   boilTime: number;
   fermentables: IRecipeFermentable[];
-  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+  type: "ALL_GRAIN" | "EXTRACT" | "PARTIAL_MASH" | "CIDER" | "WINE" | "MEAD";
 }
 
 export interface IRecipeInput {
@@ -120,7 +120,7 @@ export interface IRecipeInput {
       unit: string;
       amount: number;
     }>;
-    type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+    type: "ALL_GRAIN" | "EXTRACT" | "PARTIAL_MASH" | "CIDER" | "WINE" | "MEAD";
   };
 }
 
@@ -135,20 +135,20 @@ export interface IGetRecipesQuery {
 }
 
 export const getRecipeQuery = graphql<{ match: { params: { id: string } } }>(GET_RECIPE, {
-  name: 'getRecipe',
+  name: "getRecipe",
   // TODO: make options an argument, so that each component could use props differently
   options: (props) => ({
     variables: {
       id: props.match.params.id,
     },
   }),
-  skip: (props) => props.match.params.id === 'create',
+  skip: (props) => props.match.params.id === "create",
 });
 
-export const getRecipes = graphql<any, IGetRecipesQuery>(GET_RECIPES, { name: 'getRecipes' });
+export const getRecipes = graphql<any, IGetRecipesQuery>(GET_RECIPES, { name: "getRecipes" });
 
 export const removeRecipe = graphql<any, IRemoveRecipeResponse>(REMOVE_RECIPE, {
-  name: 'removeRecipe',
+  name: "removeRecipe",
   options: {
     update: (cache, { data: { removeRecipe: id } }) => {
       const { recipes } = cache.readQuery<IGetRecipesQuery>({ query: GET_RECIPES });

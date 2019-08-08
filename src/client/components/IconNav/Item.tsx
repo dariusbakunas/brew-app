@@ -1,6 +1,6 @@
-import classNames from 'classnames';
-import React from 'react';
-import Icon from '../Icon';
+import classNames from "classnames";
+import React from "react";
+import Icon from "../Icon";
 
 interface IItemProps {
   icon: string;
@@ -12,7 +12,7 @@ interface IItemProps {
 function Item(props: IItemProps) {
   const { disabled, icon, onClick, ratio = 1 } = props;
 
-  const classes = classNames('uk-icon', { 'uk-disabled': disabled });
+  const classes = classNames("uk-icon", { "uk-disabled": disabled });
 
   const width = 20 * ratio;
   const height = 20 * ratio;

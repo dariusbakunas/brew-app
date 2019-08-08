@@ -1,21 +1,21 @@
 export enum FermentableCategory {
-  ADJUNCT = 'ADJUNCT',
-  DRY_EXTRACT = 'DRY_EXTRACT',
-  FRUIT = 'FRUID',
-  GRAIN = 'GRAIN',
-  JUICE = 'JUICE',
-  LIQUID_EXTRACT = 'LIQUID_EXTRACT',
-  SUGAR = 'SUGAR',
+  ADJUNCT = "ADJUNCT",
+  DRY_EXTRACT = "DRY_EXTRACT",
+  FRUIT = "FRUID",
+  GRAIN = "GRAIN",
+  JUICE = "JUICE",
+  LIQUID_EXTRACT = "LIQUID_EXTRACT",
+  SUGAR = "SUGAR",
 }
 
 export enum GrainType {
-  BASE = 'BASE',
+  BASE = "BASE",
 }
 
 export enum YeastFlocculation {
-  LOW = 'LOW',
-  MEDIUM = 'MEDIUM',
-  HIGH = 'HIGH',
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+  HIGH = "HIGH",
 }
 
 export interface ICountry {
@@ -72,10 +72,10 @@ export type InvitationInput = {
 };
 
 export enum UserStatus {
-  GUEST = 'GUEST',
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  NEW = 'NEW',
+  GUEST = "GUEST",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
+  NEW = "NEW",
 }
 
 export type UserRole = {
@@ -100,16 +100,16 @@ export type YeastLab = {
 };
 
 export enum YeastForm {
-  DRY = 'DRY',
-  LIQUID = 'LIQUID',
+  DRY = "DRY",
+  LIQUID = "LIQUID",
 }
 
 export enum YeastType {
-  ALE = 'ALE',
-  CHAMPAGNE = 'CHAMPAGNE',
-  LAGER = 'LAGER',
-  WHEAT = 'WHEAT',
-  WINE = 'WINE',
+  ALE = "ALE",
+  CHAMPAGNE = "CHAMPAGNE",
+  LAGER = "LAGER",
+  WHEAT = "WHEAT",
+  WINE = "WINE",
 }
 
 export interface IYeast {

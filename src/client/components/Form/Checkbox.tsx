@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React from "react";
 
 interface ICheckboxProps {
   checked: boolean;
@@ -13,7 +13,7 @@ class Checkbox extends React.Component<ICheckboxProps> {
   public render() {
     const { label, name, checked, disabled } = this.props;
 
-    const classes = classNames('uk-checkbox');
+    const classes = classNames("uk-checkbox");
 
     const id = `${name}-input`;
 

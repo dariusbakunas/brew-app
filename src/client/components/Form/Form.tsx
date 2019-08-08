@@ -1,13 +1,13 @@
-import classNames from 'classnames';
-import React, { Component, ReactNode } from 'react';
-import Spinner from '../Spinner';
-import AutoComplete from './AutoComplete';
-import Checkbox from './Checkbox';
-import Fieldset from './Fieldset';
-import Input from './Input';
-import Radio from './Radio';
-import Select from './Select';
-import TextArea from './TextArea';
+import classNames from "classnames";
+import React, { Component, ReactNode } from "react";
+import Spinner from "../Spinner";
+import AutoComplete from "./AutoComplete";
+import Checkbox from "./Checkbox";
+import Fieldset from "./Fieldset";
+import Input from "./Input";
+import Radio from "./Radio";
+import Select from "./Select";
+import TextArea from "./TextArea";
 
 interface IFormProps {
   children: ReactNode;

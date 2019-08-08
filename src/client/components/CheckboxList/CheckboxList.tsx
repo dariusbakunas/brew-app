@@ -1,5 +1,5 @@
-import React from 'react';
-import Checkbox from '../Form/Checkbox';
+import React from "react";
+import Checkbox from "../Form/Checkbox";
 
 type ItemArray = Array<{ label: string; key: string; checked?: boolean }>;
 

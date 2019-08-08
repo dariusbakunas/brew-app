@@ -1,16 +1,16 @@
-import { ApolloError } from 'apollo-client';
-import { History } from 'history';
+import { ApolloError } from "apollo-client";
+import { History } from "history";
 import LocationState = History.LocationState;
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { StaticContext, withRouter } from 'react-router';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Container, Form, Spinner } from '../components';
-import { InputChangeHandlerType } from '../components/Form/Input';
-import RecipeFermentables from '../containers/RecipeFermentables';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import { CREATE_RECIPE, getRecipeQuery, IRecipe, IRecipeFermentable, IRecipeInput, UPDATE_RECIPE } from '../HOC/recipes';
-import { randomId } from '../utils/random';
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { StaticContext, withRouter } from "react-router";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { Button, Container, Form, Spinner } from "../components";
+import { InputChangeHandlerType } from "../components/Form/Input";
+import RecipeFermentables from "../containers/RecipeFermentables";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import { CREATE_RECIPE, getRecipeQuery, IRecipe, IRecipeFermentable, IRecipeInput, UPDATE_RECIPE } from "../HOC/recipes";
+import { randomId } from "../utils/random";
 
 interface IEditRecipePageProps {
   recipe: any;
@@ -28,7 +28,7 @@ interface IEditRecipePageState {
   source?: string;
   batchSize: number;
   boilTime: number;
-  type: 'ALL_GRAIN' | 'EXTRACT' | 'PARTIAL_MASH' | 'CIDER' | 'WINE' | 'MEAD';
+  type: "ALL_GRAIN" | "EXTRACT" | "PARTIAL_MASH" | "CIDER" | "WINE" | "MEAD";
   fermentables: Array<IRecipeFermentable & { key: string; name: string }>;
   loading: boolean;
   validationErrors: {
@@ -43,9 +43,9 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
       boilTime: 60,
       description: null,
       fermentables: [],
-      name: '',
+      name: "",
       source: null,
-      type: 'ALL_GRAIN',
+      type: "ALL_GRAIN",
     };
 
     return {
@@ -97,14 +97,14 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 
     return (
       <Container>
-        <div data-uk-sticky="offset: 72" style={{ backgroundColor: 'white' }}>
-          <h3>{recipe ? recipe.name : 'New Recipe'}</h3>
+        <div data-uk-sticky="offset: 72" style={{ backgroundColor: "white" }}>
+          <h3>{recipe ? recipe.name : "New Recipe"}</h3>
           <ul className="uk-breadcrumb">
             <li>
               <Link to="/recipes">Recipes</Link>
             </li>
             <li>
-              <span>{recipe ? 'Edit' : 'Create'}</span>
+              <span>{recipe ? "Edit" : "Create"}</span>
             </li>
           </ul>
         </div>
@@ -117,17 +117,17 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
               <div className="uk-accordion-content">
                 <div className="uk-grid" data-uk-grid={true}>
                   <div className="uk-width-1-2">
-                    <Form.Input label="Name" name="name" onChange={this.handleChange} required={true} value={name || ''} />
+                    <Form.Input label="Name" name="name" onChange={this.handleChange} required={true} value={name || ""} />
                   </div>
                   <div className="uk-width-1-2">
-                    <Form.Input label="Author/Source" name="source" onChange={this.handleChange} required={true} value={source || ''} />
+                    <Form.Input label="Author/Source" name="source" onChange={this.handleChange} required={true} value={source || ""} />
                   </div>
                   <div className="uk-width-1-6 uk-margin">
                     <Form.Select
                       label="Type"
                       name="type"
                       onChange={this.handleChange}
-                      options={[{ value: 'ALL_GRAIN', label: 'All Grain' }, { value: 'EXTRACT', label: 'Extract' }, { value: 'MEAD', label: 'Mead' }, { value: 'WINE', label: 'Wine' }]}
+                      options={[{ value: "ALL_GRAIN", label: "All Grain" }, { value: "EXTRACT", label: "Extract" }, { value: "MEAD", label: "Mead" }, { value: "WINE", label: "Wine" }]}
                       value={type}
                     />
                   </div>
@@ -139,7 +139,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
                   </div>
                   <div className="uk-width-3-6" />
                   <div className="uk-width-expand uk-margin">
-                    <Form.TextArea name="description" label="Description" onChange={this.handleChange} value={description || ''} />
+                    <Form.TextArea name="description" label="Description" onChange={this.handleChange} value={description || ""} />
                   </div>
                 </div>
               </div>
@@ -196,11 +196,11 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
       fermentables: [
         ...prevState.fermentables,
         {
-          amount: '',
+          amount: "",
           id: null,
           key: randomId(),
-          name: '',
-          unit: 'LB',
+          name: "",
+          unit: "LB",
         },
       ],
     }));
@@ -286,7 +286,7 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
         .then(() => {
           this.setState({ loading: false }, () => {
             this.props.history.push({
-              pathname: '/recipes',
+              pathname: "/recipes",
               state: {
                 recipeCreated: fn === createRecipe,
               },
@@ -308,9 +308,9 @@ class EditRecipePage extends React.Component<IEditRecipePageProps & RouteCompone
 export default compose(
   getRecipeQuery,
   graphql(CREATE_RECIPE, {
-    name: 'createRecipe',
+    name: "createRecipe",
   }),
   graphql(UPDATE_RECIPE, {
-    name: 'updateRecipe',
+    name: "updateRecipe",
   })
 )(withRouter(EditRecipePage));

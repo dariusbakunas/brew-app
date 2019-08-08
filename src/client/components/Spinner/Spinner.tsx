@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React from "react";
 
 interface ISpinnerProps {
   active: boolean;
@@ -42,7 +42,7 @@ class Spinner extends React.Component<ISpinnerProps> {
       return null;
     }
 
-    const classes = classNames('sk-cube-grid', 'uk-position-center');
+    const classes = classNames("sk-cube-grid", "uk-position-center");
 
     return (
       <div className="uk-overlay-default uk-position-cover">

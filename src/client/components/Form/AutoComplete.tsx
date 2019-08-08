@@ -1,6 +1,6 @@
-import debounce from 'lodash.debounce';
-import React from 'react';
-import Input, { InputChangeHandlerType } from './Input';
+import debounce from "lodash.debounce";
+import React from "react";
+import Input, { InputChangeHandlerType } from "./Input";
 
 export interface IAutoCompleteItem {
   value: string;
@@ -49,7 +49,7 @@ class AutoComplete extends React.Component<IAutoCompleteProps, IAutoCompleteStat
   }
 
   public componentDidMount(): void {
-    window.UIkit.dropdown(this.dropdownRef.current, { mode: 'click' });
+    window.UIkit.dropdown(this.dropdownRef.current, { mode: "click" });
   }
 
   public render() {

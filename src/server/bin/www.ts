@@ -2,12 +2,12 @@
  * Module dependencies.
  */
 
-import debugFn from 'debug';
-import http from 'http';
-import Loadable from 'react-loadable';
-import app from '../app';
+import debugFn from "debug";
+import http from "http";
+import Loadable from "react-loadable";
+import app from "../app";
 
-const debug = debugFn('server:server');
+const debug = debugFn("server:server");
 
 /**
  * Normalize a port into a number, string, or false.
@@ -32,8 +32,8 @@ function normalizePort(val: string) {
 /**
  * Get port from environment and store in Express.
  */
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+const port = normalizePort(process.env.PORT || "3000");
+app.set("port", port);
 
 /**
  * Create HTTP server.
@@ -46,19 +46,19 @@ const server = http.createServer(app);
  */
 
 function onError(error: NodeJS.ErrnoException) {
-  if (error.syscall !== 'listen') {
+  if (error.syscall !== "listen") {
     throw error;
   }
 
-  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
+  const bind = typeof port === "string" ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
-    case 'EACCES':
+    case "EACCES":
       console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
-    case 'EADDRINUSE':
+    case "EADDRINUSE":
       console.error(`${bind} is already in use`);
       process.exit(1);
       break;
@@ -73,7 +73,7 @@ function onError(error: NodeJS.ErrnoException) {
 
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr.port}`;
   debug(`Listening on ${bind}, NODE_ENV: ${process.env.NODE_ENV}`);
 }
 
@@ -85,5 +85,5 @@ Loadable.preloadAll().then(() => {
   server.listen(port);
 });
 
-server.on('error', onError);
-server.on('listening', onListening);
+server.on("error", onError);
+server.on("listening", onListening);

@@ -1,7 +1,7 @@
-import React, { ComponentType } from 'react';
-import { graphql } from 'react-apollo';
+import React, { ComponentType } from "react";
+import { graphql } from "react-apollo";
 
-const PROP_NAME = 'getPagedData';
+const PROP_NAME = "getPagedData";
 
 interface IQueryResult {
   [key: string]: {
@@ -45,7 +45,7 @@ interface IOptions {
  */
 const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => IOptions | IOptions) => {
   function getDisplayName(component: ComponentType) {
-    return component.displayName || component.name || 'Component';
+    return component.displayName || component.name || "Component";
   }
 
   return (WrappedComponent: React.ComponentType) => {
@@ -63,7 +63,7 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
       }
 
       public render() {
-        const options = typeof opt === 'function' ? opt(this.props) : opt;
+        const options = typeof opt === "function" ? opt(this.props) : opt;
 
         const { loading, refetch } = this.props[PROP_NAME];
 
@@ -141,7 +141,7 @@ const withPagedQuery = <TProps extends {}>(mainQuery: any, opt: (props: any) => 
     return graphql<any>(mainQuery, {
       name: PROP_NAME,
       options: (props) => {
-        const options = typeof opt === 'function' ? opt(props) : opt;
+        const options = typeof opt === "function" ? opt(props) : opt;
 
         return {
           variables: {

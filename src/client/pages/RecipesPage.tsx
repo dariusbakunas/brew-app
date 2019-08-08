@@ -1,13 +1,13 @@
-import { ApolloError } from 'apollo-client';
-import path from 'path';
-import React from 'react';
-import { compose } from 'react-apollo';
-import { RouteComponentProps } from 'react-router';
-import { withRouter } from 'react-router-dom';
-import { Button, Card, Container, Grid, IconNav, Spinner } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import { getRecipes, IGetRecipesQuery, IRecipe, removeRecipe } from '../HOC/recipes';
-import confirm from '../utils/confirm';
+import { ApolloError } from "apollo-client";
+import path from "path";
+import React from "react";
+import { compose } from "react-apollo";
+import { RouteComponentProps } from "react-router";
+import { withRouter } from "react-router-dom";
+import { Button, Card, Container, Grid, IconNav, Spinner } from "../components";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import { getRecipes, IGetRecipesQuery, IRecipe, removeRecipe } from "../HOC/recipes";
+import confirm from "../utils/confirm";
 
 interface IWindow {
   UIkit?: any;
@@ -26,8 +26,8 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
 
     window.UIkit.notification({
       message: errorMessage,
-      pos: 'top-right',
-      status: 'danger',
+      pos: "top-right",
+      status: "danger",
       timeout: 5000,
     });
   }
@@ -52,7 +52,7 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
             <div key={recipe.id}>
               <Card hover={true}>
                 <Card.Header>{recipe.name}</Card.Header>
-                <Card.Body>{recipe.description || 'No description'}</Card.Body>
+                <Card.Body>{recipe.description || "No description"}</Card.Body>
                 <Card.Footer>
                   <a href="#" className="uk-button uk-button-text">
                     Brew
@@ -98,7 +98,7 @@ class RecipesPage extends React.Component<IRecipesPageProps & RouteComponentProp
 
   private handleCreate = () => {
     const { pathname } = this.props.location;
-    this.props.history.push(path.join(pathname, 'create'));
+    this.props.history.push(path.join(pathname, "create"));
   };
 }
 

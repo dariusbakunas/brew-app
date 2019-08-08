@@ -1,8 +1,8 @@
-import classNames from 'classnames';
-import debounce from 'lodash.debounce';
-import React from 'react';
-import { randomId } from '../../utils/random';
-import Icon from '../Icon';
+import classNames from "classnames";
+import debounce from "lodash.debounce";
+import React from "react";
+import { randomId } from "../../utils/random";
+import Icon from "../Icon";
 
 export type InputChangeHandlerType = (
   e: React.FormEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>,
@@ -25,16 +25,16 @@ interface IInputProps {
   required?: boolean;
   step?: number;
   style?: object;
-  type?: 'text' | 'number';
+  type?: "text" | "number";
   value?: string | number;
-  width?: 'large' | 'medium' | 'small' | 'xsmall';
+  width?: "large" | "medium" | "small" | "xsmall";
 }
 
 class Input extends React.Component<IInputProps> {
   public static defaultProps: Partial<IInputProps> = {
-    iconWidth: '20px',
+    iconWidth: "20px",
     step: 1,
-    type: 'text',
+    type: "text",
   };
 
   private inputId: string;
@@ -52,7 +52,7 @@ class Input extends React.Component<IInputProps> {
   public render() {
     const { disabled, error, id, label, min, max, icon, iconWidth, name, required, step, type, value, width, style } = this.props;
 
-    const classes = classNames('uk-input', { 'uk-form-danger': error }, { [`uk-form-width-${width}`]: width });
+    const classes = classNames("uk-input", { "uk-form-danger": error }, { [`uk-form-width-${width}`]: width });
 
     const inputElement = (
       <input
@@ -62,7 +62,7 @@ class Input extends React.Component<IInputProps> {
         min={min}
         name={name}
         onChange={this.handleChange}
-        step={type === 'number' ? step : null}
+        step={type === "number" ? step : null}
         onBlur={this.props.onBlur}
         type={type}
         value={value}
@@ -105,7 +105,7 @@ class Input extends React.Component<IInputProps> {
     const { value } = e.currentTarget;
 
     if (onChange) {
-      if (value !== '' && type === 'number' && typeof value === 'string') {
+      if (value !== "" && type === "number" && typeof value === "string") {
         const num = step === 1 ? parseInt(value, 10) : parseFloat(value);
         this.changeCallback(e, { name, value: num });
       } else {

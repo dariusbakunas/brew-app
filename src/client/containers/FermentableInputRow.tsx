@@ -1,11 +1,11 @@
-import gql from 'graphql-tag';
-import React from 'react';
-import { Fermentable } from '../../types';
-import { Button, Form } from '../components';
-import { IAutoCompleteItem } from '../components/Form/AutoComplete';
-import Input from '../components/Form/Input';
-import Select from '../components/Form/Select';
-import withPagedQuery from '../HOC/withPagedQuery';
+import gql from "graphql-tag";
+import React from "react";
+import { Fermentable } from "../../types";
+import { Button, Form } from "../components";
+import { IAutoCompleteItem } from "../components/Form/AutoComplete";
+import Input from "../components/Form/Input";
+import Select from "../components/Form/Select";
+import withPagedQuery from "../HOC/withPagedQuery";
 
 const GET_FERMENTABLES = gql`
   query GetFermentables($nextCursor: String, $limit: Int, $filter: FermentablesFilter, $sortBy: SortableFermentableField, $sortDirection: SortDirection) {
@@ -24,7 +24,7 @@ const GET_FERMENTABLES = gql`
 interface IFermentable {
   id?: string;
   name?: string;
-  unit: 'lbs' | 'oz';
+  unit: "lbs" | "oz";
   amount?: number;
 }
 
@@ -50,7 +50,7 @@ interface IFermentableInputRowProps {
 interface IFermentableInputRowState {
   fermentable?: string;
   name: string;
-  unit?: 'lb' | 'oz';
+  unit?: "lb" | "oz";
   amount?: number;
 }
 
@@ -75,7 +75,7 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
           <Select
             name="unit"
             onChange={(e, { name, value }) => this.handleChange(e, { name, value: value.toUpperCase() })}
-            options={[{ value: 'lb', label: 'lb' }, { value: 'oz', label: 'oz' }]}
+            options={[{ value: "lb", label: "lb" }, { value: "oz", label: "oz" }]}
             value={unit.toLowerCase()}
           />
         </div>
@@ -137,7 +137,7 @@ class FermentableInputRow extends React.Component<IFermentableInputRowProps, IFe
         name: value,
       },
       limit: 15,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     });
   };
 }
@@ -156,11 +156,11 @@ interface IQueryOpts {
 
 export default withPagedQuery(GET_FERMENTABLES, (props) => {
   const options: IQueryOpts = {
-    fetchPolicy: 'no-cache',
-    name: 'fermentables',
+    fetchPolicy: "no-cache",
+    name: "fermentables",
     variables: {
       limit: 15,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     },
   };
 

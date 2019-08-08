@@ -1,5 +1,5 @@
-import classNames from 'classnames';
-import React from 'react';
+import classNames from "classnames";
+import React from "react";
 
 interface ISelectProps {
   error?: string;
@@ -11,14 +11,14 @@ interface ISelectProps {
     label: string;
   }>;
   value: string;
-  width?: 'large' | 'medium' | 'small' | 'xsmall';
+  width?: "large" | "medium" | "small" | "xsmall";
 }
 
 class Select extends React.Component<ISelectProps> {
   public render() {
     const { error, label, name, options, value, width } = this.props;
 
-    const classes = classNames('uk-select', { 'uk-form-danger': error }, { [`uk-form-width-${width}`]: width });
+    const classes = classNames("uk-select", { "uk-form-danger": error }, { [`uk-form-width-${width}`]: width });
 
     const id = `${name}-input`;
 

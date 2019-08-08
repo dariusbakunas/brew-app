@@ -1,6 +1,6 @@
-import gql from 'graphql-tag';
-import { graphql } from 'react-apollo';
-import { Invitation } from '../../types';
+import gql from "graphql-tag";
+import { graphql } from "react-apollo";
+import { Invitation } from "../../types";
 
 const GET_ALL_INVITATIONS = gql`
   query GetAllInvitations {
@@ -45,7 +45,7 @@ export interface ICreateInvitationResponse {
 }
 
 export const deleteInvitationMutation = graphql<any, IDeleteInvitationResponse>(DELETE_INVITATION, {
-  name: 'deleteInvitation',
+  name: "deleteInvitation",
   options: {
     update: (cache, { data: { deleteInvitation: id } }) => {
       const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
@@ -60,7 +60,7 @@ export const deleteInvitationMutation = graphql<any, IDeleteInvitationResponse>(
 });
 
 export const createInvitationMutation = graphql<any, ICreateInvitationResponse>(CREATE_INVITATION, {
-  name: 'createInvitation',
+  name: "createInvitation",
   options: {
     update: (cache, { data: { createInvitation: invitation } }) => {
       const { invitations } = cache.readQuery({ query: GET_ALL_INVITATIONS });
@@ -72,4 +72,4 @@ export const createInvitationMutation = graphql<any, ICreateInvitationResponse>(
   },
 });
 
-export const getAllInvitationsQuery = graphql<any, IGetInvitationsResponse>(GET_ALL_INVITATIONS, { name: 'getAllInvitations' });
+export const getAllInvitationsQuery = graphql<any, IGetInvitationsResponse>(GET_ALL_INVITATIONS, { name: "getAllInvitations" });

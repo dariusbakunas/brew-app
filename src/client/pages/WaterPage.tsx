@@ -1,13 +1,13 @@
-import { ApolloError } from 'apollo-client';
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { Water } from '../../types';
-import { Button, IconNav, Pager, Spinner, Table } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
-import WaterModal from '../modals/WaterModal';
-import { GET_WATER, REMOVE_WATER } from '../queries';
-import confirm from '../utils/confirm';
+import { ApolloError } from "apollo-client";
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { Water } from "../../types";
+import { Button, IconNav, Pager, Spinner, Table } from "../components";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import withPagedQuery from "../HOC/withPagedQuery";
+import WaterModal from "../modals/WaterModal";
+import { GET_WATER, REMOVE_WATER } from "../queries";
+import confirm from "../utils/confirm";
 
 const DEFAULT_PAGE_SIZE = 8;
 
@@ -45,8 +45,8 @@ class WaterPage extends React.Component<IWaterPageProps> {
 
     window.UIkit.notification({
       message: errorMessage,
-      pos: 'top-right',
-      status: 'danger',
+      pos: "top-right",
+      status: "danger",
       timeout: 5000,
     });
   }
@@ -151,14 +151,14 @@ class WaterPage extends React.Component<IWaterPageProps> {
 
 export default compose(
   withPagedQuery(GET_WATER, (props) => ({
-    name: 'water',
+    name: "water",
     variables: {
       limit: DEFAULT_PAGE_SIZE,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     },
   })),
   graphql(REMOVE_WATER, {
-    name: 'removeWater',
+    name: "removeWater",
     options: (props: IWaterPageProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.water.refetchQuery],

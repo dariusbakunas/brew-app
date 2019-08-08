@@ -1,13 +1,13 @@
-import { ApolloError } from 'apollo-client';
-import React from 'react';
-import { compose, graphql } from 'react-apollo';
-import { Hop } from '../../types';
-import { Button, Icon, IconNav, Pager, Spinner, Table } from '../components';
-import handleGraphQLError from '../errors/handleGraphQLError';
-import withPagedQuery from '../HOC/withPagedQuery';
-import HopModal from '../modals/HopModal';
-import { GET_HOPS, REMOVE_HOP } from '../queries';
-import confirm from '../utils/confirm';
+import { ApolloError } from "apollo-client";
+import React from "react";
+import { compose, graphql } from "react-apollo";
+import { Hop } from "../../types";
+import { Button, Icon, IconNav, Pager, Spinner, Table } from "../components";
+import handleGraphQLError from "../errors/handleGraphQLError";
+import withPagedQuery from "../HOC/withPagedQuery";
+import HopModal from "../modals/HopModal";
+import { GET_HOPS, REMOVE_HOP } from "../queries";
+import confirm from "../utils/confirm";
 
 interface IWindow {
   UIkit?: any;
@@ -46,7 +46,7 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
     }
 
     if (!low && !high) {
-      return 'N/A';
+      return "N/A";
     }
 
     const num = low || high;
@@ -59,8 +59,8 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
 
     window.UIkit.notification({
       message: errorMessage,
-      pos: 'top-right',
-      status: 'danger',
+      pos: "top-right",
+      status: "danger",
       timeout: 5000,
     });
   }
@@ -157,14 +157,14 @@ class HopsPage extends React.Component<IHopsProps, IHopPageState> {
 
 export default compose(
   withPagedQuery(GET_HOPS, (props) => ({
-    name: 'hops',
+    name: "hops",
     variables: {
       limit: DEFAULT_PAGE_SIZE,
-      sortBy: 'NAME',
+      sortBy: "NAME",
     },
   })),
   graphql(REMOVE_HOP, {
-    name: 'removeHop',
+    name: "removeHop",
     options: (props: IHopsProps) => ({
       awaitRefetchQueries: true,
       refetchQueries: [props.hops.refetchQuery],

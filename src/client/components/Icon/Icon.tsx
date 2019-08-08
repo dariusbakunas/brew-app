@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
 const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
   check: {
     contents: <polyline fill="none" stroke="#000" strokeWidth="1.1" points="4,10 8,15 17,4" />,
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   chevronLeft: {
     contents: <polyline fill="none" stroke="#000" strokeWidth="1.03" points="13 16 7 10 13 4" />,
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   chevronRight: {
     contents: <polyline fill="none" stroke="#000" strokeWidth="1.03" points="7 4 13 10 7 16" />,
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   close: {
     contents: (
@@ -20,7 +20,7 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <line fill="none" stroke="#000" strokeWidth="1.1" x1="17" y1="4" x2="4" y2="17" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   logo: {
     contents: (
@@ -34,7 +34,7 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <path d="M57.92 196.88s-4.37 7.12 4.22 18.55c6.39 8.49 8.41 11.77 8.41 11.77s1.74-1.52 9-12c9.39-13.69 1.42-17.84 1.42-17.84L70.55 208zM75.43 47.42h-9S67.08 23.58 56 3.78c1.4-3 3.28-3.25 3.28-3.25s13.53 16.61 16.15 46.89z" />
       </React.Fragment>
     ),
-    viewBox: '0 0 141.28 227.96',
+    viewBox: "0 0 141.28 227.96",
   },
   menu: {
     contents: (
@@ -44,7 +44,7 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <rect y="15" width="20" height="2" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   pencil: {
     contents: (
@@ -53,7 +53,7 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <path fill="none" stroke="#000" d="M15.98,7.268 L13.851,5.148" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   percent: {
     contents: (
@@ -61,9 +61,9 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <path d="M3.57,2.14a2.91,2.91,0,0,1-.14.92A2.14,2.14,0,0,1,3,3.72a1.69,1.69,0,0,1-.57.4,1.8,1.8,0,0,1-.69.13,1.82,1.82,0,0,1-.7-.13,1.48,1.48,0,0,1-.56-.4,1.94,1.94,0,0,1-.38-.66A2.91,2.91,0,0,1,0,2.14a2.84,2.84,0,0,1,.14-.93A1.81,1.81,0,0,1,.52.54,1.62,1.62,0,0,1,1.08.13,1.82,1.82,0,0,1,1.78,0a1.82,1.82,0,0,1,.7.13A1.72,1.72,0,0,1,3,.54a1.82,1.82,0,0,1,.39.67A2.84,2.84,0,0,1,3.57,2.14Zm-.46,0a2.69,2.69,0,0,0-.1-.8A1.54,1.54,0,0,0,2.72.8,1.1,1.1,0,0,0,2.29.49a1.25,1.25,0,0,0-.51-.1,1.25,1.25,0,0,0-.51.1A1.15,1.15,0,0,0,.85.8a1.53,1.53,0,0,0-.28.54,2.66,2.66,0,0,0-.11.8,2.53,2.53,0,0,0,.11.78,1.53,1.53,0,0,0,.28.54,1,1,0,0,0,.42.31,1.25,1.25,0,0,0,.51.1,1.25,1.25,0,0,0,.51-.1,1,1,0,0,0,.43-.31A1.54,1.54,0,0,0,3,2.92,2.55,2.55,0,0,0,3.11,2.14ZM6.79.2,6.88.13A.25.25,0,0,1,7,.1h.41L1.32,8.48a.25.25,0,0,1-.21.11H.7ZM8.15,6.57A2.58,2.58,0,0,1,8,7.49a1.78,1.78,0,0,1-.39.66,1.56,1.56,0,0,1-.56.4,1.8,1.8,0,0,1-1.39,0,1.56,1.56,0,0,1-.56-.4,1.76,1.76,0,0,1-.38-.66,2.82,2.82,0,0,1-.14-.92,2.93,2.93,0,0,1,.14-.93A1.89,1.89,0,0,1,5.11,5a1.56,1.56,0,0,1,.56-.4,1.82,1.82,0,0,1,1.4,0,1.69,1.69,0,0,1,.57.4A2.06,2.06,0,0,1,8,5.64,2.94,2.94,0,0,1,8.15,6.57Zm-.45,0a2.71,2.71,0,0,0-.11-.8,1.53,1.53,0,0,0-.28-.54,1,1,0,0,0-.42-.31,1.34,1.34,0,0,0-.52-.1,1.25,1.25,0,0,0-.51.1,1,1,0,0,0-.42.31,1.54,1.54,0,0,0-.29.54,2.73,2.73,0,0,0-.1.8,2.62,2.62,0,0,0,.1.79,1.54,1.54,0,0,0,.29.54,1,1,0,0,0,.42.3,1.25,1.25,0,0,0,.51.1,1.34,1.34,0,0,0,.52-.1,1,1,0,0,0,.42-.3,1.53,1.53,0,0,0,.28-.54A2.6,2.6,0,0,0,7.7,6.57Z" />
       </React.Fragment>
     ),
-    viewBox: '0 0 8.15 8.69',
+    viewBox: "0 0 8.15 8.69",
   },
-  ['plus-circle']: {
+  ["plus-circle"]: {
     contents: (
       <React.Fragment>
         <circle fill="none" stroke="#000" stroke-width="1.1" cx="9.5" cy="9.5" r="9" />
@@ -71,16 +71,16 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <line fill="none" stroke="#000" x1="5" y1="9.5" x2="14" y2="9.5" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
-  ['minus-circle']: {
+  ["minus-circle"]: {
     contents: (
       <React.Fragment>
         <circle fill="none" stroke="#000" stroke-width="1.1" cx="9.5" cy="9.5" r="9" />
         <line fill="none" stroke="#000" x1="5" y1="9.5" x2="14" y2="9.5" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20',
+    viewBox: "0 0 20 20",
   },
   trash: {
     contents: (
@@ -92,7 +92,7 @@ const icons: { [index: string]: { viewBox: string; contents: JSX.Element } } = {
         <rect x="2" y="3" width="16" height="1" />
       </React.Fragment>
     ),
-    viewBox: '0 0 20 20 ',
+    viewBox: "0 0 20 20 ",
   },
 };
 

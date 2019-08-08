@@ -1,20 +1,20 @@
-import React from 'react';
-import { Route } from 'react-router-dom';
-import { User, UserRole, UserStatus } from '../../types';
-import { Nav, Navbar, SideMenu } from '../components';
-import withServerContext from '../HOC/withServerContext';
-import Dashboard from './Dashboard';
-import EditRecipePage from './EditRecipePage';
-import IngredientsPage from './IngredientsPage';
-import Invitations from './InvitationsPage';
-import Profile from './Profile';
-import RecipesPage from './RecipesPage';
-import Roles from './RolesPage';
-import Users from './UsersPage';
+import React from "react";
+import { Route } from "react-router-dom";
+import { User, UserRole, UserStatus } from "../../types";
+import { Nav, Navbar, SideMenu } from "../components";
+import withServerContext from "../HOC/withServerContext";
+import Dashboard from "./Dashboard";
+import EditRecipePage from "./EditRecipePage";
+import IngredientsPage from "./IngredientsPage";
+import Invitations from "./InvitationsPage";
+import Profile from "./Profile";
+import RecipesPage from "./RecipesPage";
+import Roles from "./RolesPage";
+import Users from "./UsersPage";
 
 enum ROLES {
-  USER_MANAGER = 'USER_MANAGER',
-  INGREDIENT_MANAGER = 'INGREDIENT_MANAGER',
+  USER_MANAGER = "USER_MANAGER",
+  INGREDIENT_MANAGER = "INGREDIENT_MANAGER",
 }
 
 interface IUser {
