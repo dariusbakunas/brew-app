@@ -16,7 +16,7 @@ jobs:
   include:
     - stage: install
       script:
-        - npm install
+        - npm ci
     - stage: test
       script:
         - npm run coveralls
