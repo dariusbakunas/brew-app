@@ -1,23 +1,20 @@
-import gql from 'graphql-tag';
-import passport from 'passport';
-import Auth0Strategy from 'passport-auth0';
-import { User, UserStatus } from '../../types';
-import getApolloClient from '../apolloClient';
+import gql from "graphql-tag";
+import passport from "passport";
+import Auth0Strategy from "passport-auth0";
+import { User, UserStatus } from "../../types";
+import getApolloClient from "../apolloClient";
 
-if (process.env.NODE_ENV !== 'test' && !process.env.AUTH0_DOMAIN) {
-  throw new Error('`env.AUTH0_DOMAIN` is required for auth0');
+if (process.env.NODE_ENV !== "CI" && process.env.NODE_ENV !== "test" && !process.env.AUTH0_DOMAIN) {
+  throw new Error("`env.AUTH0_DOMAIN` is required for auth0");
 }
 
 interface IUserResponse {
   userByEmail: User;
 }
 
-const getUserByEmail =
-(
-  apolloClient: ReturnType<typeof getApolloClient>,
-  email: string,
-) => apolloClient.query<IUserResponse>({
-  query: gql`
+const getUserByEmail = (apolloClient: ReturnType<typeof getApolloClient>, email: string) =>
+  apolloClient.query<IUserResponse>({
+    query: gql`
       query GetUserByEmail($email: String!) {
         userByEmail(email: $email) {
           id
@@ -33,10 +30,10 @@ const getUserByEmail =
         }
       }
     `,
-  variables: {
-    email,
-  },
-});
+    variables: {
+      email,
+    },
+  });
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -46,13 +43,7 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 
-export const verify: Auth0Strategy.VerifyFunction = (
-  accessToken,
-  refreshToken,
-  extraParams,
-  profile,
-  done,
-) => {
+export const verify: Auth0Strategy.VerifyFunction = (accessToken, refreshToken, extraParams, profile, done) => {
   // accessToken is the token to call Auth0 API (not needed in the most cases)
   // extraParams.id_token has the JSON Web Token
   // profile has all the information from the user
@@ -78,7 +69,8 @@ export const verify: Auth0Strategy.VerifyFunction = (
 
         done(null, newUser);
       }
-    }).catch((err) => {
+    })
+    .catch((err) => {
       done(err);
     });
 };
@@ -86,10 +78,10 @@ export const verify: Auth0Strategy.VerifyFunction = (
 // @ts-ignore
 export default new Auth0Strategy(
   {
-    callbackURL: process.env.AUTH0_CALLBACK_URL || 'http://localhost:3000/callback',
+    callbackURL: process.env.AUTH0_CALLBACK_URL || "http://localhost:3000/callback",
     clientID: process.env.AUTH0_CLIENT_ID,
     clientSecret: process.env.AUTH0_CLIENT_SECRET,
     domain: process.env.AUTH0_DOMAIN,
   },
-  verify,
+  verify
 );
