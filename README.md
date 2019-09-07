@@ -1,13 +1,13 @@
 # Brew-APP
 
-| master        | dev           |
-| ------------- | ------------- |
-| [![Build Status](https://travis-ci.org/dariusbakunas/brew-app.svg?branch=master)](https://travis-ci.org/dariusbakunas/brew-app) | [![Build Status](https://travis-ci.org/dariusbakunas/brew-app.svg?branch=dev)](https://travis-ci.org/dariusbakunas/brew-app)  |
-| [![Coverage Status](https://coveralls.io/repos/github/dariusbakunas/brew-app/badge.svg?branch=master)](https://coveralls.io/github/dariusbakunas/brew-app?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/dariusbakunas/brew-app/badge.svg?branch=dev)](https://coveralls.io/github/dariusbakunas/brew-app?branch=dev)             |
+| master                                                                                                                                                                   | dev                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [![Build Status](https://travis-ci.org/dariusbakunas/brew-app.svg?branch=master)](https://travis-ci.org/dariusbakunas/brew-app)                                          | [![Build Status](https://travis-ci.org/dariusbakunas/brew-app.svg?branch=dev)](https://travis-ci.org/dariusbakunas/brew-app)                                       |
+| [![Coverage Status](https://coveralls.io/repos/github/dariusbakunas/brew-app/badge.svg?branch=master)](https://coveralls.io/github/dariusbakunas/brew-app?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/dariusbakunas/brew-app/badge.svg?branch=dev)](https://coveralls.io/github/dariusbakunas/brew-app?branch=dev) |
 
 # Configure for local dev
 
-* Create .env with these settings:
+- Create .env with these settings:
 
       SESSION_SECRET=
       AUTH0_DOMAIN=
@@ -22,7 +22,11 @@
 # Build
 
     % npm run build:dev
-    
+
 # Launch
 
     % npm run server:dev
+
+## Install Helm Chart
+
+    % helm install charts/brew-app --name brew-app --set "auth0ClientId"="id" --set "auth0ClientSecret"="secret" --set "jwtSecret"="secret"
