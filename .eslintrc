@@ -3,7 +3,8 @@
     "airbnb-base",
     "plugin:jest/recommended",
     "plugin:react/recommended",
-    "plugin:jsx-a11y/recommended"
+    "plugin:jsx-a11y/recommended",
+    "prettier"
   ],
   "env": {
     "es6": true,
@@ -11,7 +12,7 @@
     "jest/globals": true,
     "browser": true
   },
-  "plugins": ["jest", "react", "jsx-a11y", "typescript"],
+  "plugins": ["jest", "react", "jsx-a11y", "typescript", "prettier"],
   "rules": {
     "arrow-body-style": ["error", "as-needed"],
     "operator-linebreak": ["error", "after"],
@@ -40,7 +41,7 @@
       "allowChildren": false
     }]
   },
-  "parser": "typescript-eslint-parser",
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true,

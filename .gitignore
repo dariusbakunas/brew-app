@@ -28,3 +28,5 @@ dist
 .env
 graphql.config.json
 sessions
+old
+src/.next
