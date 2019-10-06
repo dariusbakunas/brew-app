@@ -2838,30 +2838,6 @@
         "@types/express": "*"
       }
     },
-    "@types/next": {
-      "version": "8.0.6",
-      "resolved": "https://registry.npmjs.org/@types/next/-/next-8.0.6.tgz",
-      "integrity": "sha512-NEPE5PpZ0atyX08I5B06A94OaygoZkLyv4zsZ9OkxbaCe9tIbIYzNWIievY36zXtOFL44JS/MArUuVdAUK9kCQ==",
-      "dev": true,
-      "requires": {
-        "@types/next-server": "*",
-        "@types/node": "*",
-        "@types/node-fetch": "*",
-        "@types/react": "*"
-      }
-    },
-    "@types/next-server": {
-      "version": "8.1.2",
-      "resolved": "https://registry.npmjs.org/@types/next-server/-/next-server-8.1.2.tgz",
-      "integrity": "sha512-Fm4QhAxwDlC9AHiGy23Lhv7DeTTt1O1s7tnAsyVOLPjePmYXPZVbOCrxd2oRHZnIIYWw41JelLbq4hN1B5idlQ==",
-      "dev": true,
-      "requires": {
-        "@types/next": "*",
-        "@types/node": "*",
-        "@types/react": "*",
-        "@types/react-loadable": "*"
-      }
-    },
     "@types/node": {
       "version": "10.12.18",
       "resolved": "https://registry.npmjs.org/@types/node/-/node-10.12.18.tgz",
@@ -19468,6 +19444,11 @@
           }
         }
       }
+    },
+    "seedrandom": {
+      "version": "3.0.5",
+      "resolved": "https://registry.npmjs.org/seedrandom/-/seedrandom-3.0.5.tgz",
+      "integrity": "sha512-8OwmbklUNzwezjGInmZ+2clQmExQPvomqjL7LFqOYqtmuxRgQYqOD3mHaU+MvZn5FLUeVxVfQjwLZW/n/JFuqg=="
     },
     "select": {
       "version": "1.1.2",
