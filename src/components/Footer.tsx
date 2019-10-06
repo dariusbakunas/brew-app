@@ -12,13 +12,7 @@ const Footer: React.FC = () => {
   const classes = useStyles({});
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      justify="center"
-      spacing={1}
-      className={classes.root}
-    >
+    <Grid container justify="center" spacing={1} className={classes.root}>
       <Grid item>
         <Link href="/privacy" label="Privacy" />
       </Grid>
