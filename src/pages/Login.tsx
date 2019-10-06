@@ -11,9 +11,17 @@ import { makeStyles, Theme } from '@material-ui/core';
 import { NextPage } from 'next';
 import HopIcon from '../icons/HopIcon';
 import quotes from '../config/quotes';
+import Footer from '../components/Footer';
 
 const useStyles = makeStyles<Theme>(theme => ({
-  root: {},
+  root: {
+    height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  grid: {
+    flexGrow: 1,
+  },
   logo: {
     width: '4em',
     height: '4em',
@@ -56,42 +64,45 @@ const Login: NextPage<LoginProps, ExcludeRouterProps<LoginProps>> = ({
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      className={classes.root}
-    >
-      <Grid item>
-        <Typography
-          variant="h3"
-          component="h2"
-          gutterBottom
-          className={classes.header}
-        >
-          BREW BEER
-        </Typography>
+    <div className={classes.root}>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        alignItems="center"
+        justify="center"
+        className={classes.grid}
+      >
+        <Grid item>
+          <Typography
+            variant="h3"
+            component="h2"
+            gutterBottom
+            className={classes.header}
+          >
+            BREW BEER
+          </Typography>
+        </Grid>
+        <Grid item>
+          <IconButton aria-label="login" onClick={handleLoginClick}>
+            <HopIcon className={classes.logo} />
+          </IconButton>
+        </Grid>
+        <Grid item>
+          {quote && (
+            <blockquote className={classes.quote}>
+              <p>
+                <q>{quote.text}</q>
+              </p>
+              <footer>
+                <cite>&mdash;{quote.author}</cite>
+              </footer>
+            </blockquote>
+          )}
+        </Grid>
       </Grid>
-      <Grid item>
-        <IconButton aria-label="login" onClick={handleLoginClick}>
-          <HopIcon className={classes.logo} />
-        </IconButton>
-      </Grid>
-      <Grid item>
-        {quote && (
-          <blockquote className={classes.quote}>
-            <p>
-              <q>{quote.text}</q>
-            </p>
-            <footer>
-              <cite>&mdash;{quote.author}</cite>
-            </footer>
-          </blockquote>
-        )}
-      </Grid>
-    </Grid>
+      <Footer />
+    </div>
   );
 };
 

@@ -11,6 +11,8 @@ import { Theme } from '@material-ui/core';
 import { AppContextType } from 'next/dist/next-server/lib/utils';
 import themeConfig from '../config/theme';
 import Root from '../components/Root';
+import Footer from '../components/Footer';
+import { FlexDirectionProperty } from 'csstype';
 
 interface IPageProps {
   user?: {
@@ -36,11 +38,7 @@ const styles = (theme: Theme) => ({
     },
   },
   appBarSpacer: theme.mixins.toolbar,
-  content: {
-    display: 'flex',
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
+  content: {},
 });
 
 interface IState {
@@ -112,9 +110,6 @@ class BrewApp extends App<IProps, IState> {
           <main className={classes.content}>
             <Component {...pageProps} />
           </main>
-          <footer>
-            <p>test footer content</p>
-          </footer>
         </Root>
       </React.Fragment>
     );
