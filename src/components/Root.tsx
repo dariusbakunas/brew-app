@@ -10,6 +10,8 @@ import themeConfig from '../config/theme';
 const useStyles = makeStyles<Theme>(theme => ({
   root: {
     display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh',
   },
 }));
 

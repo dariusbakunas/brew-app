@@ -24,14 +24,22 @@ interface IPageProps {
 }
 
 const styles = (theme: Theme) => ({
+  '@global': {
+    html: {
+      height: '100%',
+    },
+    body: {
+      minHeight: '100%',
+    },
+    '#__next': {
+      minHeight: '100%',
+    },
+  },
   appBarSpacer: theme.mixins.toolbar,
   content: {
+    display: 'flex',
     flexGrow: 1,
     padding: theme.spacing(3),
-  },
-  root: {
-    display: 'flex',
-    backgroundColor: '#EEEEEE',
   },
 });
 
@@ -104,6 +112,9 @@ class BrewApp extends App<IProps, IState> {
           <main className={classes.content}>
             <Component {...pageProps} />
           </main>
+          <footer>
+            <p>test footer content</p>
+          </footer>
         </Root>
       </React.Fragment>
     );

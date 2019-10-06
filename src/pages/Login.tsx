@@ -13,6 +13,7 @@ import HopIcon from '../icons/HopIcon';
 import quotes from '../config/quotes';
 
 const useStyles = makeStyles<Theme>(theme => ({
+  root: {},
   logo: {
     width: '4em',
     height: '4em',
@@ -61,7 +62,7 @@ const Login: NextPage<LoginProps, ExcludeRouterProps<LoginProps>> = ({
       direction="column"
       alignItems="center"
       justify="center"
-      style={{ minHeight: '100vh' }}
+      className={classes.root}
     >
       <Grid item>
         <Typography
