@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -24,10 +24,11 @@ const useStyles = makeStyles<Theme>(theme => ({
   },
   quote: {
     maxWidth: '500px',
-    '& q': {
+    '& p': {
       fontStyle: 'italic',
       fontSize: '1.25rem',
       fontWeight: 300,
+      marginBottom: theme.spacing(1),
     },
     '& cite': {
       color: '#666',
@@ -80,7 +81,9 @@ const Login: NextPage<LoginProps, ExcludeRouterProps<LoginProps>> = ({
       <Grid item>
         {quote && (
           <blockquote className={classes.quote}>
-            <q>{quote.text}</q>
+            <p>
+              <q>{quote.text}</q>
+            </p>
             <footer>
               <cite>&mdash;{quote.author}</cite>
             </footer>
