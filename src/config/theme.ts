@@ -15,10 +15,16 @@ const theme = createMuiTheme({
     error: {
       main: red.A400,
     },
+    text: {
+      primary: '#3c3f40',
+    },
     background: {
       paper: '#fff',
       default: '#F0F2F2',
     },
+  },
+  typography: {
+    fontFamily: '"Lato", "Helvetica", "Arial", sans-serif',
   },
 });
 

@@ -10,6 +10,7 @@ import { Theme } from '@material-ui/core';
 
 import { AppContextType } from 'next/dist/next-server/lib/utils';
 import themeConfig from '../config/theme';
+import Root from '../components/Root';
 
 interface IPageProps {
   user?: {
@@ -99,10 +100,11 @@ class BrewApp extends App<IProps, IState> {
         <Head>
           <title>Brew APP</title>
         </Head>
-        <main className={classes.content}>
-          {pageProps.user && <div className={classes.appBarSpacer} />}
-          <Component {...pageProps} />
-        </main>
+        <Root>
+          <main className={classes.content}>
+            <Component {...pageProps} />
+          </main>
+        </Root>
       </React.Fragment>
     );
   }
