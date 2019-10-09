@@ -1,0 +1,389 @@
+# source: http://localhost:4000/graphql
+# timestamp: Wed Oct 09 2019 08:17:53 GMT-0400 (Eastern Daylight Time)
+
+type ActivationResponse {
+  success: Boolean!
+}
+
+type Country {
+  id: ID!
+  code: String!
+  name: String!
+}
+
+type Fermentable {
+  id: ID!
+  name: String!
+  category: FermentableCategory!
+  color: Float
+  description: String
+  origin: Country!
+  type: FermentableType
+  potential: Float
+  yield: Float!
+}
+
+enum FermentableCategory {
+  ADJUNCT
+  DRY_EXTRACT
+  FRUIT
+  GRAIN
+  JUICE
+  LIQUID_EXTRACT
+  SUGAR
+}
+
+input FermentableInput {
+  name: String!
+  category: FermentableCategory!
+  color: Float
+  description: String
+  originId: ID!
+  type: FermentableType
+  yield: Float!
+}
+
+input FermentablesFilter {
+  name: String
+}
+
+type FermentablesResponse {
+  pageInfo: PageInfo!
+  data: [Fermentable!]!
+}
+
+enum FermentableType {
+  BASE
+  COLOR
+  CARAMEL_CRYSTAL
+  ROASTED
+  ADJUNCT
+  SPECIALTY
+}
+
+enum FermentableUnit {
+  LB
+  OZ
+}
+
+type Hop {
+  id: ID!
+  name: String!
+  aaLow: Float
+  aaHigh: Float
+  betaLow: Float
+  betaHigh: Float
+  description: String
+  bittering: Boolean!
+  aroma: Boolean!
+  origin: Country!
+}
+
+input HopInput {
+  name: String!
+  aaLow: Float
+  aaHigh: Float
+  betaLow: Float
+  betaHigh: Float
+  description: String
+  bittering: Boolean!
+  aroma: Boolean!
+  originId: ID!
+}
+
+type HopsResponse {
+  pageInfo: PageInfo!
+  data: [Hop!]!
+}
+
+type Invitation {
+  id: ID!
+  code: String!
+  email: String!
+}
+
+"""
+used for createdBy fields or otherwise when we don't want to expose all user fields
+"""
+type LimitedUser {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+}
+
+type Mutation {
+  _empty: String
+  createFermentable(input: FermentableInput!): Fermentable!
+  updateFermentable(id: ID!, input: FermentableInput!): Fermentable!
+  removeFermentable(id: ID!): ID!
+  createHop(input: HopInput!): Hop!
+  updateHop(id: ID!, input: HopInput!): Hop!
+  removeHop(id: ID!): ID!
+  createRecipe(input: RecipeInput!): Recipe!
+  updateRecipe(id: ID!, input: RecipeInput!): Recipe!
+  removeRecipe(id: ID!): ID!
+  activateUser(token: String!): ActivationResponse!
+  createInvitation(email: String!, sendEmail: Boolean): Invitation!
+  createRole(input: RoleInput!): Role!
+  deleteInvitation(email: String!): ID!
+  register(input: RegistrationInput!): User!
+  removeUser(id: ID!): ID!
+  updateUser(id: ID!, input: UserInput!): User!
+  createWater(input: WaterInput!): Water!
+  updateWater(id: ID!, input: WaterInput!): Water!
+  removeWater(id: ID!): ID!
+  createYeast(input: YeastInput!): Yeast!
+  updateYeast(id: ID!, input: YeastInput!): Yeast!
+  removeYeast(id: ID!): ID!
+}
+
+type PageInfo {
+  prevCursor: String
+  nextCursor: String
+}
+
+type Query {
+  _empty: String
+  countries: [Country!]!
+  fermentables(
+    nextCursor: String
+    prevCursor: String
+    filter: FermentablesFilter
+    limit: Int = 10
+    sortDirection: SortDirection = ASCENDING
+    sortBy: SortableFermentableField = NAME
+  ): FermentablesResponse!
+  hops(
+    nextCursor: String
+    prevCursor: String
+    limit: Int = 10
+    sortDirection: SortDirection = ASCENDING
+    sortBy: SortableHopField = NAME
+  ): HopsResponse!
+  randomQuote: Quote!
+  recipes: [Recipe!]!
+  recipe(id: ID!): Recipe
+  invitations: [Invitation!]!
+  roles: [Role!]!
+  users: [User!]!
+  user(id: ID!): User
+  userByEmail(email: String!): User
+  water(
+    nextCursor: String
+    prevCursor: String
+    limit: Int = 10
+    sortDirection: SortDirection = ASCENDING
+    sortBy: SortableWaterField = NAME
+  ): WaterResponse!
+  yeast(
+    nextCursor: String
+    prevCursor: String
+    limit: Int = 10
+    sortDirection: SortDirection = ASCENDING
+    sortBy: SortableYeastField = NAME
+  ): YeastResponse!
+  yeastLabs: [YeastLab!]!
+}
+
+type Quote {
+  text: String!
+  author: String
+}
+
+type Recipe {
+  id: ID!
+  name: String!
+  description: String
+  fermentables: [RecipeFermentable!]!
+  type: RecipeType!
+  batchSize: Float!
+  boilTime: Float!
+  source: String
+  createdBy: LimitedUser!
+}
+
+type RecipeFermentable {
+  id: ID!
+  name: String!
+  unit: FermentableUnit!
+  amount: Float!
+}
+
+input RecipeFermentableInput {
+  id: ID!
+  unit: FermentableUnit = LB
+  amount: Float!
+}
+
+input RecipeInput {
+  name: String!
+  description: String
+  source: String
+  type: RecipeType!
+  batchSize: Float!
+  boilTime: Float
+  fermentables: [RecipeFermentableInput!]
+}
+
+enum RecipeType {
+  ALL_GRAIN
+  EXTRACT
+  PARTIAL_MASH
+  CIDER
+  MEAD
+  WINE
+}
+
+input RegistrationInput {
+  firstName: String
+  lastName: String
+  username: String!
+  email: String!
+  code: String!
+}
+
+type Role {
+  id: ID!
+  name: String!
+  code: String!
+}
+
+input RoleInput {
+  name: String!
+  code: String!
+}
+
+enum SortableFermentableField {
+  NAME
+}
+
+enum SortableHopField {
+  NAME
+}
+
+enum SortableWaterField {
+  NAME
+}
+
+enum SortableYeastField {
+  NAME
+}
+
+enum SortDirection {
+  ASCENDING
+  DESCENDING
+}
+
+type User {
+  id: ID!
+  username: String!
+  firstName: String
+  isAdmin: Boolean!
+  lastName: String
+  email: String!
+  status: UserStatus!
+  roles: [Role!]!
+}
+
+input UserInput {
+  firstName: String
+  lastName: String
+  email: String
+  isAdmin: Boolean
+  roleIds: [String!]
+}
+
+enum UserStatus {
+  NEW
+  ACTIVE
+  INACTIVE
+}
+
+type Water {
+  id: ID!
+  name: String!
+  pH: Float!
+  alkalinity: Int!
+  calcium: Float!
+  magnesium: Float!
+  sodium: Float!
+  sulfate: Float!
+  chloride: Float!
+  bicarbonate: Float!
+  description: String
+}
+
+input WaterInput {
+  name: String!
+  pH: Float!
+  alkalinity: Int!
+  calcium: Float!
+  magnesium: Float!
+  sodium: Float!
+  sulfate: Float!
+  chloride: Float!
+  bicarbonate: Float!
+  description: String
+}
+
+type WaterResponse {
+  pageInfo: PageInfo!
+  data: [Water!]!
+}
+
+type Yeast {
+  id: ID!
+  description: String
+  flocculation: YeastFlocculation
+  form: YeastForm!
+  lab: YeastLab!
+  minTemp: Float
+  maxTemp: Float
+  minAttenuation: Float
+  maxAttenuation: Float
+  name: String!
+  type: YeastType!
+}
+
+enum YeastFlocculation {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum YeastForm {
+  LIQUID
+  DRY
+}
+
+input YeastInput {
+  description: String
+  flocculation: YeastFlocculation = MEDIUM
+  form: YeastForm!
+  labId: ID!
+  minTemp: Float
+  maxTemp: Float
+  minAttenuation: Float
+  maxAttenuation: Float
+  name: String!
+  type: YeastType!
+}
+
+type YeastLab {
+  id: ID!
+  name: String!
+}
+
+type YeastResponse {
+  pageInfo: PageInfo!
+  data: [Yeast!]!
+}
+
+enum YeastType {
+  ALE
+  CHAMPAGNE
+  LAGER
+  WHEAT
+  WINE
+}
