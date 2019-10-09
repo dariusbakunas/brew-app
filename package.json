@@ -12,7 +12,9 @@
     "build": "next build ./src",
     "start": "next start ./src",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
-    "prettier": "pretty-quick"
+    "prettier": "pretty-quick",
+    "schema:update": "graphql get-schema",
+    "schema:types": "apollo client:codegen --target=typescript --config=apollo.config.js --outputFlat src/__generated__"
   },
   "husky": {
     "hooks": {
@@ -110,6 +112,7 @@
     "@types/uikit": "^2.27.7",
     "@types/uuid": "^3.4.5",
     "@typescript-eslint/parser": "^2.3.2",
+    "apollo": "^2.19.0",
     "autoprefixer": "^9.6.2",
     "awesome-typescript-loader": "^5.2.1",
     "babel-core": "^7.0.0-bridge.0",

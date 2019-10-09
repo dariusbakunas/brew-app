@@ -2,9 +2,10 @@ import ApolloClient from 'apollo-client';
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import createApolloClient from '../lib/createApolloClient';
+import { GetUserByEmail, GetUserByEmailVariables } from '../__generated__/GetUserByEmail';
 
 const getUser = (apolloClient: ApolloClient<NormalizedCacheObject>, email: string) =>
-  apolloClient.query({
+  apolloClient.query<GetUserByEmail, GetUserByEmailVariables>({
     query: gql`
       query GetUserByEmail($email: String!) {
         userByEmail(email: $email) {
