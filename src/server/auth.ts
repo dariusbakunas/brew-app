@@ -34,9 +34,16 @@ router.get('/callback', (req: Request, res, next: NextFunction) => {
     if (err) return next(err);
     if (!user) return res.redirect('/login');
 
-    request.logIn(user, err => {
+    // accessToken, refreshToken(undefined), profile, status = GUEST
+
+    return request.logIn(user, loginErr => {
       if (err) return next(err);
-      res.redirect('/');
+
+      if (user && user.status === 'GUEST') {
+        return res.redirect('/register');
+      }
+
+      return res.redirect('/');
     });
   })(req, res, next);
 });

@@ -7,6 +7,7 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import proxy, { Config } from 'http-proxy-middleware';
 import authRoutes from './auth';
+import auth0Verify from '../auth/auth0Verify';
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -52,31 +53,12 @@ app.prepare().then(() => {
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
       callbackURL: process.env.AUTH0_CALLBACK_URL,
     },
-    (
-      accessToken: string,
-      refreshToken: string,
-      extraParams: object,
-      profile: object,
-      done: any
-    ) => {
-      const user = {
-        accessToken,
-        refreshToken,
-        extraParams,
-        profile,
-      };
-
-      return done(null, user);
-    }
+    auth0Verify
   );
 
   passport.use(auth0Strategy);
-  passport.serializeUser((user: any, done: (err: any, user: any) => void) =>
-    done(null, user)
-  );
-  passport.deserializeUser((user: any, done: (err: any, user: any) => void) =>
-    done(null, user)
-  );
+  passport.serializeUser((user: any, done: (err: any, user: any) => void) => done(null, user));
+  passport.deserializeUser((user: any, done: (err: any, user: any) => void) => done(null, user));
 
   server.use(passport.initialize());
   server.use(passport.session());
@@ -86,14 +68,18 @@ app.prepare().then(() => {
   server.use(bodyParser.json());
   server.use('/auth', authRoutes);
 
-  const restrictAccess = (
-    req: Request,
-    res: Response,
-    nextFn: NextFunction
-  ) => {
-    const request = req as Request & { isAuthenticated: () => boolean };
+  const restrictAccess = (req: Request, res: Response, nextFn: NextFunction) => {
+    const request = req as Request & {
+      isAuthenticated: () => boolean;
+      user?: { status: 'GUEST' | 'ACTIVE' };
+    };
 
     if (!request.isAuthenticated()) return res.redirect('/login');
+
+    if (request.user && request.user.status === 'GUEST') {
+      return res.redirect('/register');
+    }
+
     return nextFn();
   };
 

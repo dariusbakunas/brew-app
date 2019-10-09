@@ -1,11 +1,6 @@
 import React, { useMemo } from 'react';
 import { ApolloProvider } from '@apollo/react-hooks';
-import {
-  ApolloClient,
-  InMemoryCache,
-  HttpLink,
-  NormalizedCacheObject,
-} from 'apollo-boost';
+import { ApolloClient, InMemoryCache, HttpLink, NormalizedCacheObject } from 'apollo-boost';
 import { NextComponentType, NextPageContext } from 'next';
 import Head from 'next/head';
 import { setContext } from 'apollo-link-context';
@@ -37,7 +32,7 @@ const initApolloClient = (ctx: NextPageContext | null, initialState = {}) => {
       cache: new InMemoryCache().restore(initialState || {}),
       link: authLink.concat(
         new HttpLink({
-          uri: process.env.EVE_API_HOST,
+          uri: process.env.BREW_API_HOST,
         })
       ),
       connectToDevTools: false,
@@ -52,25 +47,20 @@ const initApolloClient = (ctx: NextPageContext | null, initialState = {}) => {
       link: new HttpLink({
         uri: '/api',
       }),
-      ssrMode: true,
+      ssrMode: false,
     });
   }
 
   return sharedClient;
 };
 
-const withApollo = <P extends object>(
-  PageComponent: NextComponentType<ApolloContext, {}, P>
-) => {
+const withApollo = <P extends object>(PageComponent: NextComponentType<ApolloContext, {}, P>) => {
   const WithApollo: NextComponentType<
     ApolloContext,
     {},
     P & { apolloClient: ApolloClient<NormalizedCacheObject>; apolloState: any }
   > = ({ apolloClient, apolloState, ...pageProps }) => {
-    const client = useMemo(
-      () => apolloClient || initApolloClient(null, apolloState),
-      []
-    );
+    const client = useMemo(() => apolloClient || initApolloClient(null, apolloState), []);
 
     return (
       <ApolloProvider client={client}>
