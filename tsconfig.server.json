@@ -3,7 +3,13 @@
   "compilerOptions": {
     "noEmit": false,
     "module": "commonjs",
-    "outDir": ".next/production-server/"
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "outDir": ".next/production-server/",
+    "traceResolution": true
   },
-  "include": ["src/server/*.ts"]
+  "include": [
+    "src/server/*.ts"
+  ],
+  "files": ["src/queries/custom.d.ts"]
 }

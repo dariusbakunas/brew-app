@@ -1,59 +1,24 @@
 {
-  "extends": [
-    "airbnb-base",
-    "plugin:jest/recommended",
-    "plugin:react/recommended",
-    "plugin:jsx-a11y/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
   "env": {
-    "es6": true,
+    "browser": true,
     "node": true,
-    "jest/globals": true,
-    "browser": true
-  },
-  "plugins": ["jest", "react", "jsx-a11y", "typescript", "prettier"],
-  "rules": {
-    "react/prop-types": 0,
-    "arrow-body-style": ["error", "as-needed"],
-    "operator-linebreak": ["error", "after"],
-    "class-methods-use-this": ["error", {
-      "exceptMethods": [
-        "render",
-        "getInitialState",
-        "getDefaultProps",
-        "componentWillMount",
-        "componentDidMount",
-        "componentWillReceiveProps",
-        "shouldComponentUpdate",
-        "componentWillUpdate",
-        "componentDidUpdate",
-        "componentWillUnmount"
-      ]
-    }],
-    "no-unused-vars": "off",
-    "typescript/no-unused-vars": ["error"],
-    "no-underscore-dangle": "off",
-    "jsx-a11y/label-has-for": [ 2, {
-      "components": [ "Label" ],
-      "required": {
-        "some": [ "nesting", "id" ]
-      },
-      "allowChildren": false
-    }]
+    "es6": true,
+    "jest": true
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": true,
-      "modules": true
+      "jsx": true // Allows for the parsing of JSX
     }
   },
-  "settings": {
-    "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".d.ts"]
-      }
-    }
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "rules": {
+    "react/prop-types": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/interface-name-prefix": 0,
+    "@typescript-eslint/no-explicit-any": 0
   }
 }
