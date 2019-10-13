@@ -76,7 +76,12 @@ app.prepare().then(() => {
 
     if (!request.isAuthenticated()) return res.redirect('/login');
 
-    if (request.user && request.user.status === 'GUEST') {
+    if (
+      request.user &&
+      request.user.status === 'GUEST' &&
+      request.originalUrl !== '/register' &&
+      request.baseUrl !== '/register'
+    ) {
       return res.redirect('/register');
     }
 
@@ -86,7 +91,7 @@ app.prepare().then(() => {
   server.get('/login', (req, res) => handle(req, res));
 
   server.use('/$', restrictAccess);
-  // server.use('/characters', restrictAccess);
+  server.use('/register', restrictAccess);
 
   server.all('*', (req, res) => handle(req, res));
 

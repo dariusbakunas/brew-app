@@ -1,5 +1,6 @@
 import express, { NextFunction, Request } from 'express';
 import passport from 'passport';
+import getUser from '../auth/getUser';
 
 const router = express.Router();
 
@@ -14,10 +15,7 @@ router.get(
 
 router.get('/user', (req: Request, res) => {
   res.setHeader('Content-Type', 'application/json');
-  const user =
-    req.session && req.session.passport && req.session.passport.user
-      ? req.session.passport.user.profile
-      : null;
+  const user = getUser(req);
   res.json(user);
 });
 

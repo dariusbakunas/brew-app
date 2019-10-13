@@ -11,18 +11,10 @@ import { Theme } from '@material-ui/core';
 import { AppContextType } from 'next/dist/next-server/lib/utils';
 import themeConfig from '../config/theme';
 import Root from '../components/Root';
-import Footer from '../components/Footer';
-import { FlexDirectionProperty } from 'csstype';
+import getUser, { IUser } from '../auth/getUser';
 
 interface IPageProps {
-  user?: {
-    displayName: string;
-    id: string;
-    user_id: string;
-    emails: Array<{ value: string }>;
-    picture: string;
-    nickname: string;
-  };
+  user?: IUser;
 }
 
 const styles = (theme: Theme) => ({
@@ -60,20 +52,7 @@ class BrewApp extends App<IProps, IState> {
 
     const request: Request = ctx.req as Request;
 
-    if (
-      request &&
-      request.session &&
-      request.session.passport &&
-      request.session.passport.user
-    ) {
-      pageProps.user = request.session.passport.user.profile;
-    } else {
-      const baseURL = request
-        ? `${request.protocol}://${request.get('Host')}`
-        : '';
-      const res = await fetch(`${baseURL}/auth/user`);
-      pageProps.user = await res.json();
-    }
+    pageProps.user = await getUser(request);
 
     return { pageProps };
   }
