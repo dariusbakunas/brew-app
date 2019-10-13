@@ -132,11 +132,7 @@ const Register: React.FC<IRegisterProps> = ({ user }) => {
           </Grid>
         )}
         <Grid item>
-          <form
-            autoComplete="off"
-            className={classes.form}
-            onSubmit={handleSubmit}
-          >
+          <form autoComplete="off" className={classes.form} onSubmit={handleSubmit}>
             <TextField
               id="username"
               required

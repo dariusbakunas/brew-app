@@ -12,6 +12,8 @@ import { AppContextType } from 'next/dist/next-server/lib/utils';
 import themeConfig from '../config/theme';
 import Root from '../components/Root';
 import getUser, { IUser } from '../auth/getUser';
+import Header from '../components/Header';
+import SideMenu from '../components/SideMenu'
 
 interface IPageProps {
   user?: IUser;
@@ -86,7 +88,19 @@ class BrewApp extends App<IProps, IState> {
           <title>Brew APP</title>
         </Head>
         <Root>
+          {!!pageProps.user && (
+            <React.Fragment>
+              <Header
+                isAuthenticated={true}
+                title="Brew Beer"
+                onLogoutClick={() => this.handleNavigate('/auth/logout')}
+                user={pageProps.user}
+              />
+              <SideMenu />
+            </React.Fragment>
+          )}
           <main className={classes.content}>
+            {pageProps.user && <div className={classes.appBarSpacer} />}
             <Component {...pageProps} />
           </main>
         </Root>
