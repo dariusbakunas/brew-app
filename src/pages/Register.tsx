@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { FormEventHandler, useEffect, useState } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { createStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import registerMutation from '../queries/register.graphql';
+import { useMutation } from '@apollo/react-hooks';
+import { Register as RegisterResult, RegisterVariables } from '../__generated__/Register';
+import withApollo from '../hoc/withApollo';
+import { IUser } from '../auth/getUser';
+import { GraphQLError } from 'graphql';
+import { useRouter } from 'next/router';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'stretch',
       width: '400px',
     },
+    progress: {
+      width: '384px',
+    },
     grid: {
       flexGrow: 1,
     },
@@ -33,14 +44,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
-    dense: {
-      marginTop: 19,
-    },
     button: {
       marginTop: theme.spacing(2),
-    },
-    menu: {
-      width: 200,
     },
   })
 );
@@ -53,21 +58,57 @@ interface RegisterState {
   username: string;
 }
 
-const Register: React.FC = () => {
-  const classes = useStyles({});
+interface IRegisterProps {
+  user?: IUser;
+}
 
-  const [values, setValues] = React.useState<RegisterState>({
+const Register: React.FC<IRegisterProps> = ({ user }) => {
+  const classes = useStyles({});
+  const router = useRouter();
+
+  const [register, { loading, error }] = useMutation<RegisterResult, RegisterVariables>(
+    registerMutation,
+    {
+      onCompleted: () => {
+        router.push('/auth/login');
+      },
+    }
+  );
+
+  const [validationErrors, setValidationErrors] = useState<Partial<RegisterState>>({});
+
+  const [values, setValues] = useState<RegisterState>({
     code: '',
-    email: '',
+    email: user ? user.email : '',
     firstName: '',
     lastName: '',
     username: '',
   });
 
+  useEffect(() => {
+    if (error) {
+      const { graphQLErrors } = error;
+      graphQLErrors.forEach((graphQLError: GraphQLError) => {
+        const { extensions } = graphQLError;
+
+        if (extensions && extensions.code === 'BAD_USER_INPUT') {
+          const { validationErrors } = extensions.exception;
+          setValidationErrors(validationErrors);
+        }
+      });
+    }
+  }, [error]);
+
   const handleChange = (name: keyof RegisterState) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setValues({ ...values, [name]: event.target.value });
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setValidationErrors({});
+    register({ variables: { input: values } });
   };
 
   return (
@@ -85,10 +126,23 @@ const Register: React.FC = () => {
             CREATE NEW ACCOUNT
           </Typography>
         </Grid>
+        {loading && (
+          <Grid item>
+            <LinearProgress className={classes.progress} />
+          </Grid>
+        )}
         <Grid item>
-          <form autoComplete="off" className={classes.form}>
+          <form
+            autoComplete="off"
+            className={classes.form}
+            onSubmit={handleSubmit}
+          >
             <TextField
               id="username"
+              required
+              disabled={loading}
+              error={!!validationErrors['username']}
+              helperText={validationErrors['username']}
               label="Username"
               className={classes.textField}
               value={values.username}
@@ -100,12 +154,15 @@ const Register: React.FC = () => {
               label="Email"
               className={classes.textField}
               value={values.email}
-              onChange={handleChange('email')}
+              InputProps={{
+                readOnly: true,
+              }}
               margin="normal"
             />
             <TextField
               id="fname"
               label="First Name"
+              disabled={loading}
               className={classes.textField}
               value={values.firstName}
               onChange={handleChange('firstName')}
@@ -114,6 +171,7 @@ const Register: React.FC = () => {
             <TextField
               id="lname"
               label="Last Name"
+              disabled={loading}
               className={classes.textField}
               value={values.lastName}
               onChange={handleChange('lastName')}
@@ -121,13 +179,23 @@ const Register: React.FC = () => {
             />
             <TextField
               id="code"
+              required
+              disabled={loading}
+              error={!!validationErrors['code']}
+              helperText={validationErrors['code']}
               label="Invitation Code"
               className={classes.textField}
               value={values.code}
               onChange={handleChange('code')}
               margin="normal"
             />
-            <Button className={classes.button} variant="contained" color="primary">
+            <Button
+              className={classes.button}
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={loading}
+            >
               Submit
             </Button>
           </form>
@@ -137,4 +205,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default withApollo(Register);
