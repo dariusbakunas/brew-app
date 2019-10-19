@@ -10,6 +10,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import ListItemText from '@material-ui/core/ListItemText';
 import List from '@material-ui/core/List';
+import IconButton from '@material-ui/core/IconButton';
+import HopIcon from '../icons/HopIcon';
+
 
 const useStyles = makeStyles<Theme, { drawerWidth: number }>(theme => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -86,6 +89,15 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, header }) => {
             <DashboardIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" primaryTypographyProps={{ noWrap: true }} />
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem selected={pathname === '/hops'} button onClick={() => handleNavigate('/hops')}>
+          <ListItemIcon>
+            <HopIcon />
+          </ListItemIcon>
+          <ListItemText primary="Hops" primaryTypographyProps={{ noWrap: true }} />
         </ListItem>
       </List>
     </Drawer>
