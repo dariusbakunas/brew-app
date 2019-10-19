@@ -13,7 +13,8 @@ import themeConfig from '../config/theme';
 import Root from '../components/Root';
 import getUser, { IUser } from '../auth/getUser';
 import Header from '../components/Header';
-import SideMenu from '../components/SideMenu'
+import SideMenu from '../components/SideMenu';
+import Container from '@material-ui/core/Container';
 
 interface IPageProps {
   user?: IUser;
@@ -101,7 +102,9 @@ class BrewApp extends App<IProps, IState> {
           )}
           <main className={classes.content}>
             {pageProps.user && <div className={classes.appBarSpacer} />}
-            <Component {...pageProps} />
+            <Container fixed>
+              <Component {...pageProps} />
+            </Container>
           </main>
         </Root>
       </React.Fragment>
