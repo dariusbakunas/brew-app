@@ -2,14 +2,14 @@
 /* eslint-disable */
 // This file was automatically generated and should not be edited.
 
-import { UserStatus } from './globalTypes';
+import { UserStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: GetUserByEmail
 // ====================================================
 
 export interface GetUserByEmail_userByEmail {
-  __typename: 'User';
+  __typename: "User";
   id: string;
   email: string;
   username: string;

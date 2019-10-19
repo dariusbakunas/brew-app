@@ -6,10 +6,18 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum SortDirection {
+  ASCENDING = "ASCENDING",
+  DESCENDING = "DESCENDING",
+}
+
+export enum SortableHopField {
+  NAME = "NAME",
+}
+
 export enum UserStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  NEW = 'NEW',
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export interface RegistrationInput {

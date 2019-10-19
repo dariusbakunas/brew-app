@@ -1,0 +1,17 @@
+query GetHops($sortBy: SortableHopField, $sortDirection: SortDirection) {
+  hops(sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "hops") {
+    id
+    name
+    aaHigh
+    aaLow
+    aroma
+    betaHigh
+    betaLow
+    bittering
+    description
+    origin {
+      id
+      name
+    }
+  }
+}
