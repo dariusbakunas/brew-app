@@ -91,7 +91,7 @@ const withApollo = <P extends object>(PageComponent: NextComponentType<ApolloCon
           <AppTree
             pageProps={{
               ...pageProps,
-              serverClient,
+              apolloClient: serverClient,
             }}
           />
         );
