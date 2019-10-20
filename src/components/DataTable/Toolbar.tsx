@@ -1,11 +1,10 @@
 import React from 'react';
-import DeleteIcon from '@material-ui/core/SvgIcon/SvgIcon';
+import DeleteIcon from '@material-ui/icons/Delete';
 import Toolbar from '@material-ui/core/Toolbar';
 import clsx from 'clsx';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { createStyles, makeStyles, Theme } from '@material-ui/core';
 import { lighten } from '@material-ui/core/styles';
 
@@ -54,16 +53,10 @@ const TableToolbar: React.FC<ITableToolbarProps> = ({ label, numSelected }) => {
           {label}
         </Typography>
       )}
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}

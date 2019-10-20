@@ -10,8 +10,10 @@ import TableBody from '@material-ui/core/TableBody';
 import Header, { IHeaderCell, Order } from './Header';
 import { stableSort } from '../../utils/stableSort';
 import TableToolbar from './Toolbar';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
-type ValueGetter<T extends {}> = (item: T) => string;
+type CellValue = string | number | boolean;
+type ValueGetter<T extends {}> = (item: T) => CellValue;
 
 export interface IDataTableProps<T extends { id: string }> {
   label: string;
@@ -45,7 +47,7 @@ const useStyles = makeStyles<Theme>(theme => ({
 interface IRowCell {
   id: string;
   align?: TableCellProps['align'];
-  value: string;
+  value: CellValue;
 }
 
 interface IRow {
@@ -53,7 +55,7 @@ interface IRow {
   cells: IRowCell[];
 }
 
-const desc = (a: string | number, b: string | number) => {
+const desc = (a: CellValue, b: CellValue) => {
   if (b < a) {
     return -1;
   }
@@ -147,6 +149,7 @@ const DataTable = <T extends { id: string }>({
   return (
     <Paper className={classes.root}>
       <TableToolbar numSelected={selected.size} label={label} />
+      {loading && <LinearProgress />}
       <div className={classes.tableWrapper}>
         <Table stickyHeader className={classes.table} aria-label="simple table">
           <Header

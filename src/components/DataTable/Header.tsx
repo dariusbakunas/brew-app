@@ -18,6 +18,9 @@ const useStyles = makeStyles<Theme>(theme => ({
     top: 20,
     width: 1,
   },
+  zFix: {
+    zIndex: 10,
+  },
 }));
 
 export interface IHeaderCell {
@@ -56,7 +59,7 @@ const Header: React.FC<IHeaderProps> = ({
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        <TableCell padding="checkbox" className={classes.zFix}>
           <Checkbox
             indeterminate={selectedRows > 0 && selectedRows < totalRows}
             checked={selectedRows === totalRows}
@@ -66,6 +69,7 @@ const Header: React.FC<IHeaderProps> = ({
         </TableCell>
         {cells.map(cell => (
           <TableCell
+            className={classes.zFix}
             key={cell.id}
             align={cell.align}
             sortDirection={orderBy === cell.id ? order : false}

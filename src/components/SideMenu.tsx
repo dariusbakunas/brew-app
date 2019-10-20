@@ -90,9 +90,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, header }) => {
           </ListItemIcon>
           <ListItemText primary="Dashboard" primaryTypographyProps={{ noWrap: true }} />
         </ListItem>
-      </List>
-      <Divider />
-      <List>
         <ListItem selected={pathname === '/hops'} button onClick={() => handleNavigate('/hops')}>
           <ListItemIcon>
             <HopIcon />
