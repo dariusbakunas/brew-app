@@ -1,5 +1,5 @@
 # source: http://localhost:4000/graphql
-# timestamp: Thu Oct 17 2019 07:46:36 GMT-0400 (Eastern Daylight Time)
+# timestamp: Sun Oct 20 2019 19:14:21 GMT-0400 (Eastern Daylight Time)
 
 type ActivationResponse {
   success: Boolean!
@@ -18,8 +18,8 @@ type Fermentable {
   color: Float
   description: String
   origin: Country!
-  type: FermentableType
-  potential: Float
+  grainType: GrainType
+  potential: Float!
   yield: Float!
 }
 
@@ -39,7 +39,7 @@ input FermentableInput {
   color: Float
   description: String
   originId: ID!
-  type: FermentableType
+  grainType: GrainType
   yield: Float!
 }
 
@@ -52,18 +52,18 @@ type FermentablesResponse {
   data: [Fermentable!]!
 }
 
-enum FermentableType {
+enum FermentableUnit {
+  LB
+  OZ
+}
+
+enum GrainType {
   BASE
   COLOR
   CARAMEL_CRYSTAL
   ROASTED
   ADJUNCT
   SPECIALTY
-}
-
-enum FermentableUnit {
-  LB
-  OZ
 }
 
 type Hop {
@@ -141,7 +141,7 @@ type PageInfo {
 type Query {
   _empty: String
   countries: [Country!]!
-  fermentables(nextCursor: String, prevCursor: String, filter: FermentablesFilter, limit: Int = 10, sortDirection: SortDirection = ASCENDING, sortBy: SortableFermentableField = NAME): FermentablesResponse!
+  fermentables(sortDirection: SortDirection = ASCENDING, sortBy: SortableFermentableField = NAME): [Fermentable!]!
   hops(sortDirection: SortDirection = ASCENDING, sortBy: SortableHopField = NAME): [Hop!]!
   randomQuote: Quote!
   recipes: [Recipe!]!
