@@ -1,0 +1,16 @@
+query GetFermentables($sortBy: SortableFermentableField, $sortDirection: SortDirection) {
+  fermentables(sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "fermentables") {
+    id
+    name
+    category
+    color
+    description
+    origin {
+      id
+      name
+    }
+    potential
+    grainType
+    yield
+  }
+}

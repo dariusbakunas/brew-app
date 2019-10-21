@@ -102,7 +102,7 @@ class BrewApp extends App<IProps, IState> {
           )}
           <main className={classes.content}>
             {pageProps.user && <div className={classes.appBarSpacer} />}
-            <Container fixed>
+            <Container maxWidth="lg">
               <Component {...pageProps} />
             </Container>
           </main>

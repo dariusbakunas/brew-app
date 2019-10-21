@@ -92,6 +92,8 @@ app.prepare().then(() => {
 
   server.use('/$', restrictAccess);
   server.use('/register', restrictAccess);
+  server.use('/hops', restrictAccess);
+  server.use('/fermentables', restrictAccess);
 
   server.all('*', (req, res) => handle(req, res));
 
