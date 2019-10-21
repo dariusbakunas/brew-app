@@ -85,11 +85,23 @@ const DataTable = <T extends { id: string }>({
     const unorderedRows = data.map((row: T) => {
       return {
         id: row.id,
-        cells: columns.map<IRowCell>(column => ({
-          id: column.id,
-          align: column.numeric ? 'right' : 'left',
-          value: typeof column.value === 'function' ? column.value(row) : `${row[column.value]}`,
-        })),
+        cells: columns.map<IRowCell>(column => {
+          let value: CellValue;
+
+          if (typeof column.value === 'function') {
+            value = column.value(row);
+          } else if (typeof row[column.value] === 'number') {
+            value = +row[column.value];
+          } else {
+            value = `${row[column.value] || ''}`;
+          }
+
+          return {
+            id: column.id,
+            align: column.numeric ? 'right' : 'left',
+            value: value,
+          };
+        }),
       };
     });
 
