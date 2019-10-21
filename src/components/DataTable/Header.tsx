@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell, { TableCellProps } from '@material-ui/core/TableCell';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -21,6 +22,9 @@ const useStyles = makeStyles<Theme>(theme => ({
   zFix: {
     zIndex: 10,
   },
+  cell: {
+    whiteSpace: 'nowrap',
+  }
 }));
 
 export interface IHeaderCell {
@@ -69,7 +73,7 @@ const Header: React.FC<IHeaderProps> = ({
         </TableCell>
         {cells.map(cell => (
           <TableCell
-            className={classes.zFix}
+            className={clsx(classes.zFix, classes.cell)}
             key={cell.id}
             align={cell.align}
             sortDirection={orderBy === cell.id ? order : false}
