@@ -3,9 +3,9 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
 import withApollo from '../hoc/withApollo';
 import {
+  GetFermentables_fermentables as Fermentable,
   GetFermentables,
   GetFermentablesVariables,
-  GetFermentables_fermentables as Fermentable,
 } from '../__generated__/GetFermentables';
 import getFermentables from '../queries/getFermentables.graphql';
 import DataTable from '../components/DataTable';

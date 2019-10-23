@@ -1,0 +1,18 @@
+query GetYeast($sortBy: SortableYeastField, $sortDirection: SortDirection) {
+  yeast(sortBy: $sortBy, sortDirection: $sortDirection) @connection(key: "yeast") {
+    id
+    name
+    form
+    type
+    description
+    lab {
+      id
+      name
+    }
+    maxTemp
+    minTemp
+    minAttenuation
+    maxAttenuation
+    flocculation
+  }
+}

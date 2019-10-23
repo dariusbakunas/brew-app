@@ -38,9 +38,32 @@ export enum SortableHopField {
   NAME = "NAME",
 }
 
+export enum SortableYeastField {
+  NAME = "NAME",
+}
+
 export enum UserStatus {
   ACTIVE = "ACTIVE",
   INACTIVE = "INACTIVE",
+}
+
+export enum YeastFlocculation {
+  HIGH = "HIGH",
+  LOW = "LOW",
+  MEDIUM = "MEDIUM",
+}
+
+export enum YeastForm {
+  DRY = "DRY",
+  LIQUID = "LIQUID",
+}
+
+export enum YeastType {
+  ALE = "ALE",
+  CHAMPAGNE = "CHAMPAGNE",
+  LAGER = "LAGER",
+  WHEAT = "WHEAT",
+  WINE = "WINE",
 }
 
 export interface RegistrationInput {

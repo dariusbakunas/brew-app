@@ -1,5 +1,5 @@
 # source: http://localhost:4000/graphql
-# timestamp: Sun Oct 20 2019 19:14:21 GMT-0400 (Eastern Daylight Time)
+# timestamp: Tue Oct 22 2019 17:57:55 GMT-0400 (Eastern Daylight Time)
 
 type ActivationResponse {
   success: Boolean!
@@ -152,7 +152,7 @@ type Query {
   user(id: ID!): User
   userByEmail(email: String!): User
   water(nextCursor: String, prevCursor: String, limit: Int = 10, sortDirection: SortDirection = ASCENDING, sortBy: SortableWaterField = NAME): WaterResponse!
-  yeast(nextCursor: String, prevCursor: String, limit: Int = 10, sortDirection: SortDirection = ASCENDING, sortBy: SortableYeastField = NAME): YeastResponse!
+  yeast(sortDirection: SortDirection = ASCENDING, sortBy: SortableYeastField = NAME): [Yeast!]!
   yeastLabs: [YeastLab!]!
 }
 
