@@ -63,7 +63,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.4",
     "copy-webpack-plugin": "^4.6.0",
-    "ejs": "^2.6.1",
+    "ejs": "^3.1.7",
     "express": "^4.16.4",
     "express-session": "^1.16.1",
     "filepond": "^4.4.0",
